@@ -52,6 +52,10 @@ const Option = (props) => {
  *
  */
 const DynamicInput = (props) => {
+  // console.log("====================================");
+  // console.log(props);
+  // console.log("salam");
+  // console.log("====================================");
   /**
    * @constant  {JSON} field filed of input
    * @function  {function} onChangeHandler function for when input is changed
@@ -101,6 +105,7 @@ const DynamicInput = (props) => {
   //     } else {
   //       const options = [];
   //       let selecteda = [];
+  //       console.log(selecteda);
   //       // for other_services we need to set the options and selected values to the format of componenet
   //       for (let i = 0; i < field.params.length; i++) {
   //         let disabled = field.params[i].enabled
@@ -139,6 +144,7 @@ const DynamicInput = (props) => {
   //           }}
   //           // add all others selected options to this option
   //           onChange={(e) => {
+  //             console.log(e);
   //             let x = [];
   //             let y = "";
   //             if (e !== null) {
@@ -224,76 +230,74 @@ const DynamicInput = (props) => {
   return (
     <NativeBaseProvider>
       <ScrollView style={styles.container}>
-        <FormControl
-          onKeyPress={(e) => {
-            e.persist();
-            if (field.type === "number") {
-              if (validation && validation?.float) {
-                // if field is number and have float validation
-                // just allow numbers and decimal point come from language
-                if (numericKeys.indexOf(e.key) === -1) {
-                  e.preventDefault();
-                  return;
-                }
-              } else if (validation && validation?.float === false) {
-                // if field is number and have not float validation
-                if (num1.indexOf(e.key) === -1) {
-                  e.preventDefault();
-                  return;
+        <Box w="100%" minWidth="300px">
+          <FormControl
+            onKeyPress={(e) => {
+              e.persist();
+              if (field.type === "number") {
+                if (validation && validation?.float) {
+                  // if field is number and have float validation
+                  // just allow numbers and decimal point come from language
+                  if (numericKeys.indexOf(e.key) === -1) {
+                    e.preventDefault();
+                    return;
+                  }
+                } else if (validation && validation?.float === false) {
+                  // if field is number and have not float validation
+                  if (num1.indexOf(e.key) === -1) {
+                    e.preventDefault();
+                    return;
+                  }
                 }
               }
+              // change the decimal pointing to selected language
+              onChangeHandler(e.target.value, field);
+            }}
+            lang="en-US"
+            onChange={(e) => onChangeHandler(e.target.value, field)}
+            value={defaultValue}
+            className="form-control"
+            id={`field-${field.id}`}
+            disabled={field.active ? !field.active : field.disabled}
+            min={
+              validation && validation?.min !== -1 ? validation.min : undefined
             }
-            // change the decimal pointing to selected language
-            onChangeHandler(e.target.value, field);
-          }}
-          lang="en-US"
-          onChange={(e) => onChangeHandler(e.target.value, field)}
-          value={defaultValue}
-          className="form-control"
-          id={`field-${field.id}`}
-          disabled={field.active ? !field.active : field.disabled}
-          min={
-            validation && validation?.min !== -1 ? validation.min : undefined
-          }
-          max={
-            validation && validation?.max !== -1 ? validation.max : undefined
-          }
-          step={
-            validation && validation?.float
-              ? Math.pow(0.1, validation.floating).toFixed(validation.floating)
-              : undefined
-          }
-          maxLength={
-            validation && validation?.digits !== -1
-              ? validation.digits
-              : undefined
-          }
-          onBlur={(e) => {
-            e.persist();
-            // check for seperator
-            if (separator) {
-              const formatted = thousandSeparator(e.target.value);
-              onChangeHandler(formatted, field);
+            max={
+              validation && validation?.max !== -1 ? validation.max : undefined
             }
-          }}
-        >
-          <Stack mx="4">
-            <FormControl.Label>Password</FormControl.Label>
-            <Input
-              type="password"
-              defaultValue="12345"
-              placeholder="password"
-            />
-            <FormControl.HelperText>
-              Must be atleast 6 characters.
-            </FormControl.HelperText>
-            <FormControl.ErrorMessage
-              leftIcon={<WarningOutlineIcon size="xs" />}
-            >
-              Atleast 6 characters are required.
-            </FormControl.ErrorMessage>
-          </Stack>
-        </FormControl>
+            step={
+              validation && validation?.float
+                ? Math.pow(0.1, validation.floating).toFixed(
+                    validation.floating
+                  )
+                : undefined
+            }
+            maxLength={
+              validation && validation?.digits !== -1
+                ? validation.digits
+                : undefined
+            }
+            onBlur={(e) => {
+              e.persist();
+              // check for seperator
+              if (separator) {
+                const formatted = thousandSeparator(e.target.value);
+                onChangeHandler(formatted, field);
+              }
+            }}
+          >
+            <FormControl.Label isRequired={field.required}>
+              {field.name}
+            </FormControl.Label>
+            <Input type="text" placeholder={field.name} />
+            {/* <FormControl.HelperText>
+            Must be atleast 6 characters.
+          </FormControl.HelperText> */}
+            {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+            Atleast 6 characters are required.
+          </FormControl.ErrorMessage> */}
+          </FormControl>
+        </Box>
       </ScrollView>
     </NativeBaseProvider>
   );
@@ -307,7 +311,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   HeadStyle: {
-    height: 50,
+    height: 150,
     alignContent: "center",
     backgroundColor: "#ffe0f0",
   },

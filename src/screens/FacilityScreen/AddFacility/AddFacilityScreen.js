@@ -13,6 +13,15 @@ import { Field, Formik } from "formik";
 import * as yup from "yup";
 import Message from "../../../components/Notification/notification";
 import {
+  FormControl,
+  Input,
+  Stack,
+  WarningOutlineIcon,
+  Box,
+  Center,
+  NativeBaseProvider,
+} from "native-base";
+import {
   checkConnected,
   readData,
   removeItemValue,
@@ -70,8 +79,11 @@ const AddFacilityScreen = ({}) => {
       }
       setLevels(levelTemp);
       topic.map((item) => {
-        content.push(<MyComponent title={item} />)
-      })
+        console.log("====================================");
+        console.log(item);
+        console.log("====================================");
+        content.push(<MyComponent title={item} />);
+      });
     }
   }, [dataflag, ff]);
   const sendFacility = (values) => {
@@ -250,19 +262,51 @@ const AddFacilityScreen = ({}) => {
             </>
           )}
         </Formik> */}
-      <DynamicInput field = {{
-        "active": true,
-        "disabled": true,
-        "id": 2,
-        "name": "Facility name",
-        "params": [],
-        "required": true,
-        "stateName": "name",
-        "topic": "Facility general information",
-        "type": "text",
-        "validation": [],
-      }} 
-      onChangeHandler = {() => console.log("the dsadsadasdasdasdasdasds")} />
+        {/* <Box alignItems="center">
+            <Box w="100%" maxWidth="300px">
+              <FormControl isRequired>
+                <Stack mx="4">
+                  <FormControl.Label>Password</FormControl.Label>
+                  <Input
+                    type="password"
+                    defaultValue="12345"
+                    placeholder="password"
+                  />
+                  <FormControl.HelperText>
+                    Must be atleast 6 characters.
+                  </FormControl.HelperText>
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    Atleast 6 characters are required.
+                  </FormControl.ErrorMessage>
+                </Stack>
+              </FormControl>
+            </Box>
+          </Box> */}
+        {ff?.related?.map((field) => {
+          return (
+            <DynamicInput
+              field={field}
+              onChangeHandler={() => console.log("the dsadsadasdasdasdasdasds")}
+            />
+          );
+        })}
+        <DynamicInput
+          field={{
+            active: true,
+            disabled: true,
+            id: 2,
+            name: "Facility name",
+            params: [],
+            required: true,
+            stateName: "name",
+            topic: "Facility general information",
+            type: "text",
+            validation: [],
+          }}
+          onChangeHandler={() => console.log("the dsadsadasdasdasdasdasds")}
+        />
       </View>
     </ScrollView>
   );
