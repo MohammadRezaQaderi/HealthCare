@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
-import { BarCodeScanner } from "expo-barcode-scanner";
+// import { BarCodeScanner } from "expo-barcode-scanner";
 import CustomButton from "../../components/CustomButton";
 
 export default function ScanQRScreen() {
@@ -8,10 +8,10 @@ export default function ScanQRScreen() {
   const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
+    // (async () => {
+    //   const { status } = await BarCodeScanner.requestPermissionsAsync();
+    //   setHasPermission(status === "granted");
+    // })();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
@@ -25,7 +25,6 @@ export default function ScanQRScreen() {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  console.log(hasPermission);
   return (
     <View style={styles.container}>
       <Text></Text>

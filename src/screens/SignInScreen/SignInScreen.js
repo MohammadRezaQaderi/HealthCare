@@ -7,14 +7,22 @@ import {
   Text,
 } from "react-native";
 import React, { useState } from "react";
-import Logo from "../../../assets/images/logo.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
-import axios from "axios";
-import { saveData, readData, removeItemValue } from "../../components/func";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
-import CustomInputForm from "../../../CustomInput";
+import axios from "axios";
+// Component Import
+import CustomButton from "../../components/CustomButton";
+import CustomInput from "../../components/CustomInput";
+// Icon and Image Import
+import Logo from "../../../assets/logo.png";
+// Functionality Import
+import {
+  saveData,
+  readData,
+  removeItemValue,
+  إ,
+} from "../../components/DataStorage";
+
 /**
  * This function is for the Loding format
  * @returns
@@ -44,7 +52,7 @@ function getInfoFromServer() {
             headers: { Authorization: token },
           })
           .then((response) => {
-            removeItemValue("facility-field").then(()=>"");
+            removeItemValue("facility-field").then(() => "");
             saveData("facility-field", response?.data).then(() => "");
           })
           .catch((error) => {
@@ -55,7 +63,7 @@ function getInfoFromServer() {
             headers: { Authorization: token },
           })
           .then((response) => {
-            removeItemValue("facilities").then(()=>"");
+            removeItemValue("facilities").then(() => "");
             saveData("facilities", response?.data).then(() => "");
           })
           .catch((error) => {
@@ -66,7 +74,7 @@ function getInfoFromServer() {
             headers: { Authorization: token },
           })
           .then((response) => {
-            removeItemValue("message-facility-list").then(()=>"");
+            removeItemValue("message-facility-list").then(() => "");
             saveData("message-facility-list", response?.data).then(() => "");
           })
           .catch((error) => {
@@ -75,13 +83,26 @@ function getInfoFromServer() {
         axios
           .get("http://" + url + "/message/", {
             headers: { Authorization: token },
+            params: { type: "sender" },
           })
           .then((response) => {
-            removeItemValue("messages").then(()=>"");
-            saveData("messages", response?.data).then(() => "");
+            removeItemValue("messages-sender").then(() => "");
+            saveData("messages-sender", response?.data).then(() => "");
           })
           .catch((error) => {
-            console.log("errors for get messages: ", error);
+            console.log("errors for get messages sender: ", error);
+          });
+        axios
+          .get("http://" + url + "/message/", {
+            headers: { Authorization: token },
+            params: { type: "reciever" },
+          })
+          .then((response) => {
+            removeItemValue("messages-reciever").then(() => "");
+            saveData("messages-reciever", response?.data).then(() => "");
+          })
+          .catch((error) => {
+            console.log("errors for get messages reciever: ", error);
           });
       });
     }
@@ -141,12 +162,12 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
             {({ handleSubmit, values }) => (
               <>
                 <Field
-                  component={CustomInputForm}
+                  component={CustomInput}
                   name="username"
                   placeholder="Username"
                 />
                 <Field
-                  component={CustomInputForm}
+                  component={CustomInput}
                   name="password"
                   placeholder="Password"
                   secureTextEntry

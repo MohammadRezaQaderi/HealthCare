@@ -1,12 +1,18 @@
-import { StyleSheet, ScrollView, Text, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  Text,
+  View,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-// import CustomButton from "../../../components/CustomButton";
-import Message from "../../../components/Notification/notification";
-import TableExample from "../../../components/DataTable";
 import { ActivityIndicator } from "react-native-paper";
-import { readData } from "../../../components/func";
-import { Row, Table } from "react-native-table-component";
+import { readData } from "../../../components/DataStorage";
+import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import CustomButton from "../../../components/CustomButton";
+import SelectInput from "../../../components/SelectInput/SelectInput";
+import MessageListTable from "../../../components/MessageListTable";
 
 const facilityHandleData = {
   tableHead: ["Sender", "Subject", "Body", "Date", "Read", "Edit"],
@@ -32,91 +38,109 @@ const facilityHandleData = {
   ],
 };
 
+const typeData = [
+  {
+    key: "sender",
+    value: "sender",
+  },
+  { key: "reciever", value: "reciever" },
+];
+
 const goToSendMessage = (setCurrentTab) => {
   setCurrentTab("Send Message");
 };
 
-const DataFormat = async (messages, setData) => {
-  let data_need = [];
-  console.log("start message config");
-  await messages.map((message, i) => {
-    data_need.push([
-      message["id"],
-      message["subject"],
-      message["body"].slice(0, 20),
-    ]);
-  });
-  setData(data_need);
+const DataFormat = async (messages, setData, type) => {
+  if (type == "reciever") {
+    let table = {
+      tableHead: ["Sender", "Subject", "Body", "Date", "Option"],
+      widthArr: [130, 180, 180, 120, 80],
+      tableData: [],
+    };
+    let data_need = [];
+    for (let index = 0; index < messages.length; index++) {
+      data_need.push([
+        messages[index]["sender"]["name"],
+        messages[index]["subject"],
+        messages[index]["body"].slice(0, 20),
+        messages[index]["updated_at"].slice(0, 10),
+        messages[index]["read"],
+      ]);
+    }
+    table.tableData = data_need;
+    setData(table);
+  }
+  if (type == "sender") {
+    let table = {
+      tableHead: ["Sender", "Subject", "Body", "Date", "Option"],
+      widthArr: [130, 180, 180, 120, 80],
+      tableData: [],
+    };
+    let data_need = [];
+    for (let index = 0; index < messages.length; index++) {
+      data_need.push([
+        messages[index]["sender"]["name"],
+        messages[index]["subject"],
+        messages[index]["body"].slice(0, 20),
+        messages[index]["updated_at"].slice(0, 10),
+        "true",
+      ]);
+    }
+    table.tableData = data_need;
+    setData(table);
+  }
 };
 
-const ListMessageScreen = ({ setCurrentTab }) => {
-  // const [status, setStatus] = useState(false);
+const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
+  const [checked, setChecked] = useState([]);
+  const [type, setType] = useState("sender");
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState(facilityHandleData);
-  // setData(facilityHandleData)
   useEffect(() => {
-    readData("messages").then((value) => {
-      if (value != null) {
-        let data = JSON.parse(value);
-        try {
-          setMessages(data);
-        } catch (e) {}
-        return (
-          <>
-            <Message type="success" message="::::))))" />
-          </>
-        );
-      } else {
-        return (
-          <Message type="warn" message="we didn`t have message-facility-list" />
-        );
-      }
-    });
-  }, []);
-  // useEffect(() => {
-  //   DataFormat(messages, setData);
-  //   setData(facilityHandleData)
-  // }, [messages]);
+    if (type == "reciever") {
+      readData("messages-reciever").then((value) => {
+        if (value != null) {
+          let data = JSON.parse(value);
+          try {
+            setMessages(data);
+          } catch (e) {}
+        } else {
+        }
+      });
+    }
+    if (type == "sender") {
+      readData("messages-sender").then((value) => {
+        if (value != null) {
+          let data = JSON.parse(value);
+          try {
+            setMessages(data);
+          } catch (e) {}
+        } else {
+        }
+      });
+    }
+  }, [type]);
+  useEffect(() => {
+    DataFormat(messages, setData, type);
+  }, [messages]);
   return (
     <ScrollView>
-      {data?.tableData.length > 0 ? (
-        <View style={styles.container}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "black",
-              paddingBottom: 10,
-            }}
-          >
-            Received or sent messages
-          </Text>
-          <ScrollView horizontal={true}>
-            <View>
-              <Table borderStyle={{}}>
-                <Row
-                  data={data?.tableHead}
-                  widthArr={data?.widthArr}
-                  style={styles.head}
-                  textStyle={styles.headText}
-                />
-              </Table>
-              <ScrollView>
-                <Table borderStyle={{}}>
-                  {data?.tableData.map((rowData, index) => (
-                    <Row
-                      key={index}
-                      data={rowData}
-                      widthArr={data?.widthArr}
-                      style={styles.rowSection}
-                      textStyle={styles.text}
-                    />
-                  ))}
-                </Table>
-              </ScrollView>
-            </View>
-          </ScrollView>
-        </View>
+      <SelectInput
+        data={typeData}
+        setSelected={setType}
+        type={"single"}
+        defaultOption={type}
+      />
+      {data?.tableData?.length > 0 ? (
+        <ScrollView horizontal={true}>
+          <MessageListTable
+            data={data}
+            setCurrentTab={setCurrentTab}
+            setDefaultValueMessage={setDefaultValueMessage}
+            type={type}
+            messages={messages}
+          ></MessageListTable>
+        </ScrollView>
       ) : (
         <>
           <ActivityIndicator
@@ -170,5 +194,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   text: { margin: 6, fontSize: 16, textAlign: "center" },
+  btn: { width: 58, height: 18, backgroundColor: "#78B7BB", borderRadius: 2 },
+  btnText: { textAlign: "center", color: "#fff" },
 });
 export default ListMessageScreen;

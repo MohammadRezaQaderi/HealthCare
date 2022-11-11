@@ -1,4 +1,3 @@
-// import { Form } from "react-bootstrap";
 import {
   FormControl,
   Input,
@@ -291,11 +290,11 @@ const DynamicInput = (props) => {
             </FormControl.Label>
             <Input type="text" placeholder={field.name} />
             {/* <FormControl.HelperText>
-            Must be atleast 6 characters.
-          </FormControl.HelperText> */}
+              Must be atleast 6 characters.
+            </FormControl.HelperText> */}
             {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            Atleast 6 characters are required.
-          </FormControl.ErrorMessage> */}
+              Atleast 6 characters are required.
+            </FormControl.ErrorMessage> */}
           </FormControl>
         </Box>
       </ScrollView>

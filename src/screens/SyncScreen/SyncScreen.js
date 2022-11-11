@@ -1,11 +1,11 @@
 import { View, StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
-import CustomButton from "../../../components/CustomButton";
+import CustomButton from "../../components/CustomButton";
 import {
   checkConnected,
   readData,
   removeItemValue,
-} from "../../../components/func";
+} from "../../components/DataStorage";
 
 const SyncScreen = ({}) => {
   const [connectionState, setConnectionState] = useState(false);

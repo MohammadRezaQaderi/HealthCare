@@ -11,29 +11,71 @@ import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
 import { Field, Formik } from "formik";
 import * as yup from "yup";
-import Message from "../../../components/Notification/notification";
-import {
-  FormControl,
-  Input,
-  Stack,
-  WarningOutlineIcon,
-  Box,
-  Center,
-  NativeBaseProvider,
-} from "native-base";
 import {
   checkConnected,
   readData,
   removeItemValue,
   saveData,
-} from "../../../components/func";
-import CustomInputForm from "../../../../CustomInput";
-import plus from "../../../../assets/images/plus.png";
-import minus from "../../../../assets/images/minus.png";
+} from "../../../components/DataStorage";
+import CustomInput from "../../../components/CustomInput";
+// import plus from "../../../../assets/images/plus.png";
+// import minus from "../../../../assets/images/minus.png";
 import Stepper from "react-native-stepper-ui";
 import DynamicInput from "../../../components/DynamicInput";
+import FacilityInput from "../../../components/FacilityInput /FacilityInput ";
+import { StepperContainer, StepView } from "@material.ui/react-native-stepper";
+import Input from "../../../components/Input/CustomInput";
 
-const AddFacilityScreen = ({}) => {
+const MyComponent = ({ facilityFeilds, state, setState }) => {
+  const views = [];
+  for (let i = 0; i < facilityFeilds.length; i++) {
+    views.push(
+      <ScrollView>
+        <View>
+          <Input
+            value={state}
+            setValue={setState}
+            placeholder={facilityFeilds[i].name}
+          />
+        </View>
+      </ScrollView>
+    );
+  }
+  return views;
+};
+
+const MyStepper = ({ topic, facilityFeilds, state, setState }) => {
+  const views = [];
+  for (let i = 0; i < topic?.length; i++) {
+    if (i === 1) {
+      views.push(
+        <StepView title={topic[i]} onNext={() => true}>
+          <MyComponent
+            facilityFeilds={facilityFeilds[topic[i]]}
+            state={state}
+            setState={setState}
+          />
+          {/* <Text> fuck</Text> */}
+        </StepView>
+      );
+    } else {
+      views.push(
+        <StepView title={topic[i]}>
+          <MyComponent
+            facilityFeilds={facilityFeilds[topic[i]]}
+            state={state}
+            setState={setState}
+          />
+          {/* <Text> asdasdsadsadsd</Text> */}
+        </StepView>
+      );
+    }
+  }
+  console.log("viies", views);
+  return views;
+};
+
+const AddFacilityScreen = ({ setDefaultValueFacility }) => {
   const [facilityShow, setFacilityShow] = useState(true);
   const [connectionState, setConnectionState] = useState(false);
   const [userShow, setUserShow] = useState(true);
@@ -44,8 +86,10 @@ const AddFacilityScreen = ({}) => {
   const [levels, setLevels] = useState([]);
   const [topic, setTopics] = useState([]);
   const [ff, setFF] = useState({});
+  const [content, setContent] = useState([]);
+  const [state, setState] = useState("");
+  const [facilityFeilds, setFacilityFeilds] = useState({});
   const [active, setActive] = useState(0);
-  let content = [];
   let data = {};
   useEffect(() => {
     readData("facility-field").then((value) => {
@@ -59,12 +103,22 @@ const AddFacilityScreen = ({}) => {
   useEffect(() => {
     if (dataflag) {
       let topicTemp = [];
+      let facilityFeildsTemp = {};
       for (let index = 0; index < ff?.related.length; index++) {
         if (!topicTemp.includes(ff?.related[index].topic)) {
           topicTemp.push(ff?.related[index].topic);
         }
       }
+      for (let index = 0; index < topicTemp.length; index++) {
+        facilityFeildsTemp[topicTemp[index]] = [];
+      }
+      for (let index = 0; index < ff?.related.length; index++) {
+        let temp = facilityFeildsTemp[ff?.related[index].topic];
+        temp.push(ff?.related[index]);
+        facilityFeildsTemp[ff?.related[index].topic] = temp;
+      }
       setTopics(topicTemp);
+      setFacilityFeilds(facilityFeildsTemp);
       let levelTemp = [];
       for (let index = 0; index < ff?.levels.length; index++) {
         levelTemp.push({
@@ -77,13 +131,6 @@ const AddFacilityScreen = ({}) => {
           maxpop: ff?.levels[index].maxpop,
         });
       }
-      setLevels(levelTemp);
-      topic.map((item) => {
-        console.log("====================================");
-        console.log(item);
-        console.log("====================================");
-        content.push(<MyComponent title={item} />);
-      });
     }
   }, [dataflag, ff]);
   const sendFacility = (values) => {
@@ -135,9 +182,9 @@ const AddFacilityScreen = ({}) => {
           saveData("send-facility", send_facility).then(() => "");
         }
       }
-      // return <Message type="success" message="Facility sent." />;
     });
   };
+
   const signUpValidationSchema = yup.object().shape({
     // subject: yup.string().required("Subjecr is required"),
   });
@@ -148,175 +195,21 @@ const AddFacilityScreen = ({}) => {
   };
   return (
     <ScrollView>
-      {/* <View style={{ marginVertical: 80 }}>
-        <Stepper
-          active={active}
-          content={content}
-          onNext={() => setActive((p) => p + 1)}
-          onBack={() => setActive((p) => p - 1)}
-          onFinish={() => Alert.alert("Finish")}
-        />
-      </View> */}
-      <View style={styles.root}>
-        {/* <Formik
-          initialValues={initialValues}
-          validationSchema={signUpValidationSchema}
-          onSubmit={(values, { resetForm }) => {
-            sendFacility(values);
-            resetForm({ values: initialValues });
-          }}
-        >
-          {({ handleSubmit, values }) => (
-            <>
-              <View style={styles.container}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    color: "black",
-                    flex: 1,
-                  }}
-                >
-                  Main Info
-                </Text>
-                <TouchableOpacity
-                  onPress={() => setFacilityShow((prev) => !prev)}
-                >
-                  <Image
-                    source={facilityShow ? plus : minus}
-                    style={styles.logo}
-                  />
-                </TouchableOpacity>
-              </View>
-              {!facilityShow && (
-                <>
-                  <Field
-                    component={CustomInputForm}
-                    name="name"
-                    placeholder="Facility name"
-                  />
-                </>
-              )}
-              <View style={styles.container}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    color: "black",
-                    flex: 1,
-                  }}
-                >
-                  User
-                </Text>
-                <TouchableOpacity onPress={() => setUserShow((prev) => !prev)}>
-                  <Image source={userShow ? plus : minus} style={styles.logo} />
-                </TouchableOpacity>
-              </View>
-              {!userShow && (
-                <>
-                  <Field
-                    component={CustomInputForm}
-                    name="username"
-                    placeholder="Username"
-                  />
-                </>
-              )}
-              <View style={styles.container}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    color: "black",
-                    flex: 1,
-                  }}
-                >
-                  Level
-                </Text>
-                <TouchableOpacity onPress={() => setLevelShow((prev) => !prev)}>
-                  <Image
-                    source={levelShow ? plus : minus}
-                    style={styles.logo}
-                  />
-                </TouchableOpacity>
-              </View>
-              {!levelShow && (
-                <>
-                  <Field
-                    component={CustomInputForm}
-                    name="username"
-                    placeholder="Username"
-                  />
-                  <Field
-                    component={CustomInputForm}
-                    name="username"
-                    placeholder="Username"
-                  />
-                  <Field
-                    component={CustomInputForm}
-                    name="username"
-                    placeholder="Username"
-                  />
-                </>
-              )}
-              <CustomButton onPress={handleSubmit} text={"Send"} />
-            </>
-          )}
-        </Formik> */}
-        {/* <Box alignItems="center">
-            <Box w="100%" maxWidth="300px">
-              <FormControl isRequired>
-                <Stack mx="4">
-                  <FormControl.Label>Password</FormControl.Label>
-                  <Input
-                    type="password"
-                    defaultValue="12345"
-                    placeholder="password"
-                  />
-                  <FormControl.HelperText>
-                    Must be atleast 6 characters.
-                  </FormControl.HelperText>
-                  <FormControl.ErrorMessage
-                    leftIcon={<WarningOutlineIcon size="xs" />}
-                  >
-                    Atleast 6 characters are required.
-                  </FormControl.ErrorMessage>
-                </Stack>
-              </FormControl>
-            </Box>
-          </Box> */}
-        {ff?.related?.map((field) => {
-          return (
-            <DynamicInput
-              field={field}
-              onChangeHandler={() => console.log("the dsadsadasdasdasdasdasds")}
+      {Object.keys(ff).length !== 0 ? (
+        <StepperContainer>
+          {
+            <MyStepper
+              topic={topic}
+              facilityFeilds={facilityFeilds}
+              state={state}
+              setState={setState}
             />
-          );
-        })}
-        <DynamicInput
-          field={{
-            active: true,
-            disabled: true,
-            id: 2,
-            name: "Facility name",
-            params: [],
-            required: true,
-            stateName: "name",
-            topic: "Facility general information",
-            type: "text",
-            validation: [],
-          }}
-          onChangeHandler={() => console.log("the dsadsadasdasdasdasdasds")}
-        />
-      </View>
+          }
+        </StepperContainer>
+      ) : (
+        <></>
+      )}
     </ScrollView>
-  );
-};
-
-const MyComponent = (props) => {
-  return (
-    <View>
-      <Text>{props.title}</Text>
-    </View>
   );
 };
 

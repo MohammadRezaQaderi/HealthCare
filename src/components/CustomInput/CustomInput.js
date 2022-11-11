@@ -1,33 +1,29 @@
-import { View, StyleSheet, TextInput } from "react-native";
 import React from "react";
+import { Text, TextInput, StyleSheet, View } from "react-native";
 
-const CustomInput = ({
-  value,
-  setValue,
-  placeholder,
-  secureTextEntry = false,
-  type = "Nothing",
-}) => {
+const CustomInput = (props) => {
+  const {
+    field: { name, onBlur, onChange, value },
+    form: { errors, touched, setFieldTouched },
+    ...inputProps
+  } = props;
+  const hasError = errors[name] && touched[name];
   return (
-    <View style={styles.container}>
-      {type == "message" ? (
+    <>
+      <View style={styles.container}>
         <TextInput
+          style={[styles.textInput, hasError && styles.errorInput]}
           value={value}
-          onChangeText={setValue}
-          placeholder={placeholder}
-          secureTextEntry={secureTextEntry}
-          style={styles.input1}
+          onChangeText={(text) => onChange(name)(text)}
+          onBlur={() => {
+            setFieldTouched(name);
+            onBlur(name);
+          }}
+          {...inputProps}
         />
-      ) : (
-        <TextInput
-          value={value}
-          onChangeText={setValue}
-          placeholder={placeholder}
-          secureTextEntry={secureTextEntry}
-          style={styles.input}
-        />
-      )}
-    </View>
+        {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
+      </View>
+    </>
   );
 };
 
@@ -38,20 +34,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 5,
   },
-  input: {
+  textInput: {
     borderColor: "gray",
     width: "100%",
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
+    height: 40,
+    width: "100%",
+    backgroundColor: "white",
+    borderColor: "gray",
   },
-  input1: {
-    borderColor: "gray",
-    width: "100%",
-    height: 150,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
+  errorText: {
+    fontSize: 10,
+    color: "red",
+  },
+  errorInput: {
+    borderColor: "red",
   },
 });
 

@@ -1,8 +1,9 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Table } from "react-native-table-component";
 import { ActivityIndicator } from "react-native-paper";
-
+import { readData } from "../../../components/DataStorage";
+import FacilityListTable from "../../../components/FacilityListTable";
 const facilityHandleData = {
   tableHead: [
     "Levels",
@@ -38,35 +39,57 @@ const subFacilityHandleData = {
     [4, "Level", 0, 0, 0],
   ],
 };
+const DataFormat = async (facility, setData) => {
+  let table = {
+    tableHead: [
+      "Levels",
+      "Level name",
+      "Total number of facilities",
+      "Total number of sub-facilities",
+      "Number of defined sub-level facilities",
+    ],
+    widthArr: [130, 180, 180, 120, 80],
+    tableData: [],
+  };
+  let data_need = [];
+  for (let index = 0; index < facility.length; index++) {
+    data_need.push([
+      facility[index]["level"] ? facility[index]["level"] : "N/A",
+      facility[index]["name"] ? facility[index]["name"] : "N/A",
+      facility[index]["typeimmservice"]
+        ? facility[index]["typeimmservice"]
+        : "N/A",
+      facility[index]["ownership"] ? facility[index]["ownership"] : "N/A",
+      facility[index]["loverlevelfac"]
+        ? facility[index]["loverlevelfac"]
+        : "N/A",
+    ]);
+  }
+  table.tableData = data_need;
+  setData(table);
+};
 
-const ListFacilityScreen = ({}) => {
+const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
   const [data, setData] = useState(facilityHandleData);
   const [subData, setSubData] = useState(subFacilityHandleData);
-
-  // useEffect(() => {
-  //   readData("facilities").then((value) => {
-
-  //     if (value != null) {
-  //       let data = JSON.parse(value);
-  //       try {
-  //         setData(data);
-  //       } catch (e) {}
-  //       return (
-  //         <>
-  //           <Message type="success" message="::::))))" />
-  //         </>
-  //       );
-  //     } else {
-  //       return (
-  //         <Message type="warn" message="we didn`t have message-facility-list" />
-  //       );
-  //     }
-  //   });
-  // }, []);
+  const [facility, setFacility] = useState([]);
+  useEffect(() => {
+    readData("facilities").then((value) => {
+      if (value != null) {
+        let data = JSON.parse(value);
+        try {
+          setFacility(data);
+        } catch (e) {}
+      } else {
+      }
+    });
+  }, []);
+  useEffect(() => {
+    DataFormat(facility, setData);
+  }, [facility]);
   return (
     <ScrollView>
-      {/* <TableExample /> */}
-      {data?.tableData.length > 0 ? (
+      {data?.tableData?.length > 0 ? (
         <View style={styles.container}>
           <Text
             style={{
@@ -141,7 +164,7 @@ const ListFacilityScreen = ({}) => {
           <Text
             style={{
               fontSize: 15,
-              fontWeight: "bold", 
+              fontWeight: "bold",
               color: "black",
               paddingBottom: 10,
             }}
@@ -149,7 +172,7 @@ const ListFacilityScreen = ({}) => {
             Sub facilities
           </Text>
           <ScrollView horizontal={true}>
-            <View>
+            {/* <View>
               <Table borderStyle={{}}>
                 <Row
                   data={subData?.tableHead}
@@ -171,7 +194,8 @@ const ListFacilityScreen = ({}) => {
                   ))}
                 </Table>
               </ScrollView>
-            </View>
+            </View> */}
+            <FacilityListTable data={subData} />
           </ScrollView>
         </View>
       ) : (

@@ -1,15 +1,17 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Button } from "react-native";
 import React from "react";
-import CustomButton from "../../components/CustomButton";
-import CustomInputForm from "../../../CustomInput";
-import { saveData } from "../../components/func";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+// Component Import
+import CustomButton from "../../components/CustomButton";
+import CustomInput from "../../components/CustomInput";
+// Functionality Import
+import { saveData } from "../../components/DataStorage";
 
 const URLScreen = ({ setUrlState }) => {
   const onPassPressed = (values) => {
-    let url = "http://" +  values.url+"/auth/urlCheck/"
+    let url = "http://" + values.url + "/auth/urlCheck/";
     axios
       .get(url)
       .then((response) => {
@@ -39,11 +41,12 @@ const URLScreen = ({ setUrlState }) => {
         onSubmit={(values, { resetForm }) => {
           onPassPressed(values);
           resetForm({ values: initialValues });
+          // showToast();
         }}
       >
         {({ handleSubmit, values }) => (
           <>
-            <Field component={CustomInputForm} name="url" placeholder="URL" />
+            <Field component={CustomInput} name="url" placeholder="URL" />
             <CustomButton onPress={handleSubmit} text={"Save URL"} />
           </>
         )}

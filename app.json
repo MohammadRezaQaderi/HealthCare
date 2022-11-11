@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Health Care",
-    "slug": "firstproject",
+    "name": "FirstProject",
+    "slug": "FirstProject",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

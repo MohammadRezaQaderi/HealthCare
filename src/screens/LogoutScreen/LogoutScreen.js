@@ -1,8 +1,11 @@
 import { View, StyleSheet, Image, useWindowDimensions } from "react-native";
 import React, { useState } from "react";
-import Logo from "../../../assets/images/logo.png";
+// Component Import
 import CustomButton from "../../components/CustomButton";
-import { removeItemValue } from "../../components/func";
+// Icon and Image Import
+import Logo from "../../../assets/logo.png";
+// Functionality Import
+import { removeItemValue } from "../../components/DataStorage";
 
 const LogoutScreen = ({ setLoggedIn, setCurrentTab }) => {
   const { height } = useWindowDimensions();
