@@ -25,21 +25,83 @@ import DynamicInput from "../../../components/DynamicInput";
 import FacilityInput from "../../../components/FacilityInput /FacilityInput ";
 import { StepperContainer, StepView } from "@material.ui/react-native-stepper";
 import Input from "../../../components/Input/CustomInput";
+import SelectInput from "../../../components/SelectInput/SelectInput";
+
+const DataFormating = (data, type) => {
+  let obj = [];
+  if (type === "key") {
+    data.map((item) => {
+      obj.push({ value: item.name, key: item.id });
+    });
+  }
+  if (type === "bool") {
+    obj = [
+      { value: "Yes", key: true },
+      { value: "No", key: false },
+    ];
+  }
+  return obj;
+};
 
 const MyComponent = ({ facilityFeilds, state, setState }) => {
   const views = [];
+
   for (let i = 0; i < facilityFeilds.length; i++) {
-    views.push(
-      <ScrollView>
-        <View>
-          <Input
-            value={state}
-            setValue={setState}
-            placeholder={facilityFeilds[i].name}
-          />
-        </View>
-      </ScrollView>
-    );
+    if (facilityFeilds[i].type === "text") {
+      views.push(
+        <ScrollView>
+          <View>
+            <Input
+              value={state}
+              setValue={setState}
+              placeholder={facilityFeilds[i].name}
+            />
+          </View>
+        </ScrollView>
+      );
+    }
+    if (facilityFeilds[i].type === "select") {
+      views.push(
+        <ScrollView>
+          <View>
+            <SelectInput
+              data={() => DataFormating(facilityFeilds[i]?.params, "key")}
+              setSelected={setState}
+              placeholder={facilityFeilds[i].name}
+              type={"single"}
+            />
+          </View>
+        </ScrollView>
+      );
+    }
+    if (facilityFeilds[i].type === "number") {
+      views.push(
+        <ScrollView>
+          <View>
+            <SelectInput
+              data={() => DataFormating(facilityFeilds[i]?.params, "key")}
+              setSelected={setState}
+              placeholder={facilityFeilds[i].name}
+              type={"single"}
+            />
+          </View>
+        </ScrollView>
+      );
+    }
+    if (facilityFeilds[i].type === "bool") {
+      views.push(
+        <ScrollView>
+          <View>
+            <SelectInput
+              data={() => DataFormating(facilityFeilds[i]?.params, "bool")}
+              setSelected={setState}
+              placeholder={facilityFeilds[i].name}
+              type={"single"}
+            />
+          </View>
+        </ScrollView>
+      );
+    }
   }
   return views;
 };
@@ -71,7 +133,6 @@ const MyStepper = ({ topic, facilityFeilds, state, setState }) => {
       );
     }
   }
-  console.log("viies", views);
   return views;
 };
 
@@ -131,6 +192,7 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
           maxpop: ff?.levels[index].maxpop,
         });
       }
+      setLevels(levelTemp);
     }
   }, [dataflag, ff]);
   const sendFacility = (values) => {
@@ -193,8 +255,32 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
     receivers: [],
     body: "",
   };
+  console.log("levels: ", levels);
   return (
     <ScrollView>
+      {/* {Object.keys(levels).length > 0 ? (
+        <View>
+          <Input
+            value={"Add Facility"}
+            setValue={setState}
+            placeholder={"Facility Name"}
+            disabled={false}
+          />
+          <Input
+            value={state}
+            setValue={setState}
+            placeholder={"Facility Name"}
+          />
+          <SelectInput
+            data={() => DataFormating(levels, "key")}
+            setSelected={setState}
+            placeholder={"Select Levels"}
+            type={"single"}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
       {Object.keys(ff).length !== 0 ? (
         <StepperContainer>
           {
@@ -208,7 +294,25 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
         </StepperContainer>
       ) : (
         <></>
-      )}
+      )} */}
+      <StepperContainer>
+        <StepView title="Intro" subTitle="The intro details">
+          <Text>Step 1 Contents</Text>
+        </StepView>
+        <StepView
+          title="Second"
+          onNext={() => true}
+          subTitle="Name and other details"
+        >
+          <Text>Step 2 Contents</Text>
+        </StepView>
+        <StepView title="Third Step" subTitle="Some lines">
+          <Text>Step 3 Contents …!</Text>
+        </StepView>
+        <StepView title="Last Step" subTitle="Finishing lines">
+          <Text>Step 4 Contents …!</Text>
+        </StepView>
+      </StepperContainer>
     </ScrollView>
   );
 };

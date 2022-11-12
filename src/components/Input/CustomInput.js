@@ -7,8 +7,8 @@ const Input = ({
   placeholder,
   secureTextEntry = false,
   type = "Nothing",
+  disabled = true,
 }) => {
-  console.log("======================================================");
   return (
     <View style={styles.container}>
       {type == "message" ? (
@@ -18,6 +18,8 @@ const Input = ({
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
           style={styles.input1}
+          selectTextOnFocus={disabled}
+          editable={disabled}
         />
       ) : (
         <TextInput
@@ -26,6 +28,8 @@ const Input = ({
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
           style={styles.input}
+          selectTextOnFocus={disabled}
+          editable={disabled}
         />
       )}
     </View>

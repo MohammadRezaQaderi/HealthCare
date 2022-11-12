@@ -3,7 +3,14 @@ import {
   MultipleSelectList,
   SelectList,
 } from "react-native-dropdown-select-list";
-const SelectInput = ({ data, setSelected, placeholder, type, defaultOption }) => {
+const SelectInput = ({
+  data,
+  setSelected,
+  placeholder,
+  type,
+  defaultOption,
+}) => {
+  console.log("data", data);
   if (type === "single") {
     return (
       <View style={styles.container}>
