@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import MapView from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
@@ -36,7 +37,7 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import { Form } from "react-bootstrap";
-import DynamicInput from "../components/DynamicInput";
+import DynamicInput from "../components/DynamicInput/DynamicInput";
 import {
   hasValidationError,
   timeValidationError,
@@ -51,16 +52,16 @@ import StepOperations from "../components/StepOperations";
 import { useEffect } from "react";
 import { seperator } from "../helpers/seperator";
 
-import {
-  MapContainer,
-  useMap,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+// import {
+//   MapContainer,
+//   useMap,
+//   TileLayer,
+//   Marker,
+//   Popup,
+//   useMapEvents,
+// } from "react-leaflet";
+// import L from "leaflet";
+// import "leaflet/dist/leaflet.css";
 import toast from "react-hot-toast";
 
 // const DataFormating = (data, type) => {
@@ -385,78 +386,78 @@ const parentFacilityField = {
   stateName: "parentName",
 };
 const center = [52.22977, 21.01178];
-delete L.Icon.Default.prototype._getIconUrl;
+// delete L.Icon.Default.prototype._getIconUrl;
 
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-});
-/**
- * @compoenent location marker compnent
- * @return {JSX} marker tag
- */
-function LocationMarker() {
-  const [position, setPosition] = useState(null);
-  const map = useMapEvents({
-    click() {
-      map.locate();
-      map.invalidateSize();
-    },
-    locationfound(e) {
-      setPosition(e.latlng);
-      map.flyTo(e.latlng, map.getZoom());
-    },
-  });
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+//   iconUrl: require("leaflet/dist/images/marker-icon.png"),
+//   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+// });
+// /**
+//  * @compoenent location marker compnent
+//  * @return {JSX} marker tag
+//  */
+// function LocationMarker() {
+//   const [position, setPosition] = useState(null);
+//   const map = useMapEvents({
+//     click() {
+//       map.locate();
+//       map.invalidateSize();
+//     },
+//     locationfound(e) {
+//       setPosition(e.latlng);
+//       map.flyTo(e.latlng, map.getZoom());
+//     },
+//   });
 
-  return position === null ? null : (
-    <Marker position={position}>
-      <Popup>You are here</Popup>
-    </Marker>
-  );
-}
-/**
- *
- * @param {*} props
- * @returns {JSX} get user cordinates from gps
- */
-const GetCoordinates = (props) => {
-  const map = useMap();
-  const handleClick = (e) => {
-    window.handleMapClick(e);
-  };
+//   return position === null ? null : (
+//     <Marker position={position}>
+//       <Popup>You are here</Popup>
+//     </Marker>
+//   );
+// }
+// /**
+//  *
+//  * @param {*} props
+//  * @returns {JSX} get user cordinates from gps
+//  */
+// const GetCoordinates = (props) => {
+//   const map = useMap();
+//   const handleClick = (e) => {
+//     window.handleMapClick(e);
+//   };
 
-  useEffect(() => {
-    if (!map) return;
-    const info = L.DomUtil.create("div", "legend");
+//   useEffect(() => {
+//     if (!map) return;
+//     const info = L.DomUtil.create("div", "legend");
 
-    const positon = L.Control.extend({
-      options: {
-        position: "bottomleft",
-      },
+//     const positon = L.Control.extend({
+//       options: {
+//         position: "bottomleft",
+//       },
 
-      onAdd: function () {
-        info.textContent = "Click on map too add location";
-        return info;
-      },
-    });
-    map.on("load", (e) => {
-      console.log("salam");
-    });
-    map.on("click", (e) => {
-      info.textContent = e.latlng;
-      handleClick(e);
-    });
+//       onAdd: function () {
+//         info.textContent = "Click on map too add location";
+//         return info;
+//       },
+//     });
+//     map.on("load", (e) => {
+//       console.log("salam");
+//     });
+//     map.on("click", (e) => {
+//       info.textContent = e.latlng;
+//       handleClick(e);
+//     });
 
-    map.addControl(new positon());
-  }, [map]);
+//     map.addControl(new positon());
+//   }, [map]);
 
-  return null;
-};
-/**
- *
- * @returns {JSX} return facility component
- */
+//   return null;
+// };
+// /**
+//  *
+//  * @returns {JSX} return facility component
+//  */
 function AddFacilityScreen() {
   const [activeStep, setActiveStep] = useState(0);
   const [fieldsValue, setFieldValue] = useState({});
@@ -997,44 +998,52 @@ function AddFacilityScreen() {
                         </div>
                         <div className="map">
                           {Current !== null && x1 && x2 && (
-                            <MapContainer
-                              center={[x1, x2]}
-                              zoom={10}
-                              scrollWheelZoom={true}
-                              style={{
-                                width: "100%",
-                                height: "450px",
-                                zIndex: "1",
+                            // <MapContainer
+                            //   center={[x1, x2]}
+                            //   zoom={10}
+                            //   scrollWheelZoom={true}
+                            //   style={{
+                            //     width: "100%",
+                            //     height: "450px",
+                            //     zIndex: "1",
+                            //   }}
+
+                            //   //   onClick={this.handlemapclick}
+                            // >
+                            //   <TileLayer
+                            //     {...{
+                            //       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                            //       width: 500,
+                            //     }}
+                            //   />
+
+                            //   <GetCoordinates
+                            //     change={handleMapClick}
+                            //     fields={fieldsValue}
+                            //     setFields={setFieldValue}
+                            //     map={map}
+                            //     setMap={setMap}
+                            //   />
+                            //   <>
+                            //     {map && (
+                            //       <Marker position={map} draggable={true}>
+                            //         <Popup position={map}>
+                            //           Current location:{" "}
+                            //           <pre>{JSON.stringify(map, null, 2)}</pre>
+                            //         </Popup>
+                            //       </Marker>
+                            //     )}
+                            //   </>
+                            //   <LocationMarker />
+                            // </MapContainer>
+                            <MapView
+                              initialRegion={{
+                                latitude: 37.78825,
+                                longitude: -122.4324,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
                               }}
-
-                              //   onClick={this.handlemapclick}
-                            >
-                              <TileLayer
-                                {...{
-                                  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                  width: 500,
-                                }}
-                              />
-
-                              <GetCoordinates
-                                change={handleMapClick}
-                                fields={fieldsValue}
-                                setFields={setFieldValue}
-                                map={map}
-                                setMap={setMap}
-                              />
-                              <>
-                                {map && (
-                                  <Marker position={map} draggable={true}>
-                                    <Popup position={map}>
-                                      Current location:{" "}
-                                      <pre>{JSON.stringify(map, null, 2)}</pre>
-                                    </Popup>
-                                  </Marker>
-                                )}
-                              </>
-                              <LocationMarker />
-                            </MapContainer>
+                            />
                           )}
                         </div>
                         <button
