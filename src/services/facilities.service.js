@@ -1,6 +1,5 @@
 import ApiManager from "./axios-config";
 import authHeader from "./auth-header";
-import axios from "axios";
 
 const API_URL = " https://tlsapi.invgap.org/facilities/";
 
