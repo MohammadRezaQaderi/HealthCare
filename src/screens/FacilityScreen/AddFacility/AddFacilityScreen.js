@@ -109,48 +109,29 @@ const MyComponent = ({ facilityFeilds, state, setState }) => {
 const MyStepper = ({ topic, facilityFeilds, state, setState }) => {
   const views = [];
   for (let i = 0; i < topic?.length; i++) {
-    if (i === 1) {
-      views.push(
-        <StepView title={topic[i]} onNext={() => true}>
-          <MyComponent
-            facilityFeilds={facilityFeilds[topic[i]]}
-            state={state}
-            setState={setState}
-          />
-          {/* <Text> fuck</Text> */}
-        </StepView>
-      );
-    } else {
-      views.push(
-        <StepView title={topic[i]}>
-          <MyComponent
-            facilityFeilds={facilityFeilds[topic[i]]}
-            state={state}
-            setState={setState}
-          />
-          {/* <Text> asdasdsadsadsd</Text> */}
-        </StepView>
-      );
-    }
+    views.push(
+      <ScrollView>
+        <Text> {topic[i]} </Text>
+        <MyComponent
+          facilityFeilds={facilityFeilds[topic[i]]}
+          state={state}
+          setState={setState}
+        />
+      </ScrollView>
+    );
   }
   return views;
 };
 
 const AddFacilityScreen = ({ setDefaultValueFacility }) => {
-  const [facilityShow, setFacilityShow] = useState(true);
   const [connectionState, setConnectionState] = useState(false);
-  const [userShow, setUserShow] = useState(true);
-  const [levelShow, setLevelShow] = useState(true);
-  const [relateShow, setRelateShow] = useState(true);
   const [dataflag, setDataFlag] = useState(false);
   const [formData, setFormData] = useState({});
   const [levels, setLevels] = useState([]);
   const [topic, setTopics] = useState([]);
   const [ff, setFF] = useState({});
-  const [content, setContent] = useState([]);
-  const [state, setState] = useState("");
+  const [state, setState] = useState({});
   const [facilityFeilds, setFacilityFeilds] = useState({});
-  const [active, setActive] = useState(0);
   let data = {};
   useEffect(() => {
     readData("facility-field").then((value) => {
@@ -258,7 +239,7 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
   console.log("levels: ", levels);
   return (
     <ScrollView>
-      {/* {Object.keys(levels).length > 0 ? (
+      {Object.keys(levels).length > 0 ? (
         <View>
           <Input
             value={"Add Facility"}
@@ -294,25 +275,7 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
         </StepperContainer>
       ) : (
         <></>
-      )} */}
-      <StepperContainer>
-        <StepView title="Intro" subTitle="The intro details">
-          <Text>Step 1 Contents</Text>
-        </StepView>
-        <StepView
-          title="Second"
-          onNext={() => true}
-          subTitle="Name and other details"
-        >
-          <Text>Step 2 Contents</Text>
-        </StepView>
-        <StepView title="Third Step" subTitle="Some lines">
-          <Text>Step 3 Contents …!</Text>
-        </StepView>
-        <StepView title="Last Step" subTitle="Finishing lines">
-          <Text>Step 4 Contents …!</Text>
-        </StepView>
-      </StepperContainer>
+      )}
     </ScrollView>
   );
 };

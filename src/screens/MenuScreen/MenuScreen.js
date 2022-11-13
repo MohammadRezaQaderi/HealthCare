@@ -19,6 +19,7 @@ import AddMessageScreen from "../MessageScreen/AddMessage/AddMessageScreen";
 import ListMessageScreen from "../MessageScreen/ListMessage/ListMessageScreen";
 import AddFacilityScreen from "../FacilityScreen/AddFacility/AddFacilityScreen";
 import ListFacilityScreen from "../FacilityScreen/ListFacility/ListFacilityScreen";
+import ListItemScreen from "../ItemScreen/ListItem/ListItemScreen";
 
 // Icon and Image Import
 import home from "../../../assets/home.png";
@@ -35,7 +36,8 @@ import addFacility from "../../../assets/add-facility.png";
 import listFacility from "../../../assets/list-facility.png";
 import sendMessage from "../../../assets/send-message.png";
 import listMessage from "../../../assets/list-message.png";
-
+import addItem from "../../../assets/add-list.png";
+import listItem from "../../../assets/list-item.png";
 const MenuScreen = ({
   checkState,
   urlState,
@@ -53,6 +55,7 @@ const MenuScreen = ({
   const [messageSelect, setMessageSelect] = useState(false);
   const [defaultValueMessage, setDefaultValueMessage] = useState({});
   const [defaultValueFacility, setDefaultValueFacility] = useState({});
+  const [defaultValueItem, setDefaultValueItem] = useState({});
   // To get the curretn Status of menu ...
   const [showMenu, setShowMenu] = useState(false);
   // Animated Properties...
@@ -118,6 +121,26 @@ const MenuScreen = ({
                   itemSelect,
                   [setItemSelect, setFacilitySelect, setMessageSelect],
                   true
+                )}
+                {TabButton(
+                  currentTab,
+                  setCurrentTab,
+                  "Add Item",
+                  addItem,
+                  true,
+                  itemSelect,
+                  "no",
+                  false
+                )}
+                {TabButton(
+                  currentTab,
+                  setCurrentTab,
+                  "Item List",
+                  listItem,
+                  true,
+                  itemSelect,
+                  "no",
+                  false
                 )}
                 {TabButton(
                   currentTab,
@@ -302,12 +325,14 @@ const MenuScreen = ({
                 ) : currentTab == "Facility List" ? (
                   <ListFacilityScreen
                     setCurrentTab={setCurrentTab}
-                    setDefaultValueFacility={setDefaultValueFacility}
+                    setDefaultValueItem={setDefaultValueItem}
                   />
                 ) : currentTab == "New Facility" ? (
                   <AddFacilityScreen
-                    defaultValueFacility ={defaultValueFacility}
+                    defaultValueFacility={defaultValueFacility}
                   />
+                ) : currentTab == "Item List" ? (
+                  <ListItemScreen defaultValueFacility={defaultValueFacility} />
                 ) : (
                   // : currentTab == "New Facility" ? (
                   //   <AddFacility />

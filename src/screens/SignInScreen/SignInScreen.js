@@ -70,6 +70,17 @@ function getInfoFromServer() {
             console.log("errors for get facilities: ", error);
           });
         axios
+          .get("http://" + url + "/item/", {
+            headers: { Authorization: token },
+          })
+          .then((response) => {
+            removeItemValue("item").then(() => "");
+            saveData("item", response?.data).then(() => "");
+          })
+          .catch((error) => {
+            console.log("errors for get item: ", error);
+          });
+        axios
           .get("http://" + url + "/message/helper", {
             headers: { Authorization: token },
           })

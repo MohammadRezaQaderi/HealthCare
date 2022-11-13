@@ -9,11 +9,10 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
-export default class MessageListTable extends Component {
+export default class ItemListTable extends Component {
   constructor(props) {
     super(props);
     this.state = props.data;
-    this.setChecked = props.setChecked;
     this.checked = [];
   }
 
@@ -32,37 +31,29 @@ export default class MessageListTable extends Component {
         </View>
       </TouchableOpacity>
     );
-    const readButton = (rowData, data, index) =>
-      !data ? (
+    const readButton = (data, index) =>
+      data ? (
         <View>
-          <RadioButton
-            value="Readed"
-            status="checked"
-            // disabled={true}
-          ></RadioButton>
+          <RadioButton value="Readed" status="checked"></RadioButton>
         </View>
       ) : (
         <View>
           <RadioButton
             value="Readed"
             status="unchecked"
-            onPress={() => {
-              this.checked.push(rowData[5]);
-              this.setChecked(this.checked);
-              this.state.tableData[index][4] = false;
-              console.log(this.checked);
-            }}
+            onPress={() => {}}
           ></RadioButton>
         </View>
       );
 
     return (
       // <View style={styles.container}>
-      <Table borderStyle={{ borderColor: "transparent" }}>
+      <Table borderStyle={{}}>
         <Row
           data={state.tableHead}
           style={styles.head}
           textStyle={styles.text}
+          widthArr={state.widthArr}
         />
         {state.tableData.map((rowData, index) => (
           <TableWrapper key={index} style={styles.rowSection}>
@@ -70,17 +61,15 @@ export default class MessageListTable extends Component {
               <Cell
                 key={cellIndex}
                 data={
-                  cellIndex === 5 && this.props.type === "reciever"
-                    ? ""
-                    : cellIndex === 4 && this.props.type === "sender"
-                    ? element(cellData, index)
-                    : cellIndex === 4 && this.props.type === "reciever"
-                    ? readButton(rowData, cellData, index)
-                    : cellData
+                  // cellIndex === 4 && this.props.type === "sender"
+                  //   ? element(cellData, index)
+                  //   : cellIndex === 4 && this.props.type === "reciever"
+                  //   ? readButton(cellData, index)
+                  //   :
+                  cellData
                 }
-                textStyle={
-                  (styles.text, { maxWidth: this.props.data?.widthArr[index] })
-                }
+                // widthArr={state.widthArr}
+                textStyle={(styles.text, { min: state?.widthArr[index] })}
               />
             ))}
           </TableWrapper>

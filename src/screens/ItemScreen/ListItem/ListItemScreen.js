@@ -3,51 +3,48 @@ import React, { useEffect, useState } from "react";
 import { Row, Table } from "react-native-table-component";
 import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../../components/DataStorage";
-import FacilityListTable from "../../../components/FacilityListTable";
-const facilityHandleData = {
+// import ItemListTable from "../../../components/ItemListTable";
+const itemHandleData = {
   tableHead: [
-    "Levels",
-    "Level name",
-    "Total number of facilities",
-    "Total number of sub-facilities",
-    "Number of defined sub-level facilities",
+    "Item Class",
+    "Items Category",
+    "Code",
+    "Manufacturer",
+    "Last Changed on",
+    "Tool Box",
   ],
-  widthArr: [160, 180, 120, 120, 120],
+  widthArr: [160, 180, 120, 120, 120, 120],
   tableData: [
-    ["EXP0100001", "DC PEV", 1, "PR", 0.1, "2022/10/20"],
-    ["EXP0100003", "DS KOUMASSI", 2, "LD", 0.1, "2022/10/19"],
-    ["EXP0200007", "DS Port Bouet", 2, "LD", 0.4, "2022/10/19"],
-    ["EXP0200001", "DS MARCORY", 2, "LD", 0.2, "2022/10/19"],
-    ["EXP0200002", "DS Grd BASSAME", 2, "LD", 0.7, "2022/10/20"],
+    ["EXP0100001", "DC PEV", 1, "PR", 0.1, "2022/10/20", "True"],
+    ["EXP0100003", "DS KOUMASSI", 2, "LD", 0.1, "2022/10/19", "True"],
+    ["EXP0200007", "DS Port Bouet", 2, "LD", 0.4, "2022/10/19", "True"],
+    ["EXP0200001", "DS MARCORY", 2, "LD", 0.2, "2022/10/19", "True"],
+    ["EXP0200002", "DS Grd BASSAME", 2, "LD", 0.7, "2022/10/20", "True"],
   ],
 };
 
-const DataFormat = async (facility, setData) => {
+const DataFormat = async (items, setData) => {
   let table = {
     tableHead: [
-      "Levels",
-      "Facility name",
-      "Total number of facilities",
+      "Item Class",
+      "Items Category",
       "Code",
-      "Type",
+      "Manufacturer",
       "Last Changed on",
       "Tool Box",
     ],
-    widthArr: [80, 180, 180, 180, 180, 180, 250],
+    widthArr: [160, 180, 120, 120, 120, 120],
     tableData: [],
   };
   let data_need = [];
-  for (let index = 0; index < facility.length; index++) {
+  for (let index = 0; index < items.length; index++) {
     data_need.push([
-      facility[index]["level"] ? facility[index]["level"] : "N/A",
-      facility[index]["name"] ? facility[index]["name"] : "N/A",
-      facility[index]["populationnumber"]
-        ? facility[index]["populationnumber"]
-        : "N/A",
-      facility[index]["code"] ? facility[index]["code"] : "N/A",
-      facility[index]["type"] ? facility[index]["type"] : "N/A",
-      facility[index]["updated_at"]
-        ? facility[index]["updated_at"].slice(0, 10)
+      items[index]["item_class"] ? items[index]["item_class"] : "N/A",
+      items[index]["item_type"] ? items[index]["item_type"] : "N/A",
+      items[index]["code"] ? items[index]["code"] : "N/A",
+      items[index]["Manufacturer"] ? items[index]["Manufacturer"] : "N/A",
+      items[index]["updated_at"]
+        ? items[index]["updated_at"].slice(0, 10)
         : "N/A",
       "True",
     ]);
@@ -56,23 +53,23 @@ const DataFormat = async (facility, setData) => {
   setData(table);
 };
 
-const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
-  const [data, setData] = useState(facilityHandleData);
-  const [facility, setFacility] = useState([]);
+const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
+  const [data, setData] = useState(itemHandleData);
+  const [item, setItem] = useState([]);
   useEffect(() => {
-    readData("facilities").then((value) => {
+    readData("item").then((value) => {
       if (value != null) {
         let data = JSON.parse(value);
         try {
-          setFacility(data);
+          setItem(data);
         } catch (e) {}
       } else {
       }
     });
   }, []);
   useEffect(() => {
-    DataFormat(facility, setData);
-  }, [facility]);
+    DataFormat(item, setData);
+  }, [item]);
   return (
     <ScrollView>
       {data?.tableData?.length > 0 ? (
@@ -85,7 +82,7 @@ const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
               paddingBottom: 20,
             }}
           >
-            Facilities
+            Items
           </Text>
 
           <Text
@@ -96,7 +93,7 @@ const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
               paddingBottom: 10,
             }}
           >
-            Facilities owned separated by levels
+            Items owned separated by levels
           </Text>
           <ScrollView horizontal={true}>
             <View>
@@ -148,4 +145,4 @@ const styles = StyleSheet.create({
   },
   text: { margin: 6, fontSize: 16, textAlign: "center" },
 });
-export default ListFacilityScreen;
+export default ListItemScreen;
