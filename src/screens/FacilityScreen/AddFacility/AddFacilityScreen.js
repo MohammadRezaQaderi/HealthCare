@@ -258,7 +258,7 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
   console.log("levels: ", levels);
   return (
     <ScrollView>
-      {/* {Object.keys(levels).length > 0 ? (
+      {Object.keys(levels).length > 0 ? (
         <View>
           <Input
             value={"Add Facility"}
@@ -294,8 +294,8 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
         </StepperContainer>
       ) : (
         <></>
-      )} */}
-      <StepperContainer>
+      )}
+      {/* <StepperContainer>
         <StepView title="Intro" subTitle="The intro details">
           <Text>Step 1 Contents</Text>
         </StepView>
@@ -312,7 +312,7 @@ const AddFacilityScreen = ({ setDefaultValueFacility }) => {
         <StepView title="Last Step" subTitle="Finishing lines">
           <Text>Step 4 Contents …!</Text>
         </StepView>
-      </StepperContainer>
+      </StepperContainer> */}
     </ScrollView>
   );
 };

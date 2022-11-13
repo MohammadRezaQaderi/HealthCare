@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { readData, saveData, clearAll } from "./src/components/DataStorage";
 import ExampleFour from "./src/components/MessageListTable";
 import MenuScreen from "./src/screens/MenuScreen/MenuScreen";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 // import Toast from "react-native-toast-message";
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false, retry: 0 } },
+});
 
 export default function App() {
   /**
@@ -33,15 +38,17 @@ export default function App() {
   }, []);
   return (
     // <Button title="=" onPress={showToast} />
-    <MenuScreen
-      checkState={checkState}
-      urlState={urlState}
-      setUrlState={setUrlState}
-      loggedIn={loggedIn}
-      setLoggedIn={setLoggedIn}
-      currentTab={currentTab}
-      setCurrentTab={setCurrentTab}
-    />
+    <QueryClientProvider client={queryClient}>
+      <MenuScreen
+        checkState={checkState}
+        urlState={urlState}
+        setUrlState={setUrlState}
+        loggedIn={loggedIn}
+        setLoggedIn={setLoggedIn}
+        currentTab={currentTab}
+        setCurrentTab={setCurrentTab}
+      />
+    </QueryClientProvider>
   );
 }
 // import React, { Component } from "react";
