@@ -27,8 +27,8 @@ import FacilityInput from "../../../components/FacilityInput /FacilityInput ";
 import { StepperContainer, StepView } from "@material.ui/react-native-stepper";
 import Input from "../../../components/Input/CustomInput";
 import SelectInput from "../../../components/SelectInput/SelectInput";
+import { Form } from "validate-form-in-expo-style";
 
-import React, { useState } from "react";
 import { useQuery } from "react-query";
 import FacilitiesService from "../services/facilities.service";
 import { useHistory, useParams } from "react-router-dom";
@@ -45,7 +45,6 @@ import {
 import { isRelatedFieldOk, relatedFields } from "../helpers/related-field";
 import { isRelatedFieldOkReq } from "../helpers/related-field-req";
 
-import Map from "../settings/Map";
 import { Trans } from "react-i18next";
 import { separator } from "../helpers/separator";
 import StepOperations from "../components/StepOperations";
@@ -835,308 +834,169 @@ function AddFacilityScreen() {
 
   const selectedLevel = levels.find((level) => level.id === fieldsValue.level);
   return (
-    <form onSubmit={onSaveHandler}>
-      <h3 className="page-title mb-3">
-        <Trans>Facility information</Trans>
-      </h3>
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body pb-3">
-            <div className="row pb-4" style={{ overflow: "auto" }}>
-              <Stepper activeStep={activeStep}>
-                {Object.keys(facilityFields).map((topic, index) => {
-                  return (
-                    <Step key={topic}>
-                      <StepLabel style={{ width: "max-content" }}>
-                        <Trans>{topic}</Trans>
-                      </StepLabel>
-                    </Step>
-                  );
-                })}
-              </Stepper>
-            </div>
-            <StepOperations
-              handleBack={handleBack}
-              handleNext={handleNext}
-              activeStep={activeStep}
-              id={id}
-              stepsLength={Object.keys(facilityFields).length - 1}
-              isNextDisabled={Object.keys(fieldErrors).length > 0}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body pb-3">
-            <div className="row ">
-              <Form.Group className="row mb-0">
-                <label
-                  className={`col-sm-4 text-right`}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    lineHeight: "1.4",
-                    textAlign: "right",
-                  }}
-                >
-                  <Trans>Parent facility</Trans>:
-                </label>
-                <div className={"col-sm-8"}>
-                  <DynamicInput
-                    field={parentFacilityField}
-                    defaultValue={fieldsValue["parentName"]}
-                  />
-                </div>
-              </Form.Group>
-            </div>
-            <div className="row">
-              <Form.Group className="row mb-0 mt-3">
-                <label
-                  className={`col-sm-4 text-right control-label`}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    lineHeight: "1.4",
-                    textAlign: "right",
-                  }}
-                >
-                  <Trans>Facility Name</Trans>:
-                </label>
-                <div className={"col-sm-8"}>
-                  <DynamicInput
-                    field={facilityNameField}
-                    defaultValue={fieldsValue["name"]}
-                    onChangeHandler={onChangeHandler}
-                  />
-                </div>
-                {fieldErrors["name"] && (
-                  <div className="row">
-                    <div className="col-sm-4"></div>
-                    <div className="col-sm-8">
-                      <p className="my-1 ml-2 text-danger">
-                        {fieldErrors["name"]}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </Form.Group>
-            </div>
+    <ScrollView>
+      <View>
+      <Form onSubmit={onSaveHandler}>
+         <View>
+        <Text>
+          <Trans>Facility information</Trans>
+        </Text>
+        </View>
+        <View>
+          <DynamicInput
+            field={parentFacilityField}
+            defaultValue={fieldsValue["parentName"]}
+          />
+          <DynamicInput
+            field={facilityNameField}
+            defaultValue={fieldsValue["name"]}
+            onChangeHandler={onChangeHandler}
+          />
+          <DynamicInput
+            field={levelField}
+            defaultValue={fieldsValue["level"]}
+            onChangeHandler={onChangeHandler}
+          />
+          {fieldErrors["level"] && (
+   
+            <Text >
+              {fieldErrors["level"]}
+            </Text>
+       
+          )}
+        </View>
+          <View>
+              {Object.values(facilityFields)[activeStep]?.map((field) => {
+                if (!isRelatedFieldOk(field.stateName, fieldsValue)) {
+                  return null;
+                }
 
-            <div className="row mt-3">
-              <Form.Group className="row mb-0">
-                <label
-                  className={`col-sm-4 text-right control-label`}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    lineHeight: "1.4",
-                    textAlign: "right",
-                  }}
-                >
-                  <Trans>Levels</Trans>:
-                </label>
-                <div className={"col-sm-8"}>
-                  <DynamicInput
-                    field={levelField}
-                    defaultValue={fieldsValue["level"]}
-                    onChangeHandler={onChangeHandler}
-                  />
-                </div>
-                {fieldErrors["level"] && (
-                  <div className="row">
-                    <div className="col-sm-4"></div>
-                    <div className="col-sm-8">
-                      <p className="my-1 ml-2 text-danger">
-                        {fieldErrors["level"]}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </Form.Group>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body">
-            {Object.values(facilityFields)[activeStep]?.map((field) => {
-              if (!isRelatedFieldOk(field.stateName, fieldsValue)) {
-                return null;
-              }
+                const hasRequiredError = !!fieldErrors[field.stateName];
+                return (
+                  <View key={field.stateName}>
+                  
+                      {field.stateName === "gpsCordinate" ? (
+                        <View>
+                            {Current !== null && x1 && x2 && (
+                              // <MapContainer
+                              //   center={[x1, x2]}
+                              //   zoom={10}
+                              //   scrollWheelZoom={true}
+                              //   style={{
+                              //     width: "100%",
+                              //     height: "450px",
+                              //     zIndex: "1",
+                              //   }}
 
-              const hasRequiredError = !!fieldErrors[field.stateName];
-              return (
-                <Form.Group className="row mb-0" key={field.name}>
-                  <label
-                    className={`col-sm-4  ${
-                      field.required ? "control-label" : ""
-                    }`}
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      alignItems: "center",
-                      lineHeight: "1.4",
-                      textAlign: "right",
-                    }}
-                  >
-                    {field.name}
-                  </label>
-                  <div className="col-sm-8">
-                    {field.stateName === "gpsCordinate" ? (
-                      <div className="map  ">
-                        <div className="mb-2">
-                          <Form.Control
-                            type="text"
-                            disabled
-                            value={fieldsValue[field.stateName]}
+                              //   //   onClick={this.handlemapclick}
+                              // >
+                              //   <TileLayer
+                              //     {...{
+                              //       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              //       width: 500,
+                              //     }}
+                              //   />
+
+                              //   <GetCoordinates
+                              //     change={handleMapClick}
+                              //     fields={fieldsValue}
+                              //     setFields={setFieldValue}
+                              //     map={map}
+                              //     setMap={setMap}
+                              //   />
+                              //   <>
+                              //     {map && (
+                              //       <Marker position={map} draggable={true}>
+                              //         <Popup position={map}>
+                              //           Current location:{" "}
+                              //           <pre>{JSON.stringify(map, null, 2)}</pre>
+                              //         </Popup>
+                              //       </Marker>
+                              //     )}
+                              //   </>
+                              //   <LocationMarker />
+                              // </MapContainer>
+                              <MapView
+                                initialRegion={{
+                                  latitude: 37.78825,
+                                  longitude: -122.4324,
+                                  latitudeDelta: 0.0922,
+                                  longitudeDelta: 0.0421,
+                                }}
+                              />
+                            )}
+                     
+                          <Button
+                            // className="btn btn-primary mt-2 w-50"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigator.geolocation.getCurrentPosition(
+                                (pos) => {
+                                  const { latitude, longitude } = pos.coords;
+                                  console.log(pos);
+                                  const data = {
+                                    latlng: {
+                                      lat: latitude,
+                                      lng: longitude,
+                                    },
+                                  };
+                                  setMap(data.latlng);
+                                  handleMapClick(data);
+                                },
+                                () => {},
+                                { enableHighAccuracy: true }
+                              );
+                            }}
+                          >
+                            <Text>Get current location</Text>
+                          </Button>
+                    
+                            </View>
+                      ) : (
+                        <View>
+                          <DynamicInput
+                            field={field}
+                            onChangeHandler={onChangeHandler}
+                            defaultValue={fieldsValue[field.stateName]}
+                            separator={
+                              field.stateName === "childrennumber" ||
+                              field.stateName === "loverlevelfac" ||
+                              field.stateName === "populationnumber"
+                            }
                           />
-                        </div>
-                        <div className="map">
-                          {Current !== null && x1 && x2 && (
-                            // <MapContainer
-                            //   center={[x1, x2]}
-                            //   zoom={10}
-                            //   scrollWheelZoom={true}
-                            //   style={{
-                            //     width: "100%",
-                            //     height: "450px",
-                            //     zIndex: "1",
-                            //   }}
-
-                            //   //   onClick={this.handlemapclick}
-                            // >
-                            //   <TileLayer
-                            //     {...{
-                            //       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                            //       width: 500,
-                            //     }}
-                            //   />
-
-                            //   <GetCoordinates
-                            //     change={handleMapClick}
-                            //     fields={fieldsValue}
-                            //     setFields={setFieldValue}
-                            //     map={map}
-                            //     setMap={setMap}
-                            //   />
-                            //   <>
-                            //     {map && (
-                            //       <Marker position={map} draggable={true}>
-                            //         <Popup position={map}>
-                            //           Current location:{" "}
-                            //           <pre>{JSON.stringify(map, null, 2)}</pre>
-                            //         </Popup>
-                            //       </Marker>
-                            //     )}
-                            //   </>
-                            //   <LocationMarker />
-                            // </MapContainer>
-                            <MapView
-                              initialRegion={{
-                                latitude: 37.78825,
-                                longitude: -122.4324,
-                                latitudeDelta: 0.0922,
-                                longitudeDelta: 0.0421,
-                              }}
-                            />
-                          )}
-                        </div>
-                        <button
-                          className="btn btn-primary mt-2 w-50"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            navigator.geolocation.getCurrentPosition(
-                              (pos) => {
-                                const { latitude, longitude } = pos.coords;
-                                console.log(pos);
-                                const data = {
-                                  latlng: {
-                                    lat: latitude,
-                                    lng: longitude,
-                                  },
-                                };
-                                setMap(data.latlng);
-                                handleMapClick(data);
-                              },
-                              () => {},
-                              { enableHighAccuracy: true }
-                            );
-                          }}
-                        >
-                          Get current location
-                        </button>
-                      </div>
-                    ) : (
-                      <DynamicInput
-                        field={field}
-                        onChangeHandler={onChangeHandler}
-                        defaultValue={fieldsValue[field.stateName]}
-                        separator={
-                          field.stateName === "childrennumber" ||
-                          field.stateName === "loverlevelfac" ||
-                          field.stateName === "populationnumber"
-                        }
-                      />
-                    )}
-                    <br />
-                    {JSON.parse(localStorage.getItem("country"))[
-                      "poptarget"
-                    ] === "General population" &&
-                      field.stateName === "populationnumber" &&
-                      selectedLevel && (
-                        <p>
-                          range: {separator(selectedLevel?.minpop)} -{" "}
-                          {separator(selectedLevel?.maxpop)}
-                        </p>
+                          </View>
                       )}
-                    {JSON.parse(localStorage.getItem("country"))[
-                      "poptarget"
-                    ] === "Under-1 Population" &&
-                      field.stateName === "childrennumber" &&
-                      selectedLevel && (
-                        <p>
-                          range: {separator(selectedLevel?.minpop)} -{" "}
-                          {separator(selectedLevel?.maxpop)}
-                        </p>
-                      )}
-                  </div>
-                  {hasRequiredError && (
-                    <div className="row">
-                      <div className="col-sm-4"></div>
-                      <div className="col-sm-8">
-                        <p className="my-1 ml-2 text-danger">
-                          <Trans>{fieldErrors[field.stateName]}</Trans>
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                  <hr className="my-3" />
-                </Form.Group>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      <div className="mt-3 mb-3">
-        <div className="card">
-          <div className="card-body py-2">
-            <StepOperations
-              handleBack={handleBack}
-              handleNext={handleNext}
-              activeStep={activeStep}
-              id={id}
-              stepsLength={Object.keys(facilityFields).length - 1}
-              isNextDisabled={Object.keys(fieldErrors).length > 0}
-            />
-          </div>
-        </div>
-      </div>
-    </form>
+                      {JSON.parse(localStorage.getItem("country"))[
+                        "poptarget"
+                      ] === "General population" &&
+                        field.stateName === "populationnumber" &&
+                        selectedLevel && (
+                          <Text>
+                            range: {separator(selectedLevel?.minpop)} -{" "}
+                            {separator(selectedLevel?.maxpop)}
+                          </Text>
+                        )}
+                      {JSON.parse(localStorage.getItem("country"))[
+                        "poptarget"
+                      ] === "Under-1 Population" &&
+                        field.stateName === "childrennumber" &&
+                        selectedLevel && (
+                          <Text>
+                            range: {separator(selectedLevel?.minpop)} -{" "}
+                            {separator(selectedLevel?.maxpop)}
+                          </Text>
+                        )}
+                    {hasRequiredError && (
+                       <View>
+                           <Text> <Trans>{fieldErrors[field.stateName]}</Trans></Text>
+                        </View>
+                           )}
+                  </View> 
+              )})}
+          </View>
+      </Form>
+      </View>
+    </ScrollView>
   );
 }
 
