@@ -179,9 +179,93 @@ const DynamicInput = (props) => {
   }
   // validation for field if it have data comes from Backend APi
   const validation = field.validation?.[0];
-  return (
+  if (field.type === "number") {
+    const validateNames = [];
+    const texts=[];
+    let keyboardType ="";
     
-    <Form.Control
+    if(validation.float){
+      validateNames.push("isFloat");
+      texts.push("Please enter a valid Float number");
+      keyboardType = "decimal-pad";
+    }
+    else{
+      texts.push("Please enter a valid number");
+      validateNames.push("isNumber");
+      keyboardType = "number-pad";
+    }
+    if (validation.min !==-1) {
+      validateNames.push("minNumber:"+validation.min);
+      texts.push("Please enter a number greater than or equal to "+validation.min);
+    }
+    if (validation.max !== -1) {
+      validateNames.push("maxNumber:" + validation.max);
+      texts.push("Please enter a number less than or equal to "+validation.max);
+    }
+    if (field.required) {
+      validateNames.push("required");
+      texts.push("This field is required");
+    }
+   
+
+
+    return (
+      <InputText
+        name={field.name}
+        label={field.name}
+        onKeyPress={(e) => {
+          e.persist();
+          if (field.type === "number") {
+            if (validation && validation?.float) {
+              // if field is number and have float validation
+              // just allow numbers and decimal point come from language
+              if (numericKeys.indexOf(e.key) === -1) {
+                e.preventDefault();
+                return;
+              }
+            } else if (validation && validation?.float === false) {
+              // if field is number and have not float validation
+              if (num1.indexOf(e.key) === -1) {
+                e.preventDefault();
+                return;
+              }
+            }
+          }
+          // change the decimal pointing to selected language
+          onChangeHandler(e.target.value, field);
+        }}
+        keyboardType="numeric"
+        placeholder="textfield with floating label"
+        validateNames={validateNames}
+        errorMessages={texts}
+        value={defaultValue}
+        type="text"
+        editable={field.active ? field.active : !field.disabled}
+        id={`field-${field.id}`}
+        leftIcon={<FontAwesome name="user-o" color="#0A3055" size={20} />}
+        invalidIcon={<Feather name="alert-circle" color="red" size={20} />}
+        validIcon={<Feather name="check-circle" color="green" size={20} />}
+        labelStyle={styles.labelStyle}
+        style={[styles.inputStyle]}
+        containerStyle={styles.inputContainerStyle}
+        floatingTopValue={hp("1%")}
+        floatingFontSize={hp("0.5%")}
+        onChange={(e, target, text) => onChangeHandler(text, field)}
+        onBlur={(e) => {
+          e.persist();
+          // check for seperator
+          if (separator) {
+            const formatted = thousandSeparator(e.target.value);
+            onChangeHandler(formatted, field);
+          }
+        }}
+      />
+    );
+  }
+  return (
+    <InputText
+      name={field.name}
+      label={field.name}
       onKeyPress={(e) => {
         e.persist();
         if (field.type === "number") {
@@ -203,22 +287,23 @@ const DynamicInput = (props) => {
         // change the decimal pointing to selected language
         onChangeHandler(e.target.value, field);
       }}
-      lang="en-US"
-      onChange={(e) => onChangeHandler(e.target.value, field)}
+      keyboardType="numeric"
+      placeholder="textfield with floating label"
+      validateNames={field.required ? ["required"] : []}
+      errorMessages={["This field is required"]}
       value={defaultValue}
-      className="form-control"
+      type="text"
+      editable={field.active ? field.active : !field.disabled}
       id={`field-${field.id}`}
-      disabled={field.active ? !field.active : field.disabled}
-      min={validation && validation?.min !== -1 ? validation.min : undefined}
-      max={validation && validation?.max !== -1 ? validation.max : undefined}
-      step={
-        validation && validation?.float
-          ? Math.pow(0.1, validation.floating).toFixed(validation.floating)
-          : undefined
-      }
-      maxLength={
-        validation && validation?.digits !== -1 ? validation.digits : undefined
-      }
+      leftIcon={<FontAwesome name="user-o" color="#0A3055" size={20} />}
+      invalidIcon={<Feather name="alert-circle" color="red" size={20} />}
+      validIcon={<Feather name="check-circle" color="green" size={20} />}
+      labelStyle={styles.labelStyle}
+      style={[styles.inputStyle]}
+      containerStyle={styles.inputContainerStyle}
+      floatingTopValue={hp("1%")}
+      floatingFontSize={hp("0.5%")}
+      onChange={(e, target, text) => onChangeHandler(text, field)}
       onBlur={(e) => {
         e.persist();
         // check for seperator
@@ -228,6 +313,53 @@ const DynamicInput = (props) => {
         }
       }}
     />
+    // <Form.Control
+    //   onKeyPress={(e) => {
+    //     e.persist();
+    //     if (field.type === "number") {
+    //       if (validation && validation?.float) {
+    //         // if field is number and have float validation
+    //         // just allow numbers and decimal point come from language
+    //         if (numericKeys.indexOf(e.key) === -1) {
+    //           e.preventDefault();
+    //           return;
+    //         }
+    //       } else if (validation && validation?.float === false) {
+    //         // if field is number and have not float validation
+    //         if (num1.indexOf(e.key) === -1) {
+    //           e.preventDefault();
+    //           return;
+    //         }
+    //       }
+    //     }
+    //     // change the decimal pointing to selected language
+    //     onChangeHandler(e.target.value, field);
+    //   }}
+    //   lang="en-US"
+    //   onChange={(e,target,text) => onChangeHandler(text, field)}
+    //   value={defaultValue}
+    //   className="form-control"
+    //   id={`field-${field.id}`}
+    //   disabled={field.active ? !field.active : field.disabled}
+    //   min={validation && validation?.min !== -1 ? validation.min : undefined}
+    //   max={validation && validation?.max !== -1 ? validation.max : undefined}
+    //   step={
+    //     validation && validation?.float
+    //       ? Math.pow(0.1, validation.floating).toFixed(validation.floating)
+    //       : undefined
+    //   }
+    //   maxLength={
+    //     validation && validation?.digits !== -1 ? validation.digits : undefined
+    //   }
+    //   onBlur={(e) => {
+    //     e.persist();
+    //     // check for seperator
+    //     if (separator) {
+    //       const formatted = thousandSeparator(e.target.value);
+    //       onChangeHandler(formatted, field);
+    //     }
+    //   }}
+    // />
   );
 };
 
@@ -247,6 +379,30 @@ const styles = StyleSheet.create({
   TableText: {
     margin: 10,
   },
+  inputStyle: {
+        color: constants.white,
+        paddingTop: hp('1%'),
+    },
+     inputContainerStyle: {
+        paddingBottom: hp('1%'),
+        paddingTop: hp('1.3%'),
+        borderWidth: 2,
+        borderBottomWidth: 2,
+        // borderColor: "#333333",
+        // borderBottomColor: "#333333",
+        borderColor: constants.primaryColor,
+        borderBottomColor: constants.primaryColor,
+        borderRadius: 15
+    },
+    inputIconStyle: {
+        marginHorizontal: 10,
+        fontSize: hp('2.3%'),
+        backgroundColor: "#333333",
+        borderRadius: 5,
+        alignSelf: "center",
+        paddingHorizontal: hp('0.2%'),
+        paddingVertical: hp('0.1%'),
+    }
 });
 
 export default DynamicInput;
