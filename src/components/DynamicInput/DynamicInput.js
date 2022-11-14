@@ -57,37 +57,35 @@ const DynamicInput = (props) => {
     // we need to hard code the other_service becouse just this select is multiple choice
     if (field.stateName !== "other_services") {
       return (
-        <Form.Control
-          onChange={(e) => onChangeHandler(e.target.value, field)}
-          // defaultValue={defaultValue}
-          className="form-control form-select"
-          as="select"
-          disabled={field.active ? !field.active : field.disabled}
-          id={`field-${field.id}`}
-        >
-          <Translation>
-            {(t, { i18n }) => (
-              <option i18n value="" selected>
-                {t("Please select")}
-              </option>
-            )}
-          </Translation>
-          {field.params.map((param) => (
-            <option
-              disabled={
-                param.enabled
+      
+        <Picker
+  selectedValue={defaultValue}
+  enabled={field.active ? field.active : !field.disabled}
+  onValueChange={(itemValue, itemIndex) =>{
+    onChangeHandler(itemValue, field)}
+  }>
+  <Picker.Item label="Please select" value="" />
+
+   {field.params.map((param) => {
+    const disabled=param.enabled
                   ? !param.enabled
                   : param.active
                   ? !param.active
                   : !param.enable
-              }
+    if(disabled){
+      return null
+    }
+   return (
+            <Picker.Item
+            label= {param.name || param.describe}
+             
               value={param.id}
-              selected={parseInt(defaultValue) === param.id ? true : false}
-            >
-              {param.name || param.describe}
-            </option>
-          ))}
-        </Form.Control>
+        
+            />
+             
+          )
+            })}
+</Picker>
       );
     } else {
       const options = [];
@@ -158,53 +156,19 @@ const DynamicInput = (props) => {
   if (field.type === "bool") {
     return (
       <>
-        <Form.Control
-          onChange={(e) => onChangeHandler(e.target.value === "true", field)}
-          // defaultValue={defaultValue}
-          className="form-control form-select"
-          as="select"
-          disabled={field.active ? !field.active : field.disabled}
+        <Picker
+          selectedValue={defaultValue}
+          enabled={field.active ? field.active : !field.disabled}
           id={`field-${field.id}`}
+          onValueChange={(itemValue, itemIndex) => {
+            onChangeHandler(itemValue === "true", field);
+          }}
         >
-          <Translation>
-            {(t, { i18n }) => (
-              <>
-                <option
-                  i18n
-                  value=""
-                  selected={
-                    defaultValue === null || defaultValue === undefined
-                      ? true
-                      : false
-                  }
-                  disabled
-                >
-                  {t("Please select")}
-                </option>
-                <option
-                  selected={
-                    defaultValue !== null && defaultValue !== undefined
-                      ? defaultValue
-                      : false
-                  }
-                  value={true}
-                >
-                  {t("Yes")}
-                </option>
-                <option
-                  selected={
-                    defaultValue !== null && defaultValue !== undefined
-                      ? !defaultValue
-                      : false
-                  }
-                  value={false}
-                >
-                  {t("No")}
-                </option>
-              </>
-            )}
-          </Translation>
-        </Form.Control>
+          <Picker.Item label="Please select" value="" />
+          <Picker.Item label="Yes" value={true} />
+          <Picker.Item label="No" value={false} />
+        </Picker>
+     
       </>
     );
   }
