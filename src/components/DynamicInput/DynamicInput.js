@@ -5,6 +5,7 @@ import { default as ReactSelect } from "react-select";
 import { Picker } from "@react-native-picker/picker";
 import { Translation, Trans } from "react-i18next";
 import i18n from "../../i18n";
+import {  InputText } from "validate-form-in-expo-style";
 import { useState } from "react";
 /**
  * define two constant for numbers input type
@@ -179,6 +180,7 @@ const DynamicInput = (props) => {
   // validation for field if it have data comes from Backend APi
   const validation = field.validation?.[0];
   return (
+    
     <Form.Control
       onKeyPress={(e) => {
         e.persist();

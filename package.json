@@ -38,7 +38,8 @@
     "react-native-toast-message": "^2.1.5",
     "validate-form-in-expo-style": "^1.0.9",
     "validator": "^13.7.0",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@expo/vector-icons": "^13.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
