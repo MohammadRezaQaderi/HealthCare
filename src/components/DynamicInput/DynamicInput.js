@@ -107,36 +107,31 @@ const DynamicInput = (props) => {
             : false;
         if (!disabled) {
           options.push({
-            label: field.params[i].name || field.params[i].describe,
-            value: field.params[i].id,
+            name: field.params[i].name || field.params[i].describe,
+            id: field.params[i].id,
           });
         }
         if (selecteds) {
           selecteda.push({
-            label: field.params[i].name || field.params[i].describe,
-            value: field.params[i].id,
+            name: field.params[i].name || field.params[i].describe,
+            id: field.params[i].id,
           });
         }
       }
 
       return (
-        <ReactSelect
-          options={options}
-          isMulti
-          closeMenuOnSelect={false}
-          hideSelectedOptions={false}
-          components={{
-            Option,
-          }}
-          // add all others selected options to this option
-          onChange={(e) => {
+        <MultiSelect
+          hideTags
+          items={options}
+          uniqueKey="id"
+          onSelectedItemsChange={(e) => {
             console.log(e);
             let x = [];
             let y = "";
             if (e !== null) {
               for (let i = 0; i < e.length; i++) {
-                x.push(e[i].value);
-                y += e[i].value;
+                x.push(e[i].id);
+                y += e[i].id;
               }
               setSelected(e);
               selecteda = e;
@@ -147,9 +142,52 @@ const DynamicInput = (props) => {
               selecteda = [];
             }
           }}
-          allowSelectAll={true}
-          value={selected.length > 0 ? selected : selecteda}
+          selectedItems={selecteda}
+          selectText="Pick Items"
+          searchInputPlaceholderText="Search Items..."
+          onChangeInput={ (text)=> console.log(text)}
+          altFontFamily="ProximaNova-Light"
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="name"
+          searchInputStyle={{ color: '#CCC' }}
+          submitButtonColor="#CCC"
+          submitButtonText="Submit"
         />
+        // <ReactSelect
+        //   options={options}
+        //   isMulti
+        //   closeMenuOnSelect={false}
+        //   hideSelectedOptions={false}
+        //   components={{
+        //     Option,
+        //   }}
+        //   // add all others selected options to this option
+        //   onChange={(e) => {
+        //     console.log(e);
+        //     let x = [];
+        //     let y = "";
+        //     if (e !== null) {
+        //       for (let i = 0; i < e.length; i++) {
+        //         x.push(e[i].value);
+        //         y += e[i].value;
+        //       }
+        //       setSelected(e);
+        //       selecteda = e;
+        //       onChangeHandler(y, field);
+        //     } else {
+        //       onChangeHandler("", field);
+        //       setSelected([]);
+        //       selecteda = [];
+        //     }
+        //   }}
+        //   allowSelectAll={true}
+        //   value={selected.length > 0 ? selected : selecteda}
+        // />
       );
     }
   }
