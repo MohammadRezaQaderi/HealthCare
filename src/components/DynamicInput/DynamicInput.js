@@ -1,5 +1,13 @@
 // import { Form } from "react-bootstrap";
 import { separator as thousandSeparator } from "../../helpers/separator";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 // import { components } from "react-select";
 // import { default as ReactSelect } from "react-select";
 import { Picker } from "@react-native-picker/picker";
