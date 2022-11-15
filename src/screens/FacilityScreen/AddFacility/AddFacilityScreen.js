@@ -22,7 +22,7 @@ import CustomInput from "../../../components/CustomInput";
 // import plus from "../../../../assets/images/plus.png";
 // import minus from "../../../../assets/images/minus.png";
 import Stepper from "react-native-stepper-ui";
-import DynamicInput from "../../../components/DynamicInput";
+// import DynamicInput from "../../../components/DynamicInput";
 import FacilityInput from "../../../components/FacilityInput /FacilityInput ";
 import { StepperContainer, StepView } from "@material.ui/react-native-stepper";
 import Input from "../../../components/Input/CustomInput";
@@ -30,26 +30,26 @@ import SelectInput from "../../../components/SelectInput/SelectInput";
 import { Form } from "validate-form-in-expo-style";
 
 import { useQuery } from "react-query";
-import FacilitiesService from "../services/facilities.service";
-import { useHistory, useParams } from "react-router-dom";
-import Spinner from "../shared/Spinner";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import { Form } from "react-bootstrap";
-import DynamicInput from "../components/DynamicInput/DynamicInput";
+import FacilitiesService from "../../../services/facilities.service.js";
+// import { useHistory, useParams } from "react-router-dom";
+import Spinner from "../../../components/Loading/Spinner";
+// import Stepper from "@mui/material/Stepper";
+// import Step from "@mui/material/Step";
+// import StepLabel from "@mui/material/StepLabel";
+// import { Form } from "react-bootstrap";
+import DynamicInput from "../../../components/DynamicInput/DynamicInput";
 import {
   hasValidationError,
   timeValidationError,
-} from "../helpers/validation-checker";
-import { isRelatedFieldOk, relatedFields } from "../helpers/related-field";
-import { isRelatedFieldOkReq } from "../helpers/related-field-req";
+} from "../../../helpers/validation-checker";
+import { isRelatedFieldOk, relatedFields } from "../../../helpers/related-field";
+import { isRelatedFieldOkReq } from "../../../helpers/related-field-req";
 
 import { Trans } from "react-i18next";
-import { separator } from "../helpers/separator";
-import StepOperations from "../components/StepOperations";
-import { useEffect } from "react";
-import { seperator } from "../helpers/seperator";
+import { separator } from "../../../helpers/separator";
+// import StepOperations from "../components/StepOperations";
+// import { useEffect } from "react";r
+import { seperator } from "../../../helpers/seperator";
 
 // import {
 //   MapContainer,
@@ -61,7 +61,7 @@ import { seperator } from "../helpers/seperator";
 // } from "react-leaflet";
 // import L from "leaflet";
 // import "leaflet/dist/leaflet.css";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";r
 
 // const DataFormating = (data, type) => {
 //   let obj = [];

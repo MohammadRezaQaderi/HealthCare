@@ -4,7 +4,8 @@ import { readData, saveData, clearAll } from "./src/components/DataStorage";
 import ExampleFour from "./src/components/MessageListTable";
 import MenuScreen from "./src/screens/MenuScreen/MenuScreen";
 import { QueryClient, QueryClientProvider } from "react-query";
-import "./i18n";
+import Toast from "react-native-toast-message";
+// import "./i18n";
 
 // import Toast from "react-native-toast-message";
 const queryClient = new QueryClient({
@@ -49,6 +50,7 @@ export default function App() {
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
       />
+      <Toast />
     </QueryClientProvider>
   );
 }

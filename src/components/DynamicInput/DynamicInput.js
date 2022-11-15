@@ -1,10 +1,10 @@
-import { Form } from "react-bootstrap";
-import { separator as thousandSeparator } from "../helpers/separator";
-import { components } from "react-select";
-import { default as ReactSelect } from "react-select";
+// import { Form } from "react-bootstrap";
+import { separator as thousandSeparator } from "../../helpers/separator";
+// import { components } from "react-select";
+// import { default as ReactSelect } from "react-select";
 import { Picker } from "@react-native-picker/picker";
-import { Translation, Trans } from "react-i18next";
-import i18n from "../../i18n";
+// import { Translation, Trans } from "react-i18next";
+// import i18n from "../../i18n";
 import {  InputText } from "validate-form-in-expo-style";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useState } from "react";
