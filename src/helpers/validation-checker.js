@@ -2,7 +2,7 @@ import { separator } from "../helpers/separator";
 import { seperator } from "../helpers/seperator";
 export const hasValidationError = (value, validation) => {
   if (typeof value !== "string" && typeof value !== "number") return false;
-
+  console.log(typeof value)
   const _value = value.replaceAll(" ", "");
   if (validation === undefined || !_value) return false;
   if (validation.min !== -1 && validation.min > _value) {

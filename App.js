@@ -5,6 +5,7 @@ import ExampleFour from "./src/components/MessageListTable";
 import MenuScreen from "./src/screens/MenuScreen/MenuScreen";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Toast from "react-native-toast-message";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import "./i18n";
 
 // import Toast from "react-native-toast-message";
@@ -33,24 +34,26 @@ export default function App() {
     readData("token").then((token) => {
       if (token != null) {
         setLoggedIn(true);
-        setCurrentTab("Scan QR");
+        setCurrentTab("New Facility");
       }
     });
     setCheckState(true);
   }, []);
   return (
-    // <Button title="=" onPress={showToast} />
-    <QueryClientProvider client={queryClient}>
-      <MenuScreen
-        checkState={checkState}
-        urlState={urlState}
-        setUrlState={setUrlState}
-        loggedIn={loggedIn}
-        setLoggedIn={setLoggedIn}
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-      />
-      <Toast />
-    </QueryClientProvider>
+   
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <MenuScreen
+          checkState={checkState}
+          urlState={urlState}
+          setUrlState={setUrlState}
+          loggedIn={loggedIn}
+          setLoggedIn={setLoggedIn}
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+        />
+        <Toast />
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

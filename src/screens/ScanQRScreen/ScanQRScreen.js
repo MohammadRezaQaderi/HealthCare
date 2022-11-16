@@ -159,8 +159,8 @@ export default function ScanQRScreen() {
         <>
           <ActivityIndicator
             size="large"
-            color="black"
-            style={{ padding: 20 }}
+            color="red"
+            style={{ padding: 0,marginTop:100 }}
           />
           <Text style={{ textAlign: "center" }}>the data get from server</Text>
         </>

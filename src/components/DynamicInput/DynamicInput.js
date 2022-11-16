@@ -7,7 +7,12 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  Dimensions,
+  PixelRatio
 } from "react-native";
+import SelectDropdown from "react-native-select-dropdown";
+import constants from "expo-constants";
+
 // import { components } from "react-select";
 // import { default as ReactSelect } from "react-select";
 import { Picker } from "@react-native-picker/picker";
@@ -16,6 +21,7 @@ import { Picker } from "@react-native-picker/picker";
 import {  InputText } from "validate-form-in-expo-style";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useState } from "react";
+import React from "react";
 /**
  * define two constant for numbers input type
  * @param  {number} numericKeys numbers with floating point
@@ -30,6 +36,14 @@ const num1 = "0123456789";
  * @param  {string} props opyions of selectt
  * component for multi select options 
  */
+const hp = (heightPercent) => {
+  const elemHeight =
+    typeof heightPercent === "number"
+      ? heightPercent
+      : parseFloat(heightPercent);
+
+  return PixelRatio.roundToNearestPixel((Dimensions.screenHeight * elemHeight) / 100);
+};
 const Option = (props) => {
   return (
     <div>
@@ -66,37 +80,40 @@ const DynamicInput = (props) => {
   if (field.type === "select") {
     // we need to hard code the other_service becouse just this select is multiple choice
     if (field.stateName !== "other_services") {
-      return (
-      
-        <Picker
-  selectedValue={defaultValue}
-  enabled={field.active ? field.active : !field.disabled}
-  onValueChange={(itemValue, itemIndex) =>{
-    onChangeHandler(itemValue, field)}
-  }>
-  <Picker.Item label="Please select" value="" />
-
-   {field.params.map((param) => {
-    const disabled=param.enabled
+      const data=[];
+      field.params.map((param) => {
+            const disabled=param.enabled
                   ? !param.enabled
                   : param.active
                   ? !param.active
                   : !param.enable
-    if(disabled){
-      return null
-    }
-   return (
-            <Picker.Item
-            label= {param.name || param.describe}
-             
-              value={param.id}
-        
-            />
-             
-          )
-            })}
-</Picker>
+                if(!disabled){
+                  data.push({ value: param.name, key: param.id });
+                }
+      });
+
+
+    
+      return (
+        <SelectDropdown
+          data={data}
+          defaultButtonText={field.name}
+          onSelect={(selectedItem, index) => {
+            onChangeHandler(selectedItem.key.toString(), field);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            // text represented after item is selected
+            // if data array is an array of objects then return selectedItem.property to render after item is selected
+            return selectedItem.value;
+          }}
+          rowTextForSelection={(item, index) => {
+            // text represented for each item in dropdown
+            // if data array is an array of objects then return item.property to represent item in dropdown
+            return item.value;
+          }}
+        />
       );
+//         
     } else {
       const options = [];
       let selecteda = [];
@@ -154,16 +171,17 @@ const DynamicInput = (props) => {
           selectedItems={selecteda}
           selectText="Pick Items"
           searchInputPlaceholderText="Search Items..."
-          onChangeInput={ (text)=> console.log(text)}
+          onChangeInput={(text) => console.log(text)}
           altFontFamily="ProximaNova-Light"
           tagRemoveIconColor="#CCC"
           tagBorderColor="#CCC"
           tagTextColor="#CCC"
+          key={field.id}
           selectedItemTextColor="#CCC"
           selectedItemIconColor="#CCC"
           itemTextColor="#000"
           displayKey="name"
-          searchInputStyle={{ color: '#CCC' }}
+          searchInputStyle={{ color: "#CCC" }}
           submitButtonColor="#CCC"
           submitButtonText="Submit"
         />
@@ -202,9 +220,31 @@ const DynamicInput = (props) => {
   }
 // check for boolean type
   if (field.type === "bool") {
+    const data =[]
+    data.push({ value: "Please select", key: "" });
+    data.push({ value: "Yes", key: true });
+    data.push({ value: "No", key: false });
+
     return (
       <>
-        <Picker
+        <SelectDropdown
+          data={data}
+          defaultButtonText={field.name}
+          onSelect={(selectedItem, index) => {
+            onChangeHandler(selectedItem.key.toString(), field);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            // text represented after item is selected
+            // if data array is an array of objects then return selectedItem.property to render after item is selected
+            return selectedItem.value;
+          }}
+          rowTextForSelection={(item, index) => {
+            // text represented for each item in dropdown
+            // if data array is an array of objects then return item.property to represent item in dropdown
+            return item.value;
+          }}
+        />
+        {/* <Picker
           selectedValue={defaultValue}
           enabled={field.active ? field.active : !field.disabled}
           id={`field-${field.id}`}
@@ -213,17 +253,16 @@ const DynamicInput = (props) => {
           }}
         >
           <Picker.Item label="Please select" value="" />
-          <Picker.Item label="Yes" value={true} />
-          <Picker.Item label="No" value={false} />
-        </Picker>
-     
+          <Picker.Item label="Yes" value={true} key="xx" />
+          <Picker.Item label="No" value={false} key="xy" />
+        </Picker> */}
       </>
     );
   }
   // change the decimal pointing to selected language
-  if ((i18n.language != "en") & (i18n.language != "ar")) {
-    numericKeys = "0123456789,:";
-  }
+  // if ((i18n.language != "en") & (i18n.language != "ar")) {
+  //   numericKeys = "0123456789,:";
+  // }
   // validation for field if it have data comes from Backend APi
   const validation = field.validation?.[0];
   if (field.type === "number") {
@@ -260,6 +299,7 @@ const DynamicInput = (props) => {
       <InputText
         name={field.name}
         label={field.name}
+        key={field.id}
         onKeyPress={(e) => {
           e.persist();
           if (field.type === "number") {
@@ -282,7 +322,7 @@ const DynamicInput = (props) => {
           onChangeHandler(e.target.value, field);
         }}
         keyboardType="numeric"
-        placeholder="textfield with floating label"
+        placeholder={field.name}
         validateNames={validateNames}
         errorMessages={texts}
         value={defaultValue}
@@ -313,6 +353,7 @@ const DynamicInput = (props) => {
     <InputText
       name={field.name}
       label={field.name}
+
       onKeyPress={(e) => {
         e.persist();
         if (field.type === "number") {
@@ -334,10 +375,10 @@ const DynamicInput = (props) => {
         // change the decimal pointing to selected language
         onChangeHandler(e.target.value, field);
       }}
-      keyboardType="numeric"
-      placeholder="textfield with floating label"
+      placeholder={field.name}
       validateNames={field.required ? ["required"] : []}
-      errorMessages={["This field is required"]}
+      errorMessages={
+        field.required ? ["required"] : []      }
       value={defaultValue}
       type="text"
       editable={field.active ? field.active : !field.disabled}
@@ -427,29 +468,29 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   inputStyle: {
-        color: constants.white,
-        paddingTop: hp('1%'),
-    },
-     inputContainerStyle: {
-        paddingBottom: hp('1%'),
-        paddingTop: hp('1.3%'),
-        borderWidth: 2,
-        borderBottomWidth: 2,
-        // borderColor: "#333333",
-        // borderBottomColor: "#333333",
-        borderColor: constants.primaryColor,
-        borderBottomColor: constants.primaryColor,
-        borderRadius: 15
-    },
-    inputIconStyle: {
-        marginHorizontal: 10,
-        fontSize: hp('2.3%'),
-        backgroundColor: "#333333",
-        borderRadius: 5,
-        alignSelf: "center",
-        paddingHorizontal: hp('0.2%'),
-        paddingVertical: hp('0.1%'),
-    }
+    color: constants.white,
+    paddingTop: 5,
+  },
+  inputContainerStyle: {
+    paddingBottom: 5,
+    paddingTop: 5,
+    borderWidth: 2,
+    borderBottomWidth: 2,
+    // borderColor: "#333333",
+    // borderBottomColor: "#333333",
+    borderColor: constants.primaryColor,
+    borderBottomColor: constants.primaryColor,
+    borderRadius: 15,
+  },
+  inputIconStyle: {
+    marginHorizontal: 10,
+    fontSize: hp("2.3%"),
+    backgroundColor: "#333333",
+    borderRadius: 5,
+    alignSelf: "center",
+    paddingHorizontal: hp("0.2%"),
+    paddingVertical: hp("0.1%"),
+  },
 });
 
 export default DynamicInput;
