@@ -5,6 +5,7 @@ import {
   Image,
   Button,
   Text,
+  Dimensions,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
@@ -513,45 +514,52 @@ function AddFacilityScreen() {
 
       //   return defaultData;
       // }
+       readData("country").then((country) => {
+         console.log(country);
+         setCountry(country);
+       });
       const params = {
         // id: id,
       };
-
       const res = {}
+     
       const result = { ...res.data, defaultData };
       result["populationnumber"] = separator(result["populationnumber"]);
       result["loverlevelfac"] = separator(result["loverlevelfac"]);
       result["childrennumber"] = separator(result["childrennumber"]);
       const gps = result["gpsCordinate"];
       if (gps) {
+
         let x11 = gps.split("(")[1]?.split(",")[0];
         let x22 = gps.split(",")[1]?.split(")")[0];
         setx1(x11);
         setx2(x22);
         setMap([x11, x22]);
       }
-      // } else {
-      //   // setx1(
-      //   //   JSON.parse(localStorage.getItem("country")) === null
-      //   //     ? 35
-      //   //     : JSON.parse(localStorage.getItem("country"))["mainlocation"] ===
-      //   //       undefined
-      //   //     ? 35
-      //   //     : JSON.parse(localStorage.getItem("country"))
-      //   //         ["mainlocation"]?.split("(")[1]
-      //   //         ?.split(",")[0]
-      //   // );
-      //   // setx2(
-      //   //   JSON.parse(localStorage.getItem("country")) === null
-      //   //     ? 51
-      //   //     : JSON.parse(localStorage.getItem("country"))["mainlocation"] ===
-      //   //       undefined
-      //   //     ? 51
-      //   //     : JSON.parse(localStorage.getItem("country"))
-      //   //         ["mainlocation"]?.split(",")[1]
-      //   //         ?.split(")")[0]
-      //   // );
-      // }
+       else {
+      console.log("mire injar");
+
+        setx1(
+          JSON.parse(country) === null
+            ? 35
+            : JSON.parse(country)["mainlocation"] ===
+              undefined
+            ? 35
+            : JSON.parse(country)
+                ["mainlocation"]?.split("(")[1]
+                ?.split(",")[0]
+        );
+        setx2(
+          JSON.parse(country) === null
+            ? 51
+            : JSON.parse(country)["mainlocation"] ===
+              undefined
+            ? 51
+            : JSON.parse(country)
+                ["mainlocation"]?.split(",")[1]
+                ?.split(")")[0]
+        );
+      }
       for (const key in result) {
         if (typeof result[key] === "number") {
           if (result[key] % 1 !== 0) {
@@ -580,9 +588,7 @@ function AddFacilityScreen() {
       // if (pid) {
       //   params["parent"] = pid;
       // }
-      console.log(isFacilitiesFields);
-    InternetConnection().then((res) => console.log(res));
-      console.log("xx");
+    // InternetConnection().then((res) => console.log(res));
       let token=""
       const result = [];
         readData("country").then((country) => {
@@ -847,8 +853,6 @@ function AddFacilityScreen() {
 
   const selectedLevel = levels.find((level) => level.id === fieldsValue.level);
   if (isFacilityDefaultLoading || isFacilitiesFields) {
-    console.log(isFacilitiesFields);
-    console.log("check");
 
     return (
     <ScrollView>
@@ -895,8 +899,6 @@ function AddFacilityScreen() {
           )}
         </View>
           <View>
-            {console.log(country)}
-            {console.log("check")}
               {facilityFields!==undefined&&
               Object.values(facilityFields)?.map((field) => {
                 if (!isRelatedFieldOk(field.stateName, fieldsValue)) {
@@ -906,22 +908,19 @@ function AddFacilityScreen() {
                 const hasRequiredError = !!fieldErrors[field.stateName];
                 return (
                   <View key={field.stateName}>
-                  
-                      {field.stateName === "gpsCordinate" ? (
-                        <View>
-                            {Current !== null && x1 && x2 ? (
-                      
-                              <MapView
-                                initialRegion={{
-                                  latitude: 37.78825,
-                                  longitude: -122.4324,
-                                  latitudeDelta: 0.0922,
-                                  longitudeDelta: 0.0421,
-                                }}
-                              />
-                            ):null}
-                     
-                          {/* <Button
+                    {field.stateName === "gpsCordinate" ? (
+                      <View>
+                        {console.log(x1, x2, Current)}
+                        {Current !== null && x1 && x2 ? (
+                          <View>
+                            <Text>{x1}</Text>
+                            <View style={styles.container}>
+                              <MapView style={styles.map} />
+                            </View>
+                          </View>
+                        ) : null}
+
+                        {/* <Button
                             // className="btn btn-primary mt-2 w-50"
                             onClick={(e) => {
                               e.preventDefault();
@@ -945,54 +944,62 @@ function AddFacilityScreen() {
                           >
                             <Text>Get current location</Text>
                           </Button> */}
-                    
-                            </View>
-                      ) : (
-                        <View>
-                          <DynamicInput
-                            field={field}
-                            onChangeHandler={onChangeHandler}
-                            defaultValue={fieldsValue[field.stateName]}
-                            separator={
-                              field.stateName === "childrennumber" ||
-                              field.stateName === "loverlevelfac" ||
-                              field.stateName === "populationnumber"
-                            }
-                          />
-                          </View>
-                      )}
-                      {JSON.parse(country)[
-                        "poptarget"
-                      ] === "General population" &&
-                        field.stateName === "populationnumber" &&
-                        selectedLevel ? (
-                          <Text>
-                            range: {separator(selectedLevel?.minpop)} -{" "}
-                            {separator(selectedLevel?.maxpop)}
-                          </Text>
-                        ):null}
-                      {JSON.parse(country)[
-                        "poptarget"
-                      ] === "Under-1 Population" &&
-                        field.stateName === "childrennumber" &&
-                        selectedLevel ?(
-                          <Text>
-                            range: {separator(selectedLevel?.minpop)} -{" "}
-                            {separator(selectedLevel?.maxpop)}
-                          </Text>
-                        ):null}
+                      </View>
+                    ) : (
+                      <View>
+                        <DynamicInput
+                          field={field}
+                          onChangeHandler={onChangeHandler}
+                          defaultValue={fieldsValue[field.stateName]}
+                          separator={
+                            field.stateName === "childrennumber" ||
+                            field.stateName === "loverlevelfac" ||
+                            field.stateName === "populationnumber"
+                          }
+                        />
+                      </View>
+                    )}
+                    {JSON.parse(country)["poptarget"] ===
+                      "General population" &&
+                    field.stateName === "populationnumber" &&
+                    selectedLevel ? (
+                      <Text>
+                        range: {separator(selectedLevel?.minpop)} -{" "}
+                        {separator(selectedLevel?.maxpop)}
+                      </Text>
+                    ) : null}
+                    {JSON.parse(country)["poptarget"] ===
+                      "Under-1 Population" &&
+                    field.stateName === "childrennumber" &&
+                    selectedLevel ? (
+                      <Text>
+                        range: {separator(selectedLevel?.minpop)} -{" "}
+                        {separator(selectedLevel?.maxpop)}
+                      </Text>
+                    ) : null}
                     {hasRequiredError ? (
-                       <View>
-                           <Text> {fieldErrors[field.stateName]}</Text>r
-                        </View>
-                           ):null}
-                  </View> 
-              )})}
+                      <View>
+                        <Text> {fieldErrors[field.stateName]}</Text>r
+                      </View>
+                    ) : null}
+                  </View>
+                );})}
           </View>
       </Form>
       </View>
     </ScrollView>
   );}
 }
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+  },
+});
 export default AddFacilityScreen;

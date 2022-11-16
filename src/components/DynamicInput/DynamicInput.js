@@ -117,7 +117,7 @@ const DynamicInput = (props) => {
     } else {
       const options = [];
       let selecteda = [];
-      console.log(selecteda);
+      // console.log(selecteda);
       // for other_services we need to set the options and selected values to the format of componenet
       for (let i = 0; i < field.params.length; i++) {
         let disabled = field.params[i].enabled
@@ -151,7 +151,7 @@ const DynamicInput = (props) => {
           items={options}
           uniqueKey="id"
           onSelectedItemsChange={(e) => {
-            console.log(e);
+            // console.log(e);
             let x = [];
             let y = "";
             if (e !== null) {
@@ -171,7 +171,7 @@ const DynamicInput = (props) => {
           selectedItems={selecteda}
           selectText="Pick Items"
           searchInputPlaceholderText="Search Items..."
-          onChangeInput={(text) => console.log(text)}
+          // onChangeInput={(text) => console.log(text)}
           altFontFamily="ProximaNova-Light"
           tagRemoveIconColor="#CCC"
           tagBorderColor="#CCC"

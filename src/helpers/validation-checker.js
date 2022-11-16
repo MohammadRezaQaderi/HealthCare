@@ -2,7 +2,7 @@ import { separator } from "../helpers/separator";
 import { seperator } from "../helpers/seperator";
 export const hasValidationError = (value, validation) => {
   if (typeof value !== "string" && typeof value !== "number") return false;
-  console.log(typeof value)
+  // console.log(typeof value)
   const _value = value.replaceAll(" ", "");
   if (validation === undefined || !_value) return false;
   if (validation.min !== -1 && validation.min > _value) {
@@ -11,7 +11,7 @@ export const hasValidationError = (value, validation) => {
   if (validation.max !== -1 && validation.max < _value) {
     return `value must less than ${separator(validation.max)}`;
   }
- console.log(_value.split("."));
+//  console.log(_value.split("."));
   if (
     validation.float &&
     _value.includes(seperator()) &&
