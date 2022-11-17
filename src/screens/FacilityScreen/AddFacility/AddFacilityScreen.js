@@ -491,7 +491,6 @@ function AddFacilityScreen({ defaultValueFacility }) {
       let size = Object.keys(defaultValueFacility).length;
       if (size === 0) {
         readData("country").then((country) => {
-          console.log(country);
           setCountry(country);
           let x11 =
             JSON.parse(country) === null
