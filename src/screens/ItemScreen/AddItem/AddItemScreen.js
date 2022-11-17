@@ -443,7 +443,13 @@ function Item({ defaultValueItem }) {
     isItemsFieldsIdle ||
     isPqsLoading
   ) {
-    return <Spinner />;
+    return (
+      <ScrollView>
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      </ScrollView>
+    );
   }
 
   return (
@@ -455,26 +461,9 @@ function Item({ defaultValueItem }) {
         <div className="card">
           <div className="card-body pb-3">
             <div className="row pb-4" style={{ overflow: "auto" }}>
-              <Stepper activeStep={activeStep}>
-                {Object.keys(itemFields).map((topic) => {
-                  return (
-                    <Step key={topic}>
-                      <StepLabel style={{ width: "max-content" }}>
-                        <Trans>{topic}</Trans>
-                      </StepLabel>
-                    </Step>
-                  );
-                })}
-              </Stepper>
+           
             </div>
-            <StepOperations
-              handleBack={handleBack}
-              handleNext={handleNext}
-              activeStep={activeStep}
-              id={id}
-              stepsLength={Object.keys(itemFields).length - 1}
-              isNextDisabled={Object.keys(fieldErrors).length > 0}
-            />
+          
           </div>
         </div>
       </div>
@@ -730,20 +719,7 @@ function Item({ defaultValueItem }) {
           </div>
         </div>
       </div>
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body py-3">
-            <StepOperations
-              handleBack={handleBack}
-              handleNext={handleNext}
-              id={id}
-              activeStep={activeStep}
-              stepsLength={Object.keys(itemFields).length - 1}
-              isNextDisabled={Object.keys(fieldErrors).length > 0}
-            />
-          </div>
-        </div>
-      </div>
+      
     </form>
   );
 }
