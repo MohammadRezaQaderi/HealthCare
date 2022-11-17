@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
 import React, { useEffect, useState } from "react";
 import CustomButton from "../../../components/CustomButton";
@@ -514,10 +514,7 @@ function AddFacilityScreen() {
 
       //   return defaultData;
       // }
-       readData("country").then((country) => {
-         console.log(country);
-         setCountry(country);
-       });
+      
       const params = {
         // id: id,
       };
@@ -538,27 +535,33 @@ function AddFacilityScreen() {
       }
        else {
       console.log("mire injar");
-
-        setx1(
-          JSON.parse(country) === null
-            ? 35
-            : JSON.parse(country)["mainlocation"] ===
-              undefined
-            ? 35
-            : JSON.parse(country)
-                ["mainlocation"]?.split("(")[1]
-                ?.split(",")[0]
-        );
-        setx2(
-          JSON.parse(country) === null
-            ? 51
-            : JSON.parse(country)["mainlocation"] ===
-              undefined
-            ? 51
-            : JSON.parse(country)
-                ["mainlocation"]?.split(",")[1]
-                ?.split(")")[0]
-        );
+ readData("country").then((country) => {
+   console.log(country);
+   setCountry(country);
+   let x11 =
+     JSON.parse(country) === null
+       ? 35.00
+       : JSON.parse(country)["mainlocation"] === undefined
+       ? 35.00
+       : JSON.parse(country)["mainlocation"]?.split("(")[1]?.split(",")[0];
+    let x22 =
+      JSON.parse(country) === null
+        ? 51.00
+        : JSON.parse(country)["mainlocation"] === undefined
+        ? 51.00
+        : JSON.parse(country)["mainlocation"]?.split(",")[1]?.split(")")[0];
+     setx1(
+       x11
+     );
+     setx2(
+      x22
+     );
+     setMap({
+      latitude:x11,
+      longitude: x22
+     })
+ });
+      
       }
       for (const key in result) {
         if (typeof result[key] === "number") {
@@ -594,60 +597,49 @@ function AddFacilityScreen() {
         readData("country").then((country) => {
           setCountry(country);
         });
-      readData("token").then((token) => {
-      token = JSON.parse(token);
-      token = "Bearer".concat(" ", token);
-         axios.get(
-         "http://46.105.58.235:8007/facilities/" + "facility-field",
-         {
-           headers: { Authorization: token },
-         }
-       ).then((res) => {
-        if (res.data) {
-         
-          setLevels(
-            res.data.levels.map((level) => ({
-              id: level.id,
-              name: `${level.id} - ${level.name}`,
-              order: 1,
-              enabled: true,
-              paramid: level.id,
-              minpop: level.minpop,
-              maxpop: level.maxpop,
-            }))
-          );
+         readData("facility-field").then((x) => {
+           if (x) {
+            const res=JSON.parse(x)
+             setLevels(
+               res.levels.map((level) => ({
+                 id: level.id,
+                 name: `${level.id} - ${level.name}`,
+                 order: 1,
+                 enabled: true,
+                 paramid: level.id,
+                 minpop: level.minpop,
+                 maxpop: level.maxpop,
+               }))
+             );
 
-          result.unshift({
-            id: "code",
-            name: "Facility code:",
-            type: "text",
-            active: false,
-            disabled: true,
-            required: false,
-            stateName: "code",
-            params: [],
-          });
-            for (const field of res.data.related) {
-              if (field.stateName === "name") {
-                continue;
-              }
-              result.push(field);
-            }
+             result.unshift({
+               id: "code",
+               name: "Facility code:",
+               type: "text",
+               active: false,
+               disabled: true,
+               required: false,
+               stateName: "code",
+               params: [],
+             });
+             for (const field of res.related) {
+               if (field.stateName === "name") {
+                 continue;
+               }
+               result.push(field);
+             }
 
-          setFieldValue((perFieldsValue) => ({
-            ...perFieldsValue,
-            completerstaffname:
-              perFieldsValue?.completerstaffname ?? res.data.user.username,
-            parentName: res.data.facility.name,
-          }));
-          setFacilityFields(result);
-         
-        }
-        else {
-          console.log("error");
-        }
-        return result;
-      });
+             setFieldValue((perFieldsValue) => ({
+               ...perFieldsValue,
+               completerstaffname:
+                 perFieldsValue?.completerstaffname ?? res.user.username,
+               parentName: res.facility.name,
+             }));
+             setFacilityFields(result);
+           } else {
+             console.log("error");
+           }
+           
       });
      
      
@@ -843,9 +835,10 @@ function AddFacilityScreen() {
   };
 
   const handleMapClick = async (e) => {
-    setMap(e.latlng);
+    const cor = e.nativeEvent.coordinate;
+    setMap(cor);
     const cloneFieldsValue = { ...fieldsValue };
-    let str = "LatLng(" + e.latlng.lat + "," + e.latlng.lng + ")";
+    let str = "LatLng(" + cor.latitude + "," + cor.longitude + ")";
     cloneFieldsValue["gpsCordinate"] = str;
     setFieldValue(cloneFieldsValue);
   };
@@ -910,12 +903,28 @@ function AddFacilityScreen() {
                   <View key={field.stateName}>
                     {field.stateName === "gpsCordinate" ? (
                       <View>
-                        {console.log(x1, x2, Current)}
+                        <Text> {fieldsValue[field.stateName]}</Text>
                         {Current !== null && x1 && x2 ? (
                           <View>
-                            <Text>{x1}</Text>
                             <View style={styles.container}>
-                              <MapView style={styles.map} />
+                              <MapView
+                                style={styles.map}
+                                onPress={handleMapClick}
+                              >
+                                {console.log(map)}
+                                {map && (
+                                  <Marker
+                                    coordinate={map}
+                                    title={"Facility Cordinates"}
+                                    description={
+                                      "latitude: " +
+                                      map.latitude.toString() +
+                                      "  longitude: " +
+                                      map.longitude.toString()
+                                    }
+                                  />
+                                )}
+                              </MapView>
                             </View>
                           </View>
                         ) : null}
