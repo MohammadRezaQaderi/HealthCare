@@ -1,11 +1,9 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Row, Table } from "react-native-table-component";
 import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../../components/DataStorage";
 import SelectInput from "../../../components/SelectInput/SelectInput";
-import LtemListTable from "../../../components/ItemListTable";
-// import ItemListTable from "../../../components/ItemListTable";
+import ItemListTable from "../../../components/ItemListTable";
 const itemHandleData = {
   tableHead: [
     "Item Class",
@@ -26,7 +24,7 @@ const itemHandleData = {
   ],
 };
 
-const DataFormat = async (items, setData) => {
+const DataFormat = async (items, setData, itemClass) => {
   let table = {
     tableHead: [
       "Item Class",
@@ -42,14 +40,20 @@ const DataFormat = async (items, setData) => {
   };
   let data_need = [];
   for (let index = 0; index < items.length; index++) {
+    let item_class = await itemClass.find(
+      (obj) => obj.item_class.id === items[index]["item_class"]
+    );
+    let item_type = await item_class.item_type.find(
+      (obj) => obj.id === items[index]["item_type"]
+    );
     data_need.push([
-      items[index]["item_class"] ? items[index]["item_class"] : "N/A",
-      items[index]["item_type"] ? items[index]["item_type"] : "N/A",
-      items[index]["code"] ? items[index]["code"] : "N/A",
-      items[index]["Manufacturer"] ? items[index]["Manufacturer"] : "N/A",
+      items[index]["item_class"] ? item_class.item_class.title : "--",
+      items[index]["item_type"] ? item_type.title : "--",
+      items[index]["code"] ? items[index]["code"] : "--",
+      items[index]["Manufacturer"] ? items[index]["Manufacturer"] : "--",
       items[index]["updated_at"]
         ? items[index]["updated_at"].slice(0, 10)
-        : "N/A",
+        : "--",
       "True",
       "True",
     ]);
@@ -61,6 +65,7 @@ const DataFormat = async (items, setData) => {
 const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
   const [data, setData] = useState(itemHandleData);
   const [item, setItem] = useState([]);
+  const [itemClass, setItemClass] = useState([]);
   const [deleteItem, setDeleteItem] = useState([]);
   const [selected, setSelected] = useState([]);
   useEffect(() => {
@@ -90,9 +95,15 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
         setDeleteItem([]);
       }
     });
+    readData("itemClass").then((x) => {
+      let data = JSON.parse(x);
+      try {
+        setItemClass(data);
+      } catch (e) {}
+    });
   }, []);
   useEffect(() => {
-    DataFormat(item, setData);
+    DataFormat(item, setData, itemClass);
   }, [item]);
   return (
     <ScrollView>
@@ -135,7 +146,7 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
             defaultOption={"Select Reason for Item to Delete"}
           />
           <ScrollView horizontal={true}>
-            <LtemListTable
+            <ItemListTable
               data={data}
               setCurrentTab={setCurrentTab}
               setDefaultValueItem={setDefaultValueItem}

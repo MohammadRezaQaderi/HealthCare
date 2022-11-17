@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {
-  Image,
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Constants from "expo-constants";
 import { Dimensions } from "react-native";
 import { readData } from "../../components/DataStorage";
 import SelectInput from "../../components/SelectInput/SelectInput";
-import ItemListTable from "../../components/ItemListTable";
+import { Row, Table } from "react-native-table-component";
 
 const { width } = Dimensions.get("window");
 const qrSize = width * 0.7;
 
-const DataFormat = async (items, setData, scannedData) => {
+const DataFormat = async (items, setData, itemClass, scannedData) => {
   let table = {
     tableHead: [
       "Item Class",
@@ -34,16 +26,22 @@ const DataFormat = async (items, setData, scannedData) => {
   };
   let data_need = [];
   for (let index = 0; index < items.length; index++) {
+    let item_class = await itemClass.find(
+      (obj) => obj.item_class.id === items[index]["item_class"]
+    );
+    let item_type = await item_class.item_type.find(
+      (obj) => obj.id === items[index]["item_type"]
+    );
     // if (items[index]["code"] === scannedData) {
     if (items[index]["code"] === "EXC0100001ACCWCR002") {
       data_need.push([
-        items[index]["item_class"] ? items[index]["item_class"] : "N/A",
-        items[index]["item_type"] ? items[index]["item_type"] : "N/A",
-        items[index]["code"] ? items[index]["code"] : "N/A",
-        items[index]["Manufacturer"] ? items[index]["Manufacturer"] : "N/A",
+        items[index]["item_class"] ? item_class.item_class.title : "--",
+        items[index]["item_type"] ? item_type.title : "--",
+        items[index]["code"] ? items[index]["code"] : "--",
+        items[index]["Manufacturer"] ? items[index]["Manufacturer"] : "--",
         items[index]["updated_at"]
           ? items[index]["updated_at"].slice(0, 10)
-          : "N/A",
+          : "--",
         "True",
         "True",
       ]);
@@ -57,6 +55,7 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
+  const [itemClass, setItemClass] = useState([]);
   const [deleteItem, setDeleteItem] = useState([]);
   const [selected, setSelected] = useState([]);
   const [item, setItem] = useState([]);
@@ -88,6 +87,12 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
         setDeleteItem([]);
       }
     });
+    readData("itemClass").then((x) => {
+      let data = JSON.parse(x);
+      try {
+        setItemClass(data);
+      } catch (e) {}
+    });
   }, []);
   useEffect(() => {
     (async () => {
@@ -102,7 +107,7 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
   useEffect(() => {
-    DataFormat(item, setData, scannedData);
+    DataFormat(item, setData, itemClass, scannedData);
   }, [scanned]);
 
   if (hasPermission === null) {
@@ -111,14 +116,13 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  console.log("data", data);
   return (
     <View style={{ flexDirection: "column", padding: 20 }}>
       {scanned && data?.tableData?.length > 0 && deleteItem.length > 0 ? (
         <>
           <View>
             <Pressable
-              onPress={() => console.log("sfgasgaggdrsdasdare")}
+              onPress={() => setScanned(false)}
               style={styles.buttonContainer}
             >
               <Text>{"Scan Again"}</Text>
@@ -132,15 +136,29 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
               defaultOption={"Select Reason for Item to Delete"}
             />
             <ScrollView horizontal={true}>
-              <ItemListTable
-                data={data}
-                setCurrentTab={setCurrentTab}
-                setDefaultValueItem={setDefaultValueItem}
-                items={item}
-                deleteItem={deleteItem}
-                selected={selected}
-                setSelected={setSelected}
-              />
+              <View>
+                <Table borderStyle={{}}>
+                  <Row
+                    data={data?.tableHead}
+                    widthArr={data?.widthArr}
+                    style={styles.head}
+                    textStyle={styles.headText}
+                  />
+                </Table>
+                <ScrollView>
+                  <Table borderStyle={{}}>
+                    {data?.tableData.map((rowData, index) => (
+                      <Row
+                        key={index}
+                        data={rowData}
+                        widthArr={data?.widthArr}
+                        style={styles.rowSection}
+                        textStyle={styles.text}
+                      />
+                    ))}
+                  </Table>
+                </ScrollView>
+              </View>
             </ScrollView>
           </View>
         </>

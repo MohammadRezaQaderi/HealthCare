@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Row, Table } from "react-native-table-component";
 import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../../components/DataStorage";
 import FacilityListTable from "../../../components/FacilityListTable";
@@ -28,7 +27,7 @@ const DataFormat = async (facility, setData) => {
     tableHead: [
       "Levels",
       "Facility name",
-      "Total number of facilities",
+      "Number of lower level facilities served by this facility",
       "Code",
       "Type",
       "Last Changed on",
@@ -41,16 +40,16 @@ const DataFormat = async (facility, setData) => {
   let data_need = [];
   for (let index = 0; index < facility.length; index++) {
     data_need.push([
-      facility[index]["level"] ? facility[index]["level"] : "N/A",
-      facility[index]["name"] ? facility[index]["name"] : "N/A",
-      facility[index]["populationnumber"]
-        ? facility[index]["populationnumber"]
-        : "N/A",
-      facility[index]["code"] ? facility[index]["code"] : "N/A",
-      facility[index]["type"] ? facility[index]["type"] : "N/A",
+      facility[index]["level"] ? facility[index]["level"] : "--",
+      facility[index]["name"] ? facility[index]["name"] : "--",
+      facility[index]["loverlevelfac"]
+        ? facility[index]["loverlevelfac"]
+        : "--",
+      facility[index]["code"] ? facility[index]["code"] : "--",
+      facility[index]["type"] ? facility[index]["type"] : "--",
       facility[index]["updated_at"]
         ? facility[index]["updated_at"].slice(0, 10)
-        : "N/A",
+        : "--",
       "True",
       "True",
     ]);
@@ -95,7 +94,6 @@ const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
   useEffect(() => {
     DataFormat(facility, setData);
   }, [facility]);
-
   return (
     <ScrollView>
       {data?.tableData?.length > 0 && deleteItem.length > 0 ? (

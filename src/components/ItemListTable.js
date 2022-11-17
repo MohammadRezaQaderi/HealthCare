@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { readData } from "./DataStorage";
 import InternetConnection from "./InternetConnection";
-import SelectInput from "./SelectInput/SelectInput";
 export default class ItemListTable extends Component {
   constructor(props) {
     super(props);
@@ -82,7 +81,6 @@ export default class ItemListTable extends Component {
   }
 
   render() {
-    console.log("this.props.items: ", this.props.data);
     const state = this.props.data;
     const editToolBox = (data, index) => (
       <View style={{ flex: 1, flexDirection: "column" }}>
@@ -121,7 +119,7 @@ export default class ItemListTable extends Component {
                       ? editToolBox(cellData, index)
                       : cellIndex === 6
                       ? deleteToolBox(cellData, index)
-                      : "cellData"
+                      : cellData
                   }
                   widthArr={state.widthArr}
                   textStyle={

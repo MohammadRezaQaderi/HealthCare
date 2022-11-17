@@ -169,69 +169,71 @@ function getInfoFromServer() {
             console.log("errors for get messages reciever: ", error);
           });
         const fields = [];
-     
+
         axios
           .get("http://" + url + "/item/item-field", {
             headers: { Authorization: token },
           })
           .then((response) => {
             // console.log("salam");
-            const  item_classes = response.data.data;
+            const item_classes = response.data.data;
             removeItemValue("itemClass").then(() => "");
             saveData("itemClass", response?.data.data).then(() => {
               item_classes.map((item_class) => {
-              let item_classx = item_class?.item_class;
-            const temp_obj = {
-              item_class: item_classx,
-              item_type: [],
-            };
-            item_class?.item_type.map((item_type) => {
-              const temp_type = {
-        id: item_type.id,
-        title: item_type.title,
-        havepqs: item_type.havepqs,
-      };
-       axios
-         .get(
-           "http://" +
-             url +
-             "/item/item-field?class_id=" +
-             item_classx.id +
-             "&type_id=" +
-             item_type.id,
-           { headers: { Authorization: token } }
-         )
-         .then((response) => {
-           temp_type.fields = response.data.fields;
-          //  console.log(temp_type);M
-         })
-         .catch((error) => {
-           console.log("errors for get item-dsdsd: ", error);
-         });
-      if (temp_type.havepqs) {
-        axios
-          .get("http://" + url + "/item/itempqs?id=" + item_type.id, {
-            headers: { Authorization: token },
-          })
-          .then((response) => {
-            temp_type.pqs = response.data;
-          })
-          .catch((error) => {
-            console.log("errors for get item-fielpqsssd: ", error);
-          });
-      }
-      temp_obj.item_type.push(temp_type);
-    });
-            fields.push(temp_obj);
-  });
+                let item_classx = item_class?.item_class;
+                const temp_obj = {
+                  item_class: item_classx,
+                  item_type: [],
+                };
+                item_class?.item_type.map((item_type) => {
+                  const temp_type = {
+                    id: item_type.id,
+                    title: item_type.title,
+                    havepqs: item_type.havepqs,
+                  };
+                  axios
+                    .get(
+                      "http://" +
+                        url +
+                        "/item/item-field?class_id=" +
+                        item_classx.id +
+                        "&type_id=" +
+                        item_type.id,
+                      { headers: { Authorization: token } }
+                    )
+                    .then((response) => {
+                      temp_type.fields = response.data.fields;
+                      //  console.log(temp_type);M
+                    })
+                    .catch((error) => {
+                      console.log("errors for get item-dsdsd: ", error);
+                    });
+                  if (temp_type.havepqs) {
+                    axios
+                      .get(
+                        "http://" + url + "/item/itempqs?id=" + item_type.id,
+                        {
+                          headers: { Authorization: token },
+                        }
+                      )
+                      .then((response) => {
+                        temp_type.pqs = response.data;
+                      })
+                      .catch((error) => {
+                        console.log("errors for get item-fielpqsssd: ", error);
+                      });
+                  }
+                  temp_obj.item_type.push(temp_type);
+                });
+                fields.push(temp_obj);
+              });
 
-  saveData("itemFields", fields).then(() => "");
-});
+              saveData("itemFields", fields).then(() => "");
+            });
           })
           .catch((error) => {
             console.log("errors for get item-field: ", error);
           });
-
       });
     }
   });
