@@ -4,6 +4,7 @@ import { Row, Table } from "react-native-table-component";
 import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../../components/DataStorage";
 import FacilityListTable from "../../../components/FacilityListTable";
+import SelectInput from "../../../components/SelectInput/SelectInput";
 const facilityHandleData = {
   tableHead: [
     "Levels",
@@ -14,7 +15,7 @@ const facilityHandleData = {
   ],
   widthArr: [160, 180, 120, 120, 120],
   tableData: [
-    ["EXP0100001", "DC PEV", 1, "PR", 0.1, "2022/10/20"],
+    ["EXC0100001ACCWCR002", "DC PEV", 1, "PR", 0.1, "2022/10/20"],
     ["EXP0100003", "DS KOUMASSI", 2, "LD", 0.1, "2022/10/19"],
     ["EXP0200007", "DS Port Bouet", 2, "LD", 0.4, "2022/10/19"],
     ["EXP0200001", "DS MARCORY", 2, "LD", 0.2, "2022/10/19"],
@@ -31,9 +32,10 @@ const DataFormat = async (facility, setData) => {
       "Code",
       "Type",
       "Last Changed on",
-      "Tool Box",
+      "Edit",
+      "Delete",
     ],
-    widthArr: [80, 180, 180, 180, 180, 180, 250],
+    widthArr: [160, 160, 160, 160, 160, 160, 160, 160],
     tableData: [],
   };
   let data_need = [];
@@ -50,6 +52,7 @@ const DataFormat = async (facility, setData) => {
         ? facility[index]["updated_at"].slice(0, 10)
         : "N/A",
       "True",
+      "True",
     ]);
   }
   table.tableData = data_need;
@@ -59,6 +62,8 @@ const DataFormat = async (facility, setData) => {
 const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
   const [data, setData] = useState(facilityHandleData);
   const [facility, setFacility] = useState([]);
+  const [deleteItem, setDeleteItem] = useState([]);
+  const [selected, setSelected] = useState([]);
   useEffect(() => {
     readData("facilities").then((value) => {
       if (value != null) {
@@ -69,13 +74,31 @@ const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
       } else {
       }
     });
+    readData("facility-delete-item").then((value) => {
+      if (value != null) {
+        let data = JSON.parse(value);
+        try {
+          let temp = [];
+          for (let index = 0; index < data?.length; index++) {
+            let temp1 = {};
+            temp1["value"] = data[index]["name"];
+            temp1["key"] = data[index]["id"];
+            temp.push(temp1);
+          }
+          setDeleteItem(temp);
+        } catch (e) {}
+      } else {
+        setDeleteItem([]);
+      }
+    });
   }, []);
   useEffect(() => {
     DataFormat(facility, setData);
   }, [facility]);
+
   return (
     <ScrollView>
-      {data?.tableData?.length > 0 ? (
+      {data?.tableData?.length > 0 && deleteItem.length > 0 ? (
         <View style={styles.container}>
           <Text
             style={{
@@ -98,30 +121,32 @@ const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
           >
             Facilities owned separated by levels
           </Text>
+
+          <Text
+            style={{
+              fontSize: 12,
+              color: "black",
+              paddingBottom: 10,
+            }}
+          >
+            Set reason for delete facility
+          </Text>
+          <SelectInput
+            data={deleteItem}
+            setSelected={setSelected}
+            type={"single"}
+            defaultOption={"Select Reason for Facility to Delete"}
+          />
           <ScrollView horizontal={true}>
-            <View>
-              <Table borderStyle={{}}>
-                <Row
-                  data={data?.tableHead}
-                  widthArr={data?.widthArr}
-                  style={styles.head}
-                  textStyle={styles.headText}
-                />
-              </Table>
-              <ScrollView>
-                <Table borderStyle={{}}>
-                  {data?.tableData.map((rowData, index) => (
-                    <Row
-                      key={index}
-                      data={rowData}
-                      widthArr={data?.widthArr}
-                      style={styles.rowSection}
-                      textStyle={styles.text}
-                    />
-                  ))}
-                </Table>
-              </ScrollView>
-            </View>
+            <FacilityListTable
+              data={data}
+              setCurrentTab={setCurrentTab}
+              setDefaultValueFacility={setDefaultValueFacility}
+              facility={facility}
+              deleteItem={deleteItem}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </ScrollView>
         </View>
       ) : (

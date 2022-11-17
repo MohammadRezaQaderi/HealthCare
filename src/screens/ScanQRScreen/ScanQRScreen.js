@@ -5,14 +5,15 @@ import {
   View,
   StyleSheet,
   Button,
+  Pressable,
   ScrollView,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Constants from "expo-constants";
 import { Dimensions } from "react-native";
-import { Row, Table } from "react-native-table-component";
-import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../components/DataStorage";
+import SelectInput from "../../components/SelectInput/SelectInput";
+import ItemListTable from "../../components/ItemListTable";
 
 const { width } = Dimensions.get("window");
 const qrSize = width * 0.7;
@@ -25,14 +26,16 @@ const DataFormat = async (items, setData, scannedData) => {
       "Code",
       "Manufacturer",
       "Last Changed on",
-      "Tool Box",
+      "Edit",
+      "Delete",
     ],
-    widthArr: [160, 180, 120, 120, 120, 120],
+    widthArr: [160, 160, 160, 160, 160, 160, 160],
     tableData: [],
   };
   let data_need = [];
   for (let index = 0; index < items.length; index++) {
-    if (items[index]["code"] === scannedData) {
+    // if (items[index]["code"] === scannedData) {
+    if (items[index]["code"] === "EXC0100001ACCWCR002") {
       data_need.push([
         items[index]["item_class"] ? items[index]["item_class"] : "N/A",
         items[index]["item_type"] ? items[index]["item_type"] : "N/A",
@@ -42,6 +45,7 @@ const DataFormat = async (items, setData, scannedData) => {
           ? items[index]["updated_at"].slice(0, 10)
           : "N/A",
         "True",
+        "True",
       ]);
     }
   }
@@ -49,21 +53,39 @@ const DataFormat = async (items, setData, scannedData) => {
   setData(table);
 };
 
-export default function ScanQRScreen() {
+export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
+  const [deleteItem, setDeleteItem] = useState([]);
+  const [selected, setSelected] = useState([]);
   const [item, setItem] = useState([]);
   const [data, setData] = useState([]);
   useEffect(() => {
     readData("item").then((value) => {
-      console.log("value", value);
       if (value != null) {
         let data = JSON.parse(value);
         try {
           setItem(data);
         } catch (e) {}
       } else {
+      }
+    });
+    readData("item-delete-item").then((value) => {
+      if (value != null) {
+        let data = JSON.parse(value);
+        try {
+          let temp = [];
+          for (let index = 0; index < data?.length; index++) {
+            let temp1 = {};
+            temp1["value"] = data[index]["name"];
+            temp1["key"] = data[index]["id"];
+            temp.push(temp1);
+          }
+          setDeleteItem(temp);
+        } catch (e) {}
+      } else {
+        setDeleteItem([]);
       }
     });
   }, []);
@@ -81,7 +103,7 @@ export default function ScanQRScreen() {
   };
   useEffect(() => {
     DataFormat(item, setData, scannedData);
-  }, [scannedData]);
+  }, [scanned]);
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -89,81 +111,51 @@ export default function ScanQRScreen() {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  console.log("scanned: ", scanned);
+  console.log("data", data);
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        padding: 100,
-      }}
-    >
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={[StyleSheet.absoluteFillObject, styles.container]}
-      ></BarCodeScanner>
-      {scanned && (
-        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
-      )}
-      {scanned && data.length > 0 ? (
-        <View style={styles.containerTable}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              color: "black",
-              paddingBottom: 20,
-            }}
-          >
-            Items
-          </Text>
-
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "black",
-              paddingBottom: 10,
-            }}
-          >
-            Items owned separated by levels
-          </Text>
-          <ScrollView horizontal={true}>
-            <View>
-              <Table borderStyle={{}}>
-                <Row
-                  data={data?.tableHead}
-                  widthArr={data?.widthArr}
-                  style={styles.head}
-                  textStyle={styles.headText}
-                />
-              </Table>
-              <ScrollView>
-                <Table borderStyle={{}}>
-                  {data?.tableData.map((rowData, index) => (
-                    <Row
-                      key={index}
-                      data={rowData}
-                      widthArr={data?.widthArr}
-                      style={styles.rowSection}
-                      textStyle={styles.text}
-                    />
-                  ))}
-                </Table>
-              </ScrollView>
-            </View>
-          </ScrollView>
-        </View>
-      ) : (
+    <View style={{ flexDirection: "column", padding: 20 }}>
+      {scanned && data?.tableData?.length > 0 && deleteItem.length > 0 ? (
         <>
-          <ActivityIndicator
-            size="large"
-            color="red"
-            style={{ padding: 0,marginTop:100 }}
-          />
-          <Text style={{ textAlign: "center" }}>the data get from server</Text>
+          <View>
+            <Pressable
+              onPress={() => console.log("sfgasgaggdrsdasdare")}
+              style={styles.buttonContainer}
+            >
+              <Text>{"Scan Again"}</Text>
+            </Pressable>
+          </View>
+          <View>
+            <SelectInput
+              data={deleteItem}
+              setSelected={setSelected}
+              type={"single"}
+              defaultOption={"Select Reason for Item to Delete"}
+            />
+            <ScrollView horizontal={true}>
+              <ItemListTable
+                data={data}
+                setCurrentTab={setCurrentTab}
+                setDefaultValueItem={setDefaultValueItem}
+                items={item}
+                deleteItem={deleteItem}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            </ScrollView>
+          </View>
         </>
+      ) : (
+        <View
+          style={{
+            flex: 2,
+            padding: 100,
+          }}
+        >
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={StyleSheet.absoluteFillObject}
+          />
+        </View>
       )}
     </View>
   );
@@ -199,10 +191,10 @@ const styles = StyleSheet.create({
     color: "white",
   },
   containerTable: {
-    flex: 1,
-    padding: 16,
-    paddingTop: 30,
-    backgroundColor: "#fff",
+    // flex: 4,
+    // padding: 16,
+    // paddingTop: 30,
+    // backgroundColor: "#fff",
   },
   rowSection: { height: 60, backgroundColor: "#f1f8ff" },
   head: { height: 50, backgroundColor: "#2888fe" },
@@ -212,66 +204,32 @@ const styles = StyleSheet.create({
     color: "white",
   },
   text: { margin: 6, fontSize: 16, textAlign: "center" },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "black",
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
+  },
+  buttonContainer: {
+    backgroundColor: "#2888fe",
+    width: "100%",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  buttonText: {
+    fontWeight: "bold",
+    color: "white",
+  },
 });
-
-// import React, { useState, useEffect } from "react";
-// import { Text, View, StyleSheet, Button } from "react-native";
-// import { BarCodeScanner } from "expo-barcode-scanner";
-
-// export default function ScanQRScreen() {
-//   const [hasPermission, setHasPermission] = useState(null);
-//   const [scanned, setScanned] = useState(false);
-
-//   useEffect(() => {
-//     const getBarCodeScannerPermissions = async () => {
-//       const { status } = await BarCodeScanner.requestPermissionsAsync();
-//       setHasPermission(status === "granted");
-//     };
-
-//     getBarCodeScannerPermissions();
-//   }, []);
-
-//   const handleBarCodeScanned = ({ type, data }) => {
-//     setScanned(true);
-//     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-//   };
-
-//   if (hasPermission === null) {
-//     return <Text>Requesting for camera permission</Text>;
-//   }
-//   if (hasPermission === false) {
-//     return <Text>No access to camera</Text>;
-//   }
-//   console.log("hasPermission=====>", hasPermission);
-//   return (
-//     <>
-//       <View style={styles.rectangleContainer}>
-//         <View style={styles.rectangle} />
-//         <BarCodeScanner
-//           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-//           style={StyleSheet.absoluteFillObject}
-//         />
-//       </View>
-//       {scanned && (
-//         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
-//       )}
-//     </>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   rectangleContainer: {
-//     flex: 1,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     backgroundColor: "transparent",
-//   },
-
-//   rectangle: {
-//     height: 250,
-//     width: 250,
-//     borderWidth: 2,
-//     borderColor: "#00FF00",
-//     backgroundColor: "transparent",
-//   },
-// });

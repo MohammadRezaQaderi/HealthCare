@@ -44,7 +44,6 @@ const AddMessageScreen = ({ defaultValueMessage }) => {
     });
   }, []);
   const sendMessage = (values) => {
-    console.log("values", values);
     InternetConnection().then((res) => setConnectionState(res));
     let send_message = [];
     if (!defaultValueMessage) {

@@ -10,7 +10,6 @@ const SelectInput = ({
   type,
   defaultOption,
 }) => {
-  console.log("data", data);
   if (type === "single") {
     return (
       <View style={styles.container}>

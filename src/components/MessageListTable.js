@@ -33,8 +33,8 @@ export default class MessageListTable extends Component {
       </TouchableOpacity>
     );
     const readButton = (rowData, data, index) =>
-      !data ? (
-        <View>
+      data ? (
+        <View style={{ alignItems: "center" }}>
           <RadioButton
             value="Readed"
             status="checked"
@@ -50,7 +50,6 @@ export default class MessageListTable extends Component {
               this.checked.push(rowData[5]);
               this.setChecked(this.checked);
               this.state.tableData[index][4] = false;
-              console.log(this.checked);
             }}
           ></RadioButton>
         </View>
@@ -63,6 +62,7 @@ export default class MessageListTable extends Component {
           data={state.tableHead}
           style={styles.head}
           textStyle={styles.text}
+          widthArr={state.widthArr}
         />
         {state.tableData.map((rowData, index) => (
           <TableWrapper key={index} style={styles.rowSection}>
@@ -78,9 +78,8 @@ export default class MessageListTable extends Component {
                     ? readButton(rowData, cellData, index)
                     : cellData
                 }
-                textStyle={
-                  (styles.text, { maxWidth: this.props.data?.widthArr[index] })
-                }
+                width={state.widthArr[cellIndex]}
+                textStyle={styles.text}
               />
             ))}
           </TableWrapper>

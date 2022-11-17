@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Row, Table } from "react-native-table-component";
 import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../../components/DataStorage";
+import SelectInput from "../../../components/SelectInput/SelectInput";
+import LtemListTable from "../../../components/ItemListTable";
 // import ItemListTable from "../../../components/ItemListTable";
 const itemHandleData = {
   tableHead: [
@@ -11,9 +13,10 @@ const itemHandleData = {
     "Code",
     "Manufacturer",
     "Last Changed on",
-    "Tool Box",
+    "Edit",
+    "Delete",
   ],
-  widthArr: [160, 180, 120, 120, 120, 120],
+  widthArr: [160, 180, 120, 120, 120, 80, 80],
   tableData: [
     ["EXP0100001", "DC PEV", 1, "PR", 0.1, "2022/10/20", "True"],
     ["EXP0100003", "DS KOUMASSI", 2, "LD", 0.1, "2022/10/19", "True"],
@@ -31,9 +34,10 @@ const DataFormat = async (items, setData) => {
       "Code",
       "Manufacturer",
       "Last Changed on",
-      "Tool Box",
+      "Edit",
+      "Delete",
     ],
-    widthArr: [160, 180, 120, 120, 120, 120],
+    widthArr: [160, 160, 160, 160, 160, 160, 160],
     tableData: [],
   };
   let data_need = [];
@@ -47,6 +51,7 @@ const DataFormat = async (items, setData) => {
         ? items[index]["updated_at"].slice(0, 10)
         : "N/A",
       "True",
+      "True",
     ]);
   }
   table.tableData = data_need;
@@ -56,6 +61,8 @@ const DataFormat = async (items, setData) => {
 const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
   const [data, setData] = useState(itemHandleData);
   const [item, setItem] = useState([]);
+  const [deleteItem, setDeleteItem] = useState([]);
+  const [selected, setSelected] = useState([]);
   useEffect(() => {
     readData("item").then((value) => {
       if (value != null) {
@@ -66,13 +73,30 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
       } else {
       }
     });
+    readData("item-delete-item").then((value) => {
+      if (value != null) {
+        let data = JSON.parse(value);
+        try {
+          let temp = [];
+          for (let index = 0; index < data?.length; index++) {
+            let temp1 = {};
+            temp1["value"] = data[index]["name"];
+            temp1["key"] = data[index]["id"];
+            temp.push(temp1);
+          }
+          setDeleteItem(temp);
+        } catch (e) {}
+      } else {
+        setDeleteItem([]);
+      }
+    });
   }, []);
   useEffect(() => {
     DataFormat(item, setData);
   }, [item]);
   return (
     <ScrollView>
-      {data?.tableData?.length > 0 ? (
+      {data?.tableData?.length > 0 && deleteItem.length > 0 ? (
         <View style={styles.container}>
           <Text
             style={{
@@ -95,30 +119,31 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
           >
             Items owned separated by levels
           </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              color: "black",
+              paddingBottom: 10,
+            }}
+          >
+            Set reason for delete item
+          </Text>
+          <SelectInput
+            data={deleteItem}
+            setSelected={setSelected}
+            type={"single"}
+            defaultOption={"Select Reason for Item to Delete"}
+          />
           <ScrollView horizontal={true}>
-            <View>
-              <Table borderStyle={{}}>
-                <Row
-                  data={data?.tableHead}
-                  widthArr={data?.widthArr}
-                  style={styles.head}
-                  textStyle={styles.headText}
-                />
-              </Table>
-              <ScrollView>
-                <Table borderStyle={{}}>
-                  {data?.tableData.map((rowData, index) => (
-                    <Row
-                      key={index}
-                      data={rowData}
-                      widthArr={data?.widthArr}
-                      style={styles.rowSection}
-                      textStyle={styles.text}
-                    />
-                  ))}
-                </Table>
-              </ScrollView>
-            </View>
+            <LtemListTable
+              data={data}
+              setCurrentTab={setCurrentTab}
+              setDefaultValueItem={setDefaultValueItem}
+              items={item}
+              deleteItem={deleteItem}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </ScrollView>
         </View>
       ) : (

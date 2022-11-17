@@ -48,7 +48,10 @@ import {
   hasValidationError,
   timeValidationError,
 } from "../../../helpers/validation-checker";
-import { isRelatedFieldOk, relatedFields } from "../../../helpers/related-field";
+import {
+  isRelatedFieldOk,
+  relatedFields,
+} from "../../../helpers/related-field";
 import { isRelatedFieldOkReq } from "../../../helpers/related-field-req";
 
 // import { Text } from "react-i18next";
@@ -517,9 +520,6 @@ function AddFacilityScreen({ defaultValueFacility }) {
         return defaultData;
       }
 
-      
-      
-
       const result = { ...defaultValueFacility, defaultData };
       result["populationnumber"] = separator(result["populationnumber"]);
       result["loverlevelfac"] = separator(result["loverlevelfac"]);
@@ -575,7 +575,7 @@ function AddFacilityScreen({ defaultValueFacility }) {
     {
       refetchOnMount: true,
       onSuccess(data) {
-        console.log(data)
+        console.log(data);
         setFieldValue(data);
       },
     }
@@ -888,7 +888,7 @@ function AddFacilityScreen({ defaultValueFacility }) {
                           {Current !== null && x1 && x2 ? (
                             <View>
                               <View style={styles.container}>
-                                <MapView
+                                {/* <MapView
                                   style={styles.map}
                                   onPress={handleMapClick}
                                 >
@@ -905,7 +905,7 @@ function AddFacilityScreen({ defaultValueFacility }) {
                                       }
                                     />
                                   )}
-                                </MapView>
+                                </MapView> */}
                               </View>
                             </View>
                           ) : null}

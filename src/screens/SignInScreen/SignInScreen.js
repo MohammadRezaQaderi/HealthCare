@@ -58,38 +58,37 @@ function getInfoFromServer() {
           .catch((error) => {
             console.log("errors for get facility-field: ", error);
           });
-          axios
-            .get("http://" + url + "/user-data/", {
-              headers: { Authorization: token },
-            })
-            .then((res) => {
-              removeItemValue("user").then(() => "");
-              removeItemValue("country").then(() => "");
+        axios
+          .get("http://" + url + "/user-data/", {
+            headers: { Authorization: token },
+          })
+          .then((res) => {
+            removeItemValue("user").then(() => "");
+            removeItemValue("country").then(() => "");
 
-              const country = res.data.Country[0];
-              const user = {
-              };
-               user.id = res.data.User.pk;
-               user.admin = res.data.User.is_superuser;
-               user.name = res.data.User.name;
-               user.username = res.data.User.username;
-               user.idnumber = res.data.User.idnumber;
-               user.phone = res.data.User.phone;
-               user.facility_name = res.data.facility;
-               user.facility_admin = res.data.User.facadmin;
-               user.facility_id = res.data.User.facilityid;
-               user.reportadmin = res.data.User.reportadmin;
-               user.itemadmin = res.data.User.itemadmin;
-               user.useradmin = res.data.User.useradmin;
-               user.created_at = res.data.User.created_at.split("T")[0];
-               user.updated_at = res.data.User.updated_at.split("T")[0];
-              saveData("user", user).then(() => "");
-              saveData("country", country).then(() => "");
-            })
-            .catch((error) => {
-              console.log("errors for get facility-field: ", error);
-            });
-          
+            const country = res.data.Country[0];
+            const user = {};
+            user.id = res.data.User.pk;
+            user.admin = res.data.User.is_superuser;
+            user.name = res.data.User.name;
+            user.username = res.data.User.username;
+            user.idnumber = res.data.User.idnumber;
+            user.phone = res.data.User.phone;
+            user.facility_name = res.data.facility;
+            user.facility_admin = res.data.User.facadmin;
+            user.facility_id = res.data.User.facilityid;
+            user.reportadmin = res.data.User.reportadmin;
+            user.itemadmin = res.data.User.itemadmin;
+            user.useradmin = res.data.User.useradmin;
+            user.created_at = res.data.User.created_at.split("T")[0];
+            user.updated_at = res.data.User.updated_at.split("T")[0];
+            saveData("user", user).then(() => "");
+            saveData("country", country).then(() => "");
+          })
+          .catch((error) => {
+            console.log("errors for get facility-field: ", error);
+          });
+
         axios
           .get("http://" + url + "/facilities/", {
             headers: { Authorization: token },
@@ -148,14 +147,35 @@ function getInfoFromServer() {
             console.log("errors for get messages reciever: ", error);
           });
         axios
+          .get("http://" + url + "/facilities/delete", {
+            headers: { Authorization: token },
+          })
+          .then((response) => {
+            removeItemValue("facility-delete-item").then(() => "");
+            saveData("facility-delete-item", response?.data).then(() => "");
+          })
+          .catch((error) => {
+            console.log("errors for get messages reciever: ", error);
+          });
+        axios
+          .get("http://" + url + "/item/delete", {
+            headers: { Authorization: token },
+          })
+          .then((response) => {
+            removeItemValue("item-delete-item").then(() => "");
+            saveData("item-delete-item", response?.data).then(() => "");
+          })
+          .catch((error) => {
+            console.log("errors for get messages reciever: ", error);
+          });
+        axios
           .get("http://" + url + "/item/item-field", {
             headers: { Authorization: token },
           })
           .then((response) => {
-            const item_classes= response.data.data;
+            const item_classes = response.data.data;
             removeItemValue("itemClass").then(() => "");
             saveData("itemClass", response?.data.data).then(() => "");
-            
           })
           .catch((error) => {
             console.log("errors for get item-field: ", error);
@@ -183,7 +203,6 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
           getInfoFromServer();
           setLoading(false);
           setCurrentTab("Logout");
-
         })
         .catch((error) => {
           console.log("errors to login: ", error);

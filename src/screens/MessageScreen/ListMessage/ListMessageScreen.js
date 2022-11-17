@@ -20,27 +20,9 @@ import MessageListTable from "../../../components/MessageListTable";
 import InternetConnection from "../../../components/InternetConnection";
 
 const facilityHandleData = {
-  tableHead: ["Sender", "Subject", "Body", "Date", "Read", "Edit"],
-  widthArr: [130, 180, 180, 120, 80, 80],
-  tableData: [
-    ["DC PEV", "Test", "Test 3", "10/5/2022", false, ":)"],
-    [
-      "DC PEV",
-      "Test 2",
-      "Thank you for all your efforts to completing the settings of the Example IGA. Mojtaba",
-      "10/5/2022",
-      false,
-      ":)",
-    ],
-    [
-      "DC PEV",
-      "Wavetech ULT not in the list",
-      "Dear Mojtaba, Brand of ULT Freezer named Wavetech is not in the list. Can you please include. Thanks, Maricel",
-      "10/5/2022",
-      false,
-      ":)",
-    ],
-  ],
+  tableHead: ["Subject", "Body", "Date", "Option"],
+  widthArr: [180, 180, 120, 80],
+  tableData: [],
 };
 
 const typeData = [
@@ -55,18 +37,16 @@ const goToSendMessage = (setCurrentTab) => {
   setCurrentTab("Send Message");
 };
 
-const DataFormat = async (messages, setData, type) => {
+const DataFormat = async (messages, setData, type, setLoading) => {
   if (type == "reciever") {
     let table = {
-      tableHead: ["Sender", "Subject", "Body", "Date", "Option"],
-      widthArr: [130, 180, 180, 120, 80],
+      tableHead: ["Subject", "Body", "Date", "Option"],
+      widthArr: [180, 180, 120, 80],
       tableData: [],
     };
     let data_need = [];
-    console.log("messages", messages);
     for (let index = 0; index < messages.length; index++) {
       data_need.push([
-        messages[index]["sender"]["name"],
         messages[index]["subject"],
         messages[index]["body"].slice(0, 25),
         messages[index]["updated_at"].slice(0, 10),
@@ -76,6 +56,7 @@ const DataFormat = async (messages, setData, type) => {
     }
     table.tableData = data_need;
     setData(table);
+    setLoading(false);
   }
   if (type == "sender") {
     let table = {
@@ -95,6 +76,7 @@ const DataFormat = async (messages, setData, type) => {
     }
     table.tableData = data_need;
     setData(table);
+    setLoading(false);
   }
 };
 
@@ -104,6 +86,7 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState(facilityHandleData);
   const [connectionState, setConnectionState] = useState(false);
+  const [loading, setLoading] = useState(true);
   const sendReadMessage = async (checked) => {
     InternetConnection().then((res) => setConnectionState(res));
     let url = "";
@@ -171,8 +154,10 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
           let data = JSON.parse(value);
           try {
             setMessages(data);
+            setLoading(false);
           } catch (e) {}
         } else {
+          setMessages([]);
         }
       });
     }
@@ -184,12 +169,14 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
             setMessages(data);
           } catch (e) {}
         } else {
+          setMessages([]);
         }
       });
     }
   }, [type]);
   useEffect(() => {
-    DataFormat(messages, setData, type);
+    setData({});
+    DataFormat(messages, setData, type, setLoading);
   }, [messages]);
   return (
     <ScrollView>
@@ -210,14 +197,20 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
             setChecked={setChecked}
           ></MessageListTable>
         </ScrollView>
-      ) : (
+      ) : loading ? (
         <>
           <ActivityIndicator
             size="large"
             color="black"
             style={{ padding: 20 }}
           />
-          <Text style={{ textAlign: "center" }}>the data get from server</Text>
+          <Text style={{ textAlign: "center" }}>{"The Data are Loading"}</Text>
+        </>
+      ) : (
+        <>
+          <Text
+            style={{ textAlign: "center" }}
+          >{`The Data For ${type} Message is Empty`}</Text>
         </>
       )}
       <View style={styles.viewContainer}>
@@ -228,10 +221,12 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
           <Text style={styles.buttonText}>{"Send Message"}</Text>
         </Pressable>
       </View>
-      <CustomButton
-        onPress={() => sendReadMessage(checked)}
-        text={"Read selected"}
-      />
+      {checked.length > 0 && (
+        <CustomButton
+          onPress={() => sendReadMessage(checked)}
+          text={"Read selected"}
+        />
+      )}
     </ScrollView>
   );
 };

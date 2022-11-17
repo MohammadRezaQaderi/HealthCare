@@ -19,6 +19,7 @@ import AddMessageScreen from "../MessageScreen/AddMessage/AddMessageScreen";
 import ListMessageScreen from "../MessageScreen/ListMessage/ListMessageScreen";
 import AddFacilityScreen from "../FacilityScreen/AddFacility/AddFacilityScreen";
 import ListFacilityScreen from "../FacilityScreen/ListFacility/ListFacilityScreen";
+import AddItemScreen from "../ItemScreen/AddItem/AddItemScreen";
 import ListItemScreen from "../ItemScreen/ListItem/ListItemScreen";
 
 // Icon and Image Import
@@ -314,7 +315,10 @@ const MenuScreen = ({
                 ) : currentTab == "Sync" ? (
                   <SyncScreen />
                 ) : currentTab == "Scan QR" ? (
-                  <ScanQRScreen />
+                  <ScanQRScreen
+                    setCurrentTab={setCurrentTab}
+                    setDefaultValueItem={setDefaultValueItem}
+                  />
                 ) : currentTab == "Send Message" ? (
                   <AddMessageScreen defaultValueMessage={defaultValueMessage} />
                 ) : currentTab == "Message List" ? (
@@ -325,28 +329,18 @@ const MenuScreen = ({
                 ) : currentTab == "Facility List" ? (
                   <ListFacilityScreen
                     setCurrentTab={setCurrentTab}
-                    setDefaultValueItem={setDefaultValueItem}
+                    setDefaultValueFacility={setDefaultValueFacility}
                   />
                 ) : currentTab == "New Facility" ? (
                   <AddFacilityScreen
                     defaultValueFacility={defaultValueFacility}
                   />
                 ) : currentTab == "Item List" ? (
-                  <ListItemScreen defaultValueFacility={defaultValueFacility} />
+                  <ListItemScreen
+                    setCurrentTab={setCurrentTab}
+                    setDefaultValueItem={setDefaultValueItem}
+                  />
                 ) : (
-                  // : currentTab == "New Facility" ? (
-                  //   <AddFacility />
-                  // ) : currentTab == "Facility List" ? (
-                  //   <ListFacility />
-                  // ) : currentTab == "Send Message" ? (
-                  //   <AddMessage />
-                  // ) : currentTab == "Message List" ? (
-                  //   <ListMessage setCurrentTab={setCurrentTab} />
-                  // ) : currentTab == "Scan QR" ? (
-                  //   <ScanQRScreen />
-                  // ) : currentTab == "Sync" ? (
-                  //   <SyncScreen />
-                  // )
                   <></>
                 )}
               </Animated.View>

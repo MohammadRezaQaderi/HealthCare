@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 // Functionality Import
 import { readData, saveData, clearAll } from "./src/components/DataStorage";
-import ExampleFour from "./src/components/MessageListTable";
 import MenuScreen from "./src/screens/MenuScreen/MenuScreen";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Toast from "react-native-toast-message";
@@ -40,7 +39,6 @@ export default function App() {
     setCheckState(true);
   }, []);
   return (
-   
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <MenuScreen
