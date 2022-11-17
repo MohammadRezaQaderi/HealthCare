@@ -656,6 +656,7 @@ function AddFacilityScreen() {
     type: "text",
     active: true,
     required: true,
+    name:"Facility name",
     disabled: false,
     stateName: "name",
   };
