@@ -202,8 +202,9 @@ function getInfoFromServer() {
                       { headers: { Authorization: token } }
                     )
                     .then((response) => {
-                      temp_type.fields = response.data.fields;
-                      //  console.log(temp_type);M
+                      // console.log("response.data.data", response.data.fields);
+                      temp_type["fields"] = response.data?.fields;
+                      console.log("temp_type");
                     })
                     .catch((error) => {
                       console.log("errors for get item-dsdsd: ", error);
@@ -217,17 +218,18 @@ function getInfoFromServer() {
                         }
                       )
                       .then((response) => {
-                        temp_type.pqs = response.data;
+                        temp_type["pqs"] = response.data;
                       })
                       .catch((error) => {
                         console.log("errors for get item-fielpqsssd: ", error);
                       });
                   }
+                  console.log("temp type");
                   temp_obj.item_type.push(temp_type);
                 });
                 fields.push(temp_obj);
               });
-
+              // console.log(fields[0].item_type)
               saveData("itemFields", fields).then(() => "");
             });
           })

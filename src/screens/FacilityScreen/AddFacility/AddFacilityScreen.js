@@ -62,79 +62,11 @@ const parentFacilityField = {
   disabled: true,
   stateName: "parentName",
 };
-const center = [52.22977, 21.01178];
-// delete L.Icon.Default.prototype._getIconUrl;
 
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-//   iconUrl: require("leaflet/dist/images/marker-icon.png"),
-//   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-// });
-// /**
-//  * @compoenent location marker compnent
-//  * @return {JSX} marker tag
-//  */
-// function LocationMarker() {
-//   const [position, setPosition] = useState(null);
-//   const map = useMapEvents({
-//     click() {
-//       map.locate();
-//       map.invalidateSize();
-//     },
-//     locationfound(e) {
-//       setPosition(e.latlng);
-//       map.flyTo(e.latlng, map.getZoom());
-//     },
-//   });
-
-//   return position === null ? null : (
-//     <Marker position={position}>
-//       <Popup>You are here</Popup>
-//     </Marker>
-//   );
-// }
-// /**
-//  *
-//  * @param {*} props
-//  * @returns {JSX} get user cordinates from gps
-//  */
-// const GetCoordinates = (props) => {
-//   const map = useMap();
-//   const handleClick = (e) => {
-//     window.handleMapClick(e);
-//   };
-
-//   useEffect(() => {
-//     if (!map) return;
-//     const info = L.DomUtil.create("div", "legend");
-
-//     const positon = L.Control.extend({
-//       options: {
-//         position: "bottomleft",
-//       },
-
-//       onAdd: function () {
-//         info.textContent = "Click on map too add location";
-//         return info;
-//       },
-//     });
-//     map.on("load", (e) => {
-//       console.log("salam");
-//     });
-//     map.on("click", (e) => {
-//       info.textContent = e.latlng;
-//       handleClick(e);
-//     });
-
-//     map.addControl(new positon());
-//   }, [map]);
-
-//   return null;
-// };
-// /**
-//  *
-//  * @returns {JSX} return facility component
-//  */
+/**
+ *
+ * @returns {JSX} return facility component
+ */
 function AddFacilityScreen({ defaultValueFacility }) {
   const [fieldsValue, setFieldValue] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
@@ -228,16 +160,16 @@ function AddFacilityScreen({ defaultValueFacility }) {
           });
         });
       }
-      for (const key in result) {
-        if (typeof result[key] === "number") {
-          if (result[key] % 1 !== 0) {
-            result[key] = result[key]
-              .toFixed(2)
-              .toString()
-              .replace(".", seperator());
-          }
-        }
-      }
+      // for (const key in result) {
+      //   if (typeof result[key] === "number") {
+      //     if (result[key] % 1 !== 0) {
+      //       result[key] = result[key]
+      //         .toFixed(2)
+      //         .toString()
+      //         .replace(".", seperator());
+      //     }
+      //   }
+      // }
       return result;
     },
     {
