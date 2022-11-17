@@ -714,22 +714,22 @@ function AddFacilityScreen({ defaultValueFacility }) {
 
   const onChangeHandler = (value, field) => {
     const validation = field.validation?.[0];
-    // if (
-    //   JSON.parse(localStorage.getItem("country"))["poptarget"] ===
-    //     "General population" &&
-    //   field.stateName === "populationnumber"
-    // ) {
-    //   validation.min = +selectedLevel?.minpop;
-    //   validation.max = +selectedLevel?.maxpop;
-    // }
-    // if (
-    //   JSON.parse(localStorage.getItem("country"))["poptarget"] ===
-    //     "Under-1 Population" &&
-    //   field.stateName === "childrennumber"
-    // ) {
-    //   validation.min = +selectedLevel?.minpop;
-    //   validation.max = +selectedLevel?.maxpop;
-    // }
+    if (
+      JSON.parse(country)["poptarget"] ===
+        "General population" &&
+      field.stateName === "populationnumber"
+    ) {
+      validation.min = +selectedLevel?.minpop;
+      validation.max = +selectedLevel?.maxpop;
+    }
+    if (
+      JSON.parse(country)["poptarget"] ===
+        "Under-1 Population" &&
+      field.stateName === "childrennumber"
+    ) {
+      validation.min = +selectedLevel?.minpop;
+      validation.max = +selectedLevel?.maxpop;
+    }
 
     let validationErr;
     if (field.name?.includes("hh:mm")) {
