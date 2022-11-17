@@ -147,6 +147,19 @@ function getInfoFromServer() {
           .catch((error) => {
             console.log("errors for get messages reciever: ", error);
           });
+        axios
+          .get("http://" + url + "/item/item-field", {
+            headers: { Authorization: token },
+          })
+          .then((response) => {
+            const item_classes= response.data.data;
+            removeItemValue("itemClass").then(() => "");
+            saveData("itemClass", response?.data.data).then(() => "");
+            
+          })
+          .catch((error) => {
+            console.log("errors for get item-field: ", error);
+          });
       });
     }
   });
@@ -166,10 +179,11 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
         .post("http://" + url + "/auth/login/", { username, password })
         .then((response) => {
           setLoggedIn(true);
-          setCurrentTab("Logout");
           saveData("token", response?.data?.access).then(() => "");
           getInfoFromServer();
           setLoading(false);
+          setCurrentTab("Logout");
+
         })
         .catch((error) => {
           console.log("errors to login: ", error);

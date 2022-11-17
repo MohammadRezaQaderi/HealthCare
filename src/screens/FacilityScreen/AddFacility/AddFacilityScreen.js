@@ -981,7 +981,7 @@ function AddFacilityScreen({ defaultValueFacility }) {
               onPress={onSaveHandler}
               style={styles.appButtonContainer}
             >
-              <Text style={styles.appButtonText}>Submit</Text>
+              <Text style={styles.appButtonText}>Save all</Text>
             </TouchableOpacity>
           </Form>
         </View>
