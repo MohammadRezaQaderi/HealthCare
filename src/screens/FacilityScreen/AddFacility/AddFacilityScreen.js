@@ -12,9 +12,7 @@ import {
 import MapView, { Marker } from "react-native-maps";
 
 import React, { useEffect, useState } from "react";
-import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
-import { Field, Formik } from "formik";
 import InternetConnection from "../../../components/InternetConnection";
 
 import * as yup from "yup";
@@ -24,13 +22,9 @@ import {
   removeItemValue,
   saveData,
 } from "../../../components/DataStorage";
-import CustomInput from "../../../components/CustomInput";
 // import plus from "../../../../assets/images/plus.png";
 // import minus from "../../../../assets/images/minus.png";
-import Stepper from "react-native-stepper-ui";
 // import DynamicInput from "../../../components/DynamicInput";
-import FacilityInput from "../../../components/FacilityInput /FacilityInput ";
-import { StepperContainer, StepView } from "@material.ui/react-native-stepper";
 import Input from "../../../components/Input/CustomInput";
 import SelectInput from "../../../components/SelectInput/SelectInput";
 import { Form } from "validate-form-in-expo-style";
