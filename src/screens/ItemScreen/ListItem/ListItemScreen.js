@@ -62,7 +62,7 @@ const DataFormat = async (items, setData, itemClass) => {
   setData(table);
 };
 
-const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
+const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
   const [data, setData] = useState(itemHandleData);
   const [item, setItem] = useState([]);
   const [itemClass, setItemClass] = useState([]);
@@ -72,10 +72,20 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem }) => {
     readData("item").then((value) => {
       if (value != null) {
         let data = JSON.parse(value);
-        try {
-          setItem(data);
-        } catch (e) {}
-      } else {
+        if (Object.keys(itemParent).length > 0) {
+          try {
+            let temp = data.filter((obj) => obj.facility === itemParent.id);
+            setItem(temp);
+          } catch (e) {}
+        } else {
+          readData("parent").then((parent) => {
+            try {
+              parent = JSON.parse(parent);
+              let temp = data.filter((obj) => obj.facility === parent.id);
+              setItem(temp);
+            } catch (e) {}
+          });
+        }
       }
     });
     readData("item-delete-item").then((value) => {

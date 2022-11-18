@@ -33,8 +33,11 @@ const DataFormat = async (facility, setData) => {
       "Last Changed on",
       "Edit",
       "Delete",
+      "Add Sub-Facility",
+      "Add Item",
+      "Item-List",
     ],
-    widthArr: [160, 160, 160, 160, 160, 160, 160, 160],
+    widthArr: [160, 160, 160, 160, 160, 160, 160, 160, 80, 80, 80],
     tableData: [],
   };
   let data_need = [];
@@ -52,13 +55,23 @@ const DataFormat = async (facility, setData) => {
         : "--",
       "True",
       "True",
+      "True",
+      "True",
+      "True",
     ]);
   }
   table.tableData = data_need;
   setData(table);
 };
 
-const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
+const ListFacilityScreen = ({
+  setCurrentTab,
+  setDefaultValueFacility,
+  facilityParent,
+  setFacilityParent,
+  itemParent,
+  setItemParent,
+}) => {
   const [data, setData] = useState(facilityHandleData);
   const [facility, setFacility] = useState([]);
   const [deleteItem, setDeleteItem] = useState([]);
@@ -144,6 +157,10 @@ const ListFacilityScreen = ({ setCurrentTab, setDefaultValueFacility }) => {
               deleteItem={deleteItem}
               selected={selected}
               setSelected={setSelected}
+              facilityParent={facilityParent}
+              setFacilityParent={setFacilityParent}
+              itemParent={itemParent}
+              setItemParent={setItemParent}
             />
           </ScrollView>
         </View>
@@ -169,6 +186,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
   },
-  text: { margin: 6, fontSize: 16, textAlign: "center" },
+  text: { fontSize: 16, textAlign: "center" },
 });
 export default ListFacilityScreen;
