@@ -101,6 +101,36 @@ const SyncScreen = ({}) => {
         console.log("we did not have the facility to send to server ");
       }
     });
+
+    readData("edited-facility").then((value) => {
+      if (value != null) {
+        for (let index = 0; index < value.length; index++) {
+          let param = value[index];
+          if (connectionState) {
+            axios
+              .put(
+                "http://" + url + "/facilities/",
+                {
+                  param,
+                },
+                {
+                  headers: { Authorization: token },
+                }
+              )
+              .then((response) => {
+                console.log("response edited-facility: ", response);
+              })
+              .catch((error) => {
+                console.log("errors edited-facility: ", error);
+              });
+          }
+        }
+        removeItemValue("edited-facility").then(() => "");
+      } else {
+        console.log("we did not have the facility to send to server ");
+      }
+    });
+
     readData("deleted-facility").then((value) => {
       if (value != null) {
         for (let index = 0; index < value.length; index++) {
@@ -158,6 +188,34 @@ const SyncScreen = ({}) => {
       }
     });
 
+    readData("edited-item").then((value) => {
+      if (value != null) {
+        for (let index = 0; index < value.length; index++) {
+          let param = value[index];
+          if (connectionState) {
+            axios
+              .put(
+                "http://" + url + "/item/",
+                {
+                  param,
+                },
+                {
+                  headers: { Authorization: token },
+                }
+              )
+              .then((response) => {
+                console.log("response edited-item: ", response);
+              })
+              .catch((error) => {
+                console.log("errors edited-item: ", error);
+              });
+          }
+        }
+        removeItemValue("edited-item").then(() => "");
+      } else {
+        console.log("we did not have the item to send to server ");
+      }
+    });
     readData("deleted-item").then((value) => {
       if (value != null) {
         for (let index = 0; index < value.length; index++) {
