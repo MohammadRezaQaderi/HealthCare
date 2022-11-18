@@ -22,6 +22,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import SelectDropdown from "react-native-select-dropdown";
 
 const facilityField = {
   id: "facility",
@@ -29,7 +30,7 @@ const facilityField = {
   active: false,
   disabled: true,
   state: "facility",
-  name: "Facility name",
+  name: "Facility Name",
 };
 
 function Item({
@@ -93,7 +94,21 @@ function Item({
       ["item-classes-and-types"],
       async () => {
         // const res = await ItemService.getItemClassesAndTypes(parent);
-
+        if(Object.keys(itemParent).length === 0){
+          setFieldValue((preValues) => ({
+            ...preValues,
+            facility: itemParent,
+          }));
+        }
+        else{
+          readData("parent").then((res) => {
+            setFieldValue((preValues) => ({
+              ...preValues,
+              facility: res,
+            }));
+          }
+          );
+        }
         // setFieldValue((preValues) => ({
         //   ...preValues,
         //   facility: res.data.facility,
@@ -404,14 +419,14 @@ function Item({
   };
 
   const selectItemClassHandler = async (e) => {
-    console.log(e.target.value);
+    console.log(e);
     console.log(itemClassesAndTypes);
-    setSelectedItemClass(itemClassesAndTypes[e.target.value]);
-    setSelectedItemType(itemClassesAndTypes[e.target.value].item_type[0]);
+    setSelectedItemClass(itemClassesAndTypes[e]);
+    setSelectedItemType(itemClassesAndTypes[e].item_type[0]);
   };
 
   const selectItemTypeHandler = (e) => {
-    setSelectedItemType(selectedItemClass.item_type[e.target.value]);
+    setSelectedItemType(selectedItemClass.item_type[e]);
   };
 
   const onIsFromPQSChange = () => {
@@ -504,257 +519,165 @@ function Item({
   return (
     <ScrollView onSubmit={onSaveHandler}>
       <View className="page-title mb-3">
-        <Text>Item information</Text>
+        <Text>Add new item</Text>
       </View>
 
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body pb-3">
-            <div className="row">
-              <Form.Group className="row mb-0">
-                <label
-                  className={`col-sm-4 text-right`}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    lineHeight: "1.4",
-                    textAlign: "right",
-                  }}
-                >
-                  <Text>Facility Name</Text>:
-                </label>
-                <div className={"col-sm-8"}>
-                  <DynamicInput
-                    field={facilityField}
-                    defaultValue={fieldsValue["facility"]?.name}
-                  />
-                </div>
-              </Form.Group>
-            </div>
-            <div className="row mt-3">
-              <Form.Group className="row mb-0">
-                <label
-                  className={`col-sm-4 text-left control-label`}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    lineHeight: "1.4",
-                    textAlign: "right",
-                  }}
-                >
-                  <Text>Item class</Text>
-                </label>
-                <div className="col-sm-8">
-                  <Form.Control
-                    onChange={selectItemClassHandler}
-                    className="form-select"
-                    as="select"
-                    value={itemClassesAndTypes?.findIndex(
-                      (i) =>
-                        i?.item_class.id === selectedItemClass?.item_class.id
-                    )}
-                    disabled={activeStep !== 0 || id !== "new"}
-                  >
-                    {itemClassesAndTypes.map((itemClass, index) => (
-                      <option value={index}>
-                        {itemClass.item_class.title}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </div>
-              </Form.Group>
-            </div>
-            <div className="row mt-3">
-              <Form.Group className="row mb-0">
-                <label
-                  className={`col-sm-4 text-right control-label`}
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    lineHeight: "1.4",
-                    textAlign: "right",
-                  }}
-                >
-                  <Text>Items category</Text>
-                </label>
-                <div className="col-sm-8">
-                  <Form.Control
-                    onChange={selectItemTypeHandler}
-                    className="form-select"
-                    as="select"
-                    value={selectedItemClass?.item_type.findIndex(
-                      (i) => i?.id === selectedItemType?.id
-                    )}
-                    disabled={activeStep !== 0 || id !== "new"}
-                  >
-                    {selectedItemClass?.item_type.map((itemType, index) => (
-                      <option value={index}>{itemType.title}</option>
-                    ))}
-                  </Form.Control>
-                </div>
-              </Form.Group>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body">
-            {activeStep === 0 && (
-              <>
-                {selectedItemType.havepqs && (
+      <View>
+        <DynamicInput
+          field={facilityField}
+          defaultValue={fieldsValue["facility"]?.name}
+        />
+      </View>
+      <View>
+        <Text>Item class</Text>
+
+        <SelectDropdown
+          data={itemClassesAndTypes.map((itemClass, index) => {
+            return { value: index, label: itemClass.item_class.title };
+          })}
+          defaultButtonText={"Item class"}
+          onSelect={(selectedItem, index) => {
+            selectItemClassHandler(index);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            // text represented after item is selected
+            // if data array is an array of objects then return selectedItem.property to render after item is selected
+            return selectedItem.label;
+          }}
+          rowTextForSelection={(item, index) => {
+            // text represented for each item in dropdown
+            // if data array is an array of objects then return item.property to represent item in dropdown
+            return item.label;
+          }}
+        />
+      </View>
+      <View>
+        <Text>Items category</Text>
+
+        <SelectDropdown
+          data={selectedItemClass?.item_type.map((itemType, index) => {
+            return { value: index, label: itemClass.item_class.title };
+          })}
+          defaultButtonText={"Items category"}
+          onSelect={(selectedItem, index) => {
+            selectItemTypeHandler(index);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            // text represented after item is selected
+            // if data array is an array of objects then return selectedItem.property to render after item is selected
+            return selectedItem.label;
+          }}
+          rowTextForSelection={(item, index) => {
+            // text represented for each item in dropdown
+            // if data array is an array of objects then return item.property to represent item in dropdown
+            return item.label;
+          }}
+        />
+      </View>
+
+      {selectedItemType.havepqs && (
+        <View>
+          <Text>Is this item from PQS/PIS list?</Text>
+          <SelectDropdown
+            data={[
+              { value: "No", key: false },
+              { value: "Yes", key: true },
+            ]}
+            defaultButtonText={field.name}
+            onSelect={(selectedItem, index) => {
+              onIsFromPQSChange();
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem.value;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item.value;
+            }}
+          />
+
+          {isFromPQS &&
+            fromPQSFields.map((pqsField) => (
+              <View>
+                <View>
+                  <Text>{pqsField.name}</Text>
+                </View>
+
+                {pqsData && pqsField.state === "PQSPISCode" ? (
                   <>
-                    <div className="row">
-                      <Form.Group className="row mb-0">
-                        <label
-                          className={`col-sm-4 text-right`}
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            alignItems: "center",
-                            lineHeight: "1.4",
-                            textAlign: "right",
-                          }}
-                        >
-                          <Text>Is this item from PQS/PIS list?</Text>
-                        </label>
-                        <div className="col-sm-6">
-                          <input
-                            name="is-from-pqs"
-                            type="checkbox"
-                            onChange={onIsFromPQSChange}
-                            checked={isFromPQS}
-                          />
-                        </div>
-                        <hr className="my-3" />
-                      </Form.Group>
-                    </div>
-                    {isFromPQS &&
-                      fromPQSFields.map((pqsField) => (
-                        <div className="row" key={pqsField.name}>
-                          <Form.Group className="row mb-0">
-                            <label
-                              className={`col-sm-4 text-right ${
-                                pqsField.required ? "control-label" : ""
-                              }`}
-                              style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                alignItems: "center",
-                                lineHeight: "1.4",
-                                textAlign: "right",
-                              }}
-                            >
-                              {pqsField.name}
-                            </label>
-
-                            <div
-                              className={`${
-                                pqsField.state === "PQSPISCode"
-                                  ? "col-sm-7"
-                                  : "col-sm-8"
-                              }`}
-                            >
-                              {pqsData && pqsField.state === "PQSPISCode" ? (
-                                <Select
-                                  options={pqsData}
-                                  onChange={(e) => {
-                                    console.log("on change ");
-                                    onChangeHandler(
-                                      e.label.split(" , ")[0],
-                                      pqsField
-                                    );
-                                  }}
-                                  value={{
-                                    label: fieldsValue["PQSPISCode"],
-                                    value: pqsData.find(
-                                      (pqs) =>
-                                        pqs.label.split(" , ")[0] ===
-                                        fieldsValue["PQSPISCode"]
-                                    )?.value,
-                                  }}
-                                  // onBlur={(e) => {
-                                  //   const value = e.target.value;
-                                  //   console.log(e.target.value)
-                                  //   if (value.length > 0) {
-                                  //     console.log("onBlur");
-                                  //     onChangeHandler(value, pqsField);
-                                  //   }
-                                  // }}
-                                />
-                              ) : (
-                                <DynamicInput
-                                  field={pqsField}
-                                  onChangeHandler={onChangeHandler}
-                                  defaultValue={fieldsValue[pqsField.state]}
-                                />
-                              )}
-                            </div>
-                            {pqsField.state === "PQSPISCode" && (
-                              <div className="col-sm-1">
-                                <button
-                                  className="btn btn-primary w-100 h-100 mt-1"
-                                  onClick={selectPQSHandler}
-                                  type="button"
-                                >
-                                  <Text>Load</Text>
-                                </button>
-                              </div>
-                            )}
-                            <hr className="my-3" />
-                          </Form.Group>
-                        </div>
-                      ))}
+                    <Select
+                      options={pqsData}
+                      onChange={(e) => {
+                        console.log("on change ");
+                        onChangeHandler(e.label.split(" , ")[0], pqsField);
+                      }}
+                      value={{
+                        label: fieldsValue["PQSPISCode"],
+                        value: pqsData.find(
+                          (pqs) =>
+                            pqs.label.split(" , ")[0] ===
+                            fieldsValue["PQSPISCode"]
+                        )?.value,
+                      }}
+                      // onBlur={(e) => {
+                      //   const value = e.target.value;
+                      //   console.log(e.target.value)
+                      //   if (value.length > 0) {
+                      //     console.log("onBlur");
+                      //     onChangeHandler(value, pqsField);
+                      //   }
+                      // }}
+                    />
                   </>
+                ) : (
+                  <DynamicInput
+                    field={pqsField}
+                    onChangeHandler={onChangeHandler}
+                    defaultValue={fieldsValue[pqsField.state]}
+                  />
                 )}
-              </>
-            )}
 
-            {itemFields !== undefined &&
-              Object.values(itemFields)?.map((field) => {
-                if (!isRelatedFieldOk(field.state, fieldsValue)) {
-                  return null;
-                }
-                const hasRequiredError = !!fieldErrors[field.state];
-                return (
-                  <div className="row" key={field.name}>
-                    <Form.Group className="row mb-0">
-                      <label
-                        className={`col-sm-4 text-right ${
-                          field.required ? "control-label" : ""
-                        }`}
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          alignItems: "center",
-                          lineHeight: "1.4",
-                          textAlign: "right",
-                        }}
-                      >
-                        <Text>{field.name}</Text>
-                      </label>
-                      <div className="col-sm-8">
-                        <DynamicInput
-                          field={field}
-                          onChangeHandler={onChangeHandler}
-                          defaultValue={fieldsValue[field.state]}
-                        />
-                      </div>
-                      {hasRequiredError && (
-                        <View>
-                          <Text>{fieldErrors[field.state]}</Text>
-                        </View>
-                      )}
-                    </Form.Group>
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-      </div>
+                {pqsField.state === "PQSPISCode" && (
+                  <View>
+                  
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={selectPQSHandler}
+                      // style={styles.appButtonContainer}
+                    >
+                      <Text>Load</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            ))}
+        </View>
+      )}
+
+      {itemFields !== undefined &&
+        Object.values(itemFields)?.map((field) => {
+          if (!isRelatedFieldOk(field.state, fieldsValue)) {
+            return null;
+          }
+          const hasRequiredError = !!fieldErrors[field.state];
+          return (
+            <View>
+              <DynamicInput
+                field={field}
+                onChangeHandler={onChangeHandler}
+                defaultValue={fieldsValue[field.state]}
+              />
+              {hasRequiredError && (
+                <View>
+                  <Text>{fieldErrors[field.state]}</Text>
+                </View>
+              )}
+            </View>
+          );
+        })}
     </ScrollView>
   );
 }
