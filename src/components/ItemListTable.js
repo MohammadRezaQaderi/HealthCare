@@ -22,7 +22,7 @@ export default class ItemListTable extends Component {
     });
     let url = "";
     let deleted_item = [];
-    readData("item-facility").then((x) => {
+    readData("deleted-item").then((x) => {
       deleted_item = JSON.parse(x);
     });
     readData("URL").then((x) => {
