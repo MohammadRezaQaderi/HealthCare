@@ -308,6 +308,8 @@ const MenuScreen = ({
                   <SignInScreen
                     setLoggedIn={setLoggedIn}
                     setCurrentTab={setCurrentTab}
+                    setItemParent={setItemParent}
+                    setFacilityParent={setFacilityParent}
                   />
                 ) : currentTab == "Logout" ? (
                   <LogoutScreen
@@ -355,7 +357,6 @@ const MenuScreen = ({
                     setDefaultValueItem={setDefaultValueItem}
                     defaultValueItem={defaultValueItem}
                     itemParent={itemParent}
-
                   />
                 ) : (
                   <></>

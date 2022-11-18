@@ -175,7 +175,8 @@ function getInfoFromServer() {
             headers: { Authorization: token },
           })
           .then((response) => {
-            // console.log("salam");
+            removeItemValue("parent").then(() => "");
+            saveData("parent", response?.data.facility).then(() => "");
             const item_classes = response.data.data;
             removeItemValue("itemClass").then(() => "");
             saveData("itemClass", response?.data.data).then(() => {
