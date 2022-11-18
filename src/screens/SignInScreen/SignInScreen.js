@@ -40,7 +40,7 @@ const getContent = () => {
  * This function get the Data from server
  * For use in the offline mode :)
  */
-function getInfoFromServer() {
+function getInfoFromServer(setCurrentTab) {
   readData("token").then((token) => {
     token = JSON.parse(token);
     token = "Bearer".concat(" ", token);
@@ -243,6 +243,7 @@ function getInfoFromServer() {
               // edit facility
               saveData("editfacility",[]).then(() => "");
               saveData("edititem",[]).then(() => "");
+              setCurrentTab("Logout");
             });
           })
           .catch((error) => {
@@ -268,9 +269,9 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
         .then((response) => {
           setLoggedIn(true);
           saveData("token", response?.data?.access).then(() => "");
-          getInfoFromServer();
+          getInfoFromServer(setCurrentTab);
           setLoading(false);
-          setCurrentTab("Logout");
+          
         })
         .catch((error) => {
           console.log("errors to login: ", error);
