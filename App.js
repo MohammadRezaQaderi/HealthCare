@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { readData, saveData, clearAll } from "./src/components/DataStorage";
 import MenuScreen from "./src/screens/MenuScreen/MenuScreen";
 import { QueryClient, QueryClientProvider } from "react-query";
-import Toast from "react-native-toast-message";
+// import Toast from "react-native-toast-message";
+import Toast from "react-native-toast-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import "./i18n";
 
@@ -33,12 +34,13 @@ export default function App() {
     readData("token").then((token) => {
       if (token != null) {
         setLoggedIn(true);
-        setCurrentTab("New Facility");
+        setCurrentTab("Scan QR");
       }
     });
     setCheckState(true);
   }, []);
   return (
+    // <ToastProvider>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <MenuScreen
@@ -50,8 +52,10 @@ export default function App() {
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
         />
-        <Toast />
+        {/* <Toast /> */}
+        <Toast ref={(ref) => (global["toast"] = ref)} />
       </QueryClientProvider>
     </GestureHandlerRootView>
+    // </ToastProvider>
   );
 }

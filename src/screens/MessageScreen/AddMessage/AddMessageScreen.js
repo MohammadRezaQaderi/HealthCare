@@ -19,7 +19,6 @@ import axios from "axios";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import CustomButton from "../../../components/CustomButton";
-
 const AddMessageScreen = ({ defaultValueMessage }) => {
   const [connectionState, setConnectionState] = useState(false);
   const [mfl, setMFL] = useState([]);
@@ -75,6 +74,13 @@ const AddMessageScreen = ({ defaultValueMessage }) => {
               }
             )
             .then((response) => {
+              toast.show("message send successfuly", {
+                type: "success",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
               console.log("response message send: ", response);
             })
             .catch((error) => {
@@ -88,6 +94,13 @@ const AddMessageScreen = ({ defaultValueMessage }) => {
                 saveData("send-message", send_message).then(() => "");
                 console.log("errors message sending and save and new one: ");
               }
+              toast.show("message dose not send, save in storage", {
+                type: "warning",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
               console.log("errors message sending: ", error);
             });
         } else {
@@ -105,6 +118,13 @@ const AddMessageScreen = ({ defaultValueMessage }) => {
               }
             )
             .then((response) => {
+              toast.show("message send successfuly", {
+                type: "success",
+                placement: "bottom",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
               console.log("response edit message send: ", response);
             })
             .catch((error) => {
