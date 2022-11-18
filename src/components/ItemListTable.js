@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { readData } from "./DataStorage";
 import InternetConnection from "./InternetConnection";
+import editIcon from "../../assets/edit.png";
+import deleteIcon from "../../assets/delete.png";
 export default class ItemListTable extends Component {
   constructor(props) {
     super(props);
@@ -83,20 +85,30 @@ export default class ItemListTable extends Component {
   render() {
     const state = this.props.data;
     const editToolBox = (data, index) => (
-      <View style={{ flex: 1, flexDirection: "column" }}>
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.editIndex(index)}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Edit</Text>
-          </View>
+          <Image
+            source={editIcon}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
     const deleteToolBox = (data, index) => (
-      <View style={{ flex: 1, flexDirection: "column" }}>
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.deleteIndex(index)}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Delete</Text>
-          </View>
+          <Image
+            source={deleteIcon}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
@@ -114,6 +126,7 @@ export default class ItemListTable extends Component {
               {rowData.map((cellData, cellIndex) => (
                 <Cell
                   key={cellIndex}
+                  style={{ width: state.widthArr[cellIndex] }}
                   data={
                     cellIndex === 5
                       ? editToolBox(cellData, index)
@@ -121,10 +134,7 @@ export default class ItemListTable extends Component {
                       ? deleteToolBox(cellData, index)
                       : cellData
                   }
-                  widthArr={state.widthArr}
-                  textStyle={
-                    (styles.text, { minWidth: state?.widthArr[index] })
-                  }
+                  textStyle={styles.text}
                 />
               ))}
             </TableWrapper>
@@ -136,11 +146,15 @@ export default class ItemListTable extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  container: {},
   head: { height: 50, backgroundColor: "#2888fe" },
-  text: { margin: 6, fontSize: 16, textAlign: "center", alignItems: "center" },
+  text: {
+    marginHorizontal: 6,
+    fontSize: 16,
+    textAlign: "center",
+    alignItems: "center",
+  },
   rowSection: {
-    flex: 2,
     flexDirection: "row",
     height: 60,
     backgroundColor: "#f1f8ff",

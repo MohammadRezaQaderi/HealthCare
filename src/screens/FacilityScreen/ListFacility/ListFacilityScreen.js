@@ -12,7 +12,7 @@ const facilityHandleData = {
     "Total number of sub-facilities",
     "Number of defined sub-level facilities",
   ],
-  widthArr: [160, 180, 120, 120, 120],
+  widthArr: [160, 160, 160, 160, 160, 160, 160, 160, 80, 80, 80],
   tableData: [
     ["EXC0100001ACCWCR002", "DC PEV", 1, "PR", 0.1, "2022/10/20"],
     ["EXP0100003", "DS KOUMASSI", 2, "LD", 0.1, "2022/10/19"],
@@ -37,7 +37,7 @@ const DataFormat = async (facility, setData) => {
       "Add Item",
       "Item-List",
     ],
-    widthArr: [160, 160, 160, 160, 160, 160, 160, 160, 80, 80, 80],
+    widthArr: [160, 160, 160, 160, 160, 160, 80, 80, 80, 80, 80],
     tableData: [],
   };
   let data_need = [];

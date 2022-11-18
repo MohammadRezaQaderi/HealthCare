@@ -35,7 +35,7 @@ const DataFormat = async (items, setData, itemClass) => {
       "Edit",
       "Delete",
     ],
-    widthArr: [160, 160, 160, 160, 160, 160, 160],
+    widthArr: [160, 160, 160, 160, 160, 80, 80],
     tableData: [],
   };
   let data_need = [];

@@ -7,6 +7,8 @@ import InternetConnection from "./InternetConnection";
 import addFacility from "../../assets/add-facility.png";
 import addItem from "../../assets/add-list.png";
 import listItem from "../../assets/list-item.png";
+import editIcon from "../../assets/edit.png";
+import deleteIcon from "../../assets/delete.png";
 export default class FacilityListTable extends Component {
   constructor(props) {
     super(props);
@@ -106,26 +108,36 @@ export default class FacilityListTable extends Component {
   }
   render() {
     const state = this.state;
-    const editToolBox = (data, index) => (
-      <View style={{ marginHorizontal: 10 }}>
+    const editToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.editIndex(index)}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Edit</Text>
-          </View>
+          <Image
+            source={editIcon}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
-    const deleteToolBox = (data, index) => (
-      <View style={{ marginHorizontal: 10 }}>
+    const deleteToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.deleteIndex(index)}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Delete</Text>
-          </View>
+          <Image
+            source={deleteIcon}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
-    const addFacilityToolBox = (data, index) => (
-      <View style={{ marginHorizontal: 10 }}>
+    const addFacilityToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.addFacilityIndex(index)}>
           <Image
             source={addFacility}
@@ -138,8 +150,8 @@ export default class FacilityListTable extends Component {
         </TouchableOpacity>
       </View>
     );
-    const addItemToolBox = (data, index) => (
-      <View style={{ marginHorizontal: 10 }}>
+    const addItemToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.addItemIndex(index)}>
           <Image
             source={addItem}
@@ -152,8 +164,8 @@ export default class FacilityListTable extends Component {
         </TouchableOpacity>
       </View>
     );
-    const listItemToolBox = (data, index) => (
-      <View style={{ marginHorizontal: 10 }}>
+    const listItemToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.listItemIndex(index)}>
           <Image
             source={listItem}
@@ -180,23 +192,37 @@ export default class FacilityListTable extends Component {
               {rowData.map((cellData, cellIndex) => (
                 <Cell
                   key={cellIndex}
+                  style={{ width: state.widthArr[cellIndex] }}
                   data={
                     cellIndex === 6
-                      ? editToolBox(cellData, index)
+                      ? editToolBox(cellData, index, state.widthArr[cellIndex])
                       : cellIndex === 7
-                      ? deleteToolBox(cellData, index)
+                      ? deleteToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
                       : cellIndex === 8
-                      ? addFacilityToolBox(cellData, index)
+                      ? addFacilityToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
                       : cellIndex === 9
-                      ? addItemToolBox(cellData, index)
+                      ? addItemToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
                       : cellIndex === 10
-                      ? listItemToolBox(cellData, index)
+                      ? listItemToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
                       : cellData
                   }
-                  widthArr={state.widthArr}
-                  textStyle={
-                    (styles.text, { minWidth: state?.widthArr[index] })
-                  }
+                  textStyle={[styles.text]}
                 />
               ))}
             </TableWrapper>
@@ -210,12 +236,17 @@ export default class FacilityListTable extends Component {
 const styles = StyleSheet.create({
   container: {},
   head: { height: 50, backgroundColor: "#2888fe" },
-  text: { margin: 6, fontSize: 16, textAlign: "center", alignItems: "center" },
+  text: {
+    marginHorizontal: 6,
+    fontSize: 16,
+    textAlign: "center",
+    alignItems: "center",
+  },
   rowSection: {
     flexDirection: "row",
     height: 60,
     backgroundColor: "#f1f8ff",
   },
   btn: { width: 58, height: 18, backgroundColor: "#78B7BB", borderRadius: 2 },
-  btnText: { textAlign: "center", color: "black" },
+  btnText: { textAlign: "center", color: "white" },
 });
