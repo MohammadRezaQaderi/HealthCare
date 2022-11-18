@@ -341,6 +341,7 @@ const MenuScreen = ({
                   />
                 ) : currentTab == "New Facility" ? (
                   <AddFacilityScreen
+                    setCurrentTab={setCurrentTab}
                     defaultValueFacility={defaultValueFacility}
                     setDefaultValueFacility={setDefaultValueFacility}
                     facilityParent={facilityParent}
