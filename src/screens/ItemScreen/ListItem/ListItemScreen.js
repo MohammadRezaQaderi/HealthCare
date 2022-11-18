@@ -40,11 +40,11 @@ const DataFormat = async (items, setData, itemClass) => {
   };
   let data_need = [];
   for (let index = 0; index < items.length; index++) {
-    let item_class = await itemClass.find(
-      (obj) => obj.item_class.id === items[index]["item_class"]
+    const item_class = itemClass.find(
+      (obj) => obj?.item_class?.id === items[index]["item_class"]
     );
-    let item_type = await item_class.item_type.find(
-      (obj) => obj.id === items[index]["item_type"]
+    const item_type = item_class?.item_type.find(
+      (obj) => obj?.id === items[index]["item_type"]
     );
     data_need.push([
       items[index]["item_class"] ? item_class.item_class.title : "--",
@@ -114,7 +114,7 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
   }, []);
   useEffect(() => {
     DataFormat(item, setData, itemClass);
-  }, [item]);
+  }, [itemClass]);
   return (
     <ScrollView>
       {data?.tableData?.length > 0 && deleteItem.length > 0 ? (
