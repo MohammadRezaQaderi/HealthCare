@@ -10,9 +10,16 @@ import { Row, Table } from "react-native-table-component";
 const { width } = Dimensions.get("window");
 const qrSize = width * 0.7;
 
-const DataFormat = async (items, setData, itemClass, scannedData) => {
+const DataFormat = async (
+  items,
+  setData,
+  itemClass,
+  facilities,
+  scannedData
+) => {
   let table = {
     tableHead: [
+      "Facility",
       "Item Class",
       "Items Category",
       "Code",
@@ -21,7 +28,7 @@ const DataFormat = async (items, setData, itemClass, scannedData) => {
       "Edit",
       "Delete",
     ],
-    widthArr: [160, 160, 160, 160, 160, 160, 160],
+    widthArr: [160, 160, 160, 160, 160, 160, 160, 160],
     tableData: [],
   };
   let data_need = [];
@@ -32,9 +39,14 @@ const DataFormat = async (items, setData, itemClass, scannedData) => {
     let item_type = await item_class.item_type.find(
       (obj) => obj.id === items[index]["item_type"]
     );
-    // if (items[index]["code"] === scannedData) {
-    if (items[index]["code"] === "EXC0100001ACCWCR002") {
+    if (items[index]["code"] === scannedData) {
+      // if (items[index]["code"] === "EXC0100001ACCWCR002") {
+      console.log("items[index]", items[index]);
+      let facility = await facilities.find(
+        (obj) => obj.id === items[index]["facility"]
+      );
       data_need.push([
+        facility.name ? facility.name : "--",
         items[index]["item_class"] ? item_class.item_class.title : "--",
         items[index]["item_type"] ? item_type.title : "--",
         items[index]["code"] ? items[index]["code"] : "--",
@@ -49,6 +61,7 @@ const DataFormat = async (items, setData, itemClass, scannedData) => {
   }
   table.tableData = data_need;
   setData(table);
+  console.log("table", table);
 };
 
 export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
@@ -56,6 +69,7 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
   const [itemClass, setItemClass] = useState([]);
+  const [facilities, setFacilities] = useState([]);
   const [deleteItem, setDeleteItem] = useState([]);
   const [selected, setSelected] = useState([]);
   const [item, setItem] = useState([]);
@@ -93,6 +107,12 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
         setItemClass(data);
       } catch (e) {}
     });
+    readData("facilities").then((x) => {
+      let data = JSON.parse(x);
+      try {
+        setFacilities(data);
+      } catch (e) {}
+    });
   }, []);
   useEffect(() => {
     (async () => {
@@ -102,13 +122,14 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
+    console.log("data", data);
     setScannedData(data);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    setScanned(true);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
   useEffect(() => {
-    DataFormat(item, setData, itemClass, scannedData);
-  }, [scanned]);
+    DataFormat(item, setData, itemClass, facilities, scannedData);
+  }, [scannedData]);
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -116,6 +137,7 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+  console.log("Scanned", scanned);
   return (
     <View style={{ flexDirection: "column", padding: 20 }}>
       {scanned && data?.tableData?.length > 0 && deleteItem.length > 0 ? (
