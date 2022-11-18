@@ -57,6 +57,8 @@ const MenuScreen = ({
   const [defaultValueMessage, setDefaultValueMessage] = useState({});
   const [defaultValueFacility, setDefaultValueFacility] = useState({});
   const [defaultValueItem, setDefaultValueItem] = useState({});
+  const [facilityParent, setFacilityParent] = useState({});
+  const [itemParent, setItemParent] = useState({});
   // To get the curretn Status of menu ...
   const [showMenu, setShowMenu] = useState(false);
   // Animated Properties...

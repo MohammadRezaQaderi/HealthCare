@@ -38,6 +38,7 @@ function Item({ defaultValueItem }) {
   const [selectedItemClass, setSelectedItemClass] = useState(null);
   const [selectedItemType, setSelectedItemType] = useState(null);
   const [isFromPQS, setIsFromPQS] = useState(false);
+  const [pqsData, setPQSData] = useState(null);
 
   // const { id } = useParams();
   // const history = useHistory();
@@ -97,7 +98,7 @@ function Item({ defaultValueItem }) {
 
         // const datas = res.data.data.filter((item) => item.item_type.length > 0);
         // if (datas.length === 0) {
-        //   toast.error(<Trans>No available item found</Trans>);
+        //   toast.error(<Text>No available item found</Text>);
         //   history.push("/settings/item-t-level");
         // }
         return itemClass.filter((item) => item.item_type.length > 0);
@@ -135,26 +136,60 @@ function Item({ defaultValueItem }) {
       }
     );
 
-  const { data: pqsData, isLoading: isPqsLoading } = useQuery(
-    ["pqs", selectedItemType?.id],
+  // const { data: pqsData, isLoading: isPqsLoading } = useQuery(
+  //   ["pqs", selectedItemType?.id],
+  //   async () => {
+  //     let id_param = 0;
+  //     if (id == "new") {
+  //       id_param = selectedItemType?.id;
+  //     } else {
+  //       id_param = 1;
+  //       if (fieldsValue !== {}) {
+  //         console.log("hi");
+  //         id_param = fieldsValue["item_type"];
+  //       } else {
+  //         window.location.reload();
+  //       }
+  //     }
+  //     const res = await ItemService.getPQS(id_param);
+  //     if (res.data.length === 0) {
+  //       return [];
+  //     }
+  //     return 
+  //   },
+  //   {
+  //     refetchOnMount: true,
+  //   }
+  // );
+
+  const {
+    data: itemFields,
+    isLoading: isItemsFieldsLoading,
+    isIdle: isItemsFieldsIdle,
+    refetch: refetchItemFields,
+  } = useQuery(
+    [
+      "item-fields",
+      selectedItemClass?.item_class.id,
+      selectedItemType?.id,
+      parent,
+    ],
     async () => {
-      let id_param = 0;
-      if (id == "new") {
-        id_param = selectedItemType?.id;
-      } else {
-        id_param = 1;
-        if (fieldsValue !== {}) {
-          console.log("hi");
-          id_param = fieldsValue["item_type"];
-        } else {
-          window.location.reload();
-        }
-      }
-      const res = await ItemService.getPQS(id_param);
-      if (res.data.length === 0) {
-        return [];
-      }
-      return res?.data?.map((item) => ({
+      // const res = await ItemService.getItemFields(
+      //   selectedItemClass.item_class.id,
+      //   selectedItemType.id,
+      //   parent
+      // );
+      readData("itemFields").then((x) => {
+        temp=JSON.parse(x);
+        // find the item class
+        const itemClass = temp.find
+        (item => item.item_class.id === selectedItemClass?.item_class.id);
+        // find the item type
+        const itemType = itemClass?.item_type?.find
+        (item => item.id === selectedItemType?.id);
+        const pqs= itemType?.pqs;
+        setPQSData(pqs.map((item) => ({
         label: item.pqsnumber
           ? item.pqsnumber +
             " , " +
@@ -171,49 +206,31 @@ function Item({ defaultValueItem }) {
             " , " +
             item.make,
         value: item,
-      }));
-    },
-    {
-      refetchOnMount: true,
-    }
-  );
+      })));
+        const res={
+          "data":{
+            "fields":itemType?.fields
+          }
+        }
 
-  const {
-    data: itemFields,
-    isLoading: isItemsFieldsLoading,
-    isIdle: isItemsFieldsIdle,
-    refetch: refetchItemFields,
-  } = useQuery(
-    [
-      "item-fields",
-      selectedItemClass?.item_class.id,
-      selectedItemType?.id,
-      parent,
-    ],
-    async () => {
-      const res = await ItemService.getItemFields(
-        selectedItemClass.item_class.id,
-        selectedItemType.id,
-        parent
-      );
       console.log(res);
-      const result = {};
+      const result = [];
       if (res.data.fields) {
         for (const field of res.data.fields) {
           if (id !== "new" && field.field.state === "same_item") {
             continue;
           }
-          const fieldTopicInResult = result[field.field.topic] ?? [];
+          // const fieldTopicInResult = result[field.field.topic] ?? [];
 
-          fieldTopicInResult.push(field.field);
-          result[field.field.topic] = fieldTopicInResult;
+          // fieldTopicInResult.push(field.field);
+          result.push(field);
         }
-        const firstTopic = Object.keys(result)[0] ?? "Type";
-        if (result[firstTopic] === undefined) {
-          result[firstTopic] = [];
-        }
+        // const firstTopic = Object.keys(result)[0] ?? "Type";
+        // if (result[firstTopic] === undefined) {
+        //   result[firstTopic] = [];
+        // }
         //static fields
-        result[firstTopic].unshift({
+        result.unshift({
           id: "code",
           name: "Item code",
           topic: firstTopic,
@@ -225,7 +242,9 @@ function Item({ defaultValueItem }) {
           params: [],
         });
       }
+      // 
       return result;
+    });
     },
     {
       enabled: !!selectedItemType,
@@ -462,8 +481,8 @@ function Item({ defaultValueItem }) {
     isItemDefaultLoading ||
     isItemClassesAndTypesLoading ||
     isItemsFieldsLoading ||
-    isItemsFieldsIdle ||
-    isPqsLoading
+    isItemsFieldsIdle 
+
   ) {
     return (
       <ScrollView>
@@ -475,20 +494,11 @@ function Item({ defaultValueItem }) {
   }
 
   return (
-    <form onSubmit={onSaveHandler}>
+    <ScrollView onSubmit={onSaveHandler}>
       <h3 className="page-title mb-3">
-        <Trans>Item information</Trans>
+        <Text>Item information</Text>
       </h3>
-      <div className="mt-3">
-        <div className="card">
-          <div className="card-body pb-3">
-            <div className="row pb-4" style={{ overflow: "auto" }}>
-           
-            </div>
-          
-          </div>
-        </div>
-      </div>
+
       <div className="mt-3">
         <div className="card">
           <div className="card-body pb-3">
@@ -504,7 +514,7 @@ function Item({ defaultValueItem }) {
                     textAlign: "right",
                   }}
                 >
-                  <Trans>Facility Name</Trans>:
+                  <Text>Facility Name</Text>:
                 </label>
                 <div className={"col-sm-8"}>
                   <DynamicInput
@@ -526,7 +536,7 @@ function Item({ defaultValueItem }) {
                     textAlign: "right",
                   }}
                 >
-                  <Trans>Item class</Trans>
+                  <Text>Item class</Text>
                 </label>
                 <div className="col-sm-8">
                   <Form.Control
@@ -560,7 +570,7 @@ function Item({ defaultValueItem }) {
                     textAlign: "right",
                   }}
                 >
-                  <Trans>Items category</Trans>
+                  <Text>Items category</Text>
                 </label>
                 <div className="col-sm-8">
                   <Form.Control
@@ -601,7 +611,7 @@ function Item({ defaultValueItem }) {
                             textAlign: "right",
                           }}
                         >
-                          <Trans>Is this item from PQS/PIS list?</Trans>
+                          <Text>Is this item from PQS/PIS list?</Text>
                         </label>
                         <div className="col-sm-6">
                           <input
@@ -682,7 +692,7 @@ function Item({ defaultValueItem }) {
                                   onClick={selectPQSHandler}
                                   type="button"
                                 >
-                                  <Trans>Load</Trans>
+                                  <Text>Load</Text>
                                 </button>
                               </div>
                             )}
@@ -694,55 +704,50 @@ function Item({ defaultValueItem }) {
                 )}
               </>
             )}
-            {Object.values(itemFields)[activeStep]?.map((field) => {
-              if (!isRelatedFieldOk(field.state, fieldsValue)) {
-                return null;
-              }
-              const hasRequiredError = !!fieldErrors[field.state];
-              return (
-                <div className="row" key={field.name}>
-                  <Form.Group className="row mb-0">
-                    <label
-                      className={`col-sm-4 text-right ${
-                        field.required ? "control-label" : ""
-                      }`}
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                        lineHeight: "1.4",
-                        textAlign: "right",
-                      }}
-                    >
-                      <Trans>{field.name}</Trans>
-                    </label>
-                    <div className="col-sm-8">
-                      <DynamicInput
-                        field={field}
-                        onChangeHandler={onChangeHandler}
-                        defaultValue={fieldsValue[field.state]}
-                      />
-                    </div>
-                    {hasRequiredError && (
-                      <div className="row">
-                        <div className="col-sm-4"></div>
-                        <div className="col-sm-8">
-                          <p className="my-1 ml-2 text-danger">
-                            <Trans>{fieldErrors[field.state]}</Trans>
-                          </p>
-                        </div>
+
+            {itemFields !== undefined &&
+              Object.values(itemFields)?.map((field) => {
+                if (!isRelatedFieldOk(field.state, fieldsValue)) {
+                  return null;
+                }
+                const hasRequiredError = !!fieldErrors[field.state];
+                return (
+                  <div className="row" key={field.name}>
+                    <Form.Group className="row mb-0">
+                      <label
+                        className={`col-sm-4 text-right ${
+                          field.required ? "control-label" : ""
+                        }`}
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          alignItems: "center",
+                          lineHeight: "1.4",
+                          textAlign: "right",
+                        }}
+                      >
+                        <Text>{field.name}</Text>
+                      </label>
+                      <div className="col-sm-8">
+                        <DynamicInput
+                          field={field}
+                          onChangeHandler={onChangeHandler}
+                          defaultValue={fieldsValue[field.state]}
+                        />
                       </div>
-                    )}
-                    <hr className="my-3" />
-                  </Form.Group>
-                </div>
-              );
-            })}
+                      {hasRequiredError && (
+                        <View>
+                          <Text>{fieldErrors[field.state]}</Text>
+                        </View>
+                      )}
+                    </Form.Group>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
-      
-    </form>
+    </ScrollView>
   );
 }
 
