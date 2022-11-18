@@ -517,167 +517,167 @@ function Item({
   }
 
   return (
-    <ScrollView onSubmit={onSaveHandler}>
+    <ScrollView>
       <View className="page-title mb-3">
         <Text>Add new item</Text>
       </View>
-
-      <View>
-        <DynamicInput
-          field={facilityField}
-          defaultValue={fieldsValue["facility"]?.name}
-        />
-      </View>
-      <View>
-        <Text>Item class</Text>
-
-        <SelectDropdown
-          data={itemClassesAndTypes.map((itemClass, index) => {
-            return { value: index, label: itemClass.item_class.title };
-          })}
-          defaultButtonText={"Item class"}
-          onSelect={(selectedItem, index) => {
-            selectItemClassHandler(index);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            // text represented after item is selected
-            // if data array is an array of objects then return selectedItem.property to render after item is selected
-            return selectedItem.label;
-          }}
-          rowTextForSelection={(item, index) => {
-            // text represented for each item in dropdown
-            // if data array is an array of objects then return item.property to represent item in dropdown
-            return item.label;
-          }}
-        />
-      </View>
-      <View>
-        <Text>Items category</Text>
-
-        <SelectDropdown
-          data={selectedItemClass?.item_type.map((itemType, index) => {
-            return { value: index, label: itemClass.item_class.title };
-          })}
-          defaultButtonText={"Items category"}
-          onSelect={(selectedItem, index) => {
-            selectItemTypeHandler(index);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            // text represented after item is selected
-            // if data array is an array of objects then return selectedItem.property to render after item is selected
-            return selectedItem.label;
-          }}
-          rowTextForSelection={(item, index) => {
-            // text represented for each item in dropdown
-            // if data array is an array of objects then return item.property to represent item in dropdown
-            return item.label;
-          }}
-        />
-      </View>
-
-      {selectedItemType.havepqs && (
+      <Form onSubmit={onSaveHandler}>
         <View>
-          <Text>Is this item from PQS/PIS list?</Text>
+          <DynamicInput
+            field={facilityField}
+            defaultValue={fieldsValue["facility"]?.name}
+          />
+        </View>
+        <View>
+          <Text>Item class</Text>
+
           <SelectDropdown
-            data={[
-              { value: "No", key: false },
-              { value: "Yes", key: true },
-            ]}
-            defaultButtonText={field.name}
+            data={itemClassesAndTypes.map((itemClass, index) => {
+              return { value: index, label: itemClass.item_class.title };
+            })}
+            defaultButtonText={"Item class"}
             onSelect={(selectedItem, index) => {
-              onIsFromPQSChange();
+              selectItemClassHandler(index);
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
               // text represented after item is selected
               // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return selectedItem.value;
+              return selectedItem.label;
             }}
             rowTextForSelection={(item, index) => {
               // text represented for each item in dropdown
               // if data array is an array of objects then return item.property to represent item in dropdown
-              return item.value;
+              return item.label;
             }}
           />
+        </View>
+        <View>
+          <Text>Items category</Text>
 
-          {isFromPQS &&
-            fromPQSFields.map((pqsField) => (
-              <View>
+          <SelectDropdown
+            data={selectedItemClass?.item_type.map((itemType, index) => {
+              return { value: index, label: itemClass.item_class.title };
+            })}
+            defaultButtonText={"Items category"}
+            onSelect={(selectedItem, index) => {
+              selectItemTypeHandler(index);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem.label;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item.label;
+            }}
+          />
+        </View>
+
+        {selectedItemType.havepqs && (
+          <View>
+            <Text>Is this item from PQS/PIS list?</Text>
+            <SelectDropdown
+              data={[
+                { value: "No", key: false },
+                { value: "Yes", key: true },
+              ]}
+              defaultButtonText={field.name}
+              onSelect={(selectedItem, index) => {
+                onIsFromPQSChange();
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem.value;
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item.value;
+              }}
+            />
+
+            {isFromPQS &&
+              fromPQSFields.map((pqsField) => (
                 <View>
-                  <Text>{pqsField.name}</Text>
-                </View>
-
-                {pqsData && pqsField.state === "PQSPISCode" ? (
-                  <>
-                    <Select
-                      options={pqsData}
-                      onChange={(e) => {
-                        console.log("on change ");
-                        onChangeHandler(e.label.split(" , ")[0], pqsField);
-                      }}
-                      value={{
-                        label: fieldsValue["PQSPISCode"],
-                        value: pqsData.find(
-                          (pqs) =>
-                            pqs.label.split(" , ")[0] ===
-                            fieldsValue["PQSPISCode"]
-                        )?.value,
-                      }}
-                      // onBlur={(e) => {
-                      //   const value = e.target.value;
-                      //   console.log(e.target.value)
-                      //   if (value.length > 0) {
-                      //     console.log("onBlur");
-                      //     onChangeHandler(value, pqsField);
-                      //   }
-                      // }}
-                    />
-                  </>
-                ) : (
-                  <DynamicInput
-                    field={pqsField}
-                    onChangeHandler={onChangeHandler}
-                    defaultValue={fieldsValue[pqsField.state]}
-                  />
-                )}
-
-                {pqsField.state === "PQSPISCode" && (
                   <View>
-                  
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={selectPQSHandler}
-                      // style={styles.appButtonContainer}
-                    >
-                      <Text>Load</Text>
-                    </TouchableOpacity>
+                    <Text>{pqsField.name}</Text>
+                  </View>
+
+                  {pqsData && pqsField.state === "PQSPISCode" ? (
+                    <>
+                      <Select
+                        options={pqsData}
+                        onChange={(e) => {
+                          console.log("on change ");
+                          onChangeHandler(e.label.split(" , ")[0], pqsField);
+                        }}
+                        value={{
+                          label: fieldsValue["PQSPISCode"],
+                          value: pqsData.find(
+                            (pqs) =>
+                              pqs.label.split(" , ")[0] ===
+                              fieldsValue["PQSPISCode"]
+                          )?.value,
+                        }}
+                        // onBlur={(e) => {
+                        //   const value = e.target.value;
+                        //   console.log(e.target.value)
+                        //   if (value.length > 0) {
+                        //     console.log("onBlur");
+                        //     onChangeHandler(value, pqsField);
+                        //   }
+                        // }}
+                      />
+                    </>
+                  ) : (
+                    <DynamicInput
+                      field={pqsField}
+                      onChangeHandler={onChangeHandler}
+                      defaultValue={fieldsValue[pqsField.state]}
+                    />
+                  )}
+
+                  {pqsField.state === "PQSPISCode" && (
+                    <View>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={selectPQSHandler}
+                        // style={styles.appButtonContainer}
+                      >
+                        <Text>Load</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              ))}
+          </View>
+        )}
+
+        {itemFields !== undefined &&
+          Object.values(itemFields)?.map((field) => {
+            if (!isRelatedFieldOk(field.state, fieldsValue)) {
+              return null;
+            }
+            const hasRequiredError = !!fieldErrors[field.state];
+            return (
+              <View>
+                <DynamicInput
+                  field={field}
+                  onChangeHandler={onChangeHandler}
+                  defaultValue={fieldsValue[field.state]}
+                />
+                {hasRequiredError && (
+                  <View>
+                    <Text>{fieldErrors[field.state]}</Text>
                   </View>
                 )}
               </View>
-            ))}
-        </View>
-      )}
-
-      {itemFields !== undefined &&
-        Object.values(itemFields)?.map((field) => {
-          if (!isRelatedFieldOk(field.state, fieldsValue)) {
-            return null;
-          }
-          const hasRequiredError = !!fieldErrors[field.state];
-          return (
-            <View>
-              <DynamicInput
-                field={field}
-                onChangeHandler={onChangeHandler}
-                defaultValue={fieldsValue[field.state]}
-              />
-              {hasRequiredError && (
-                <View>
-                  <Text>{fieldErrors[field.state]}</Text>
-                </View>
-              )}
-            </View>
-          );
-        })}
+            );
+          })}
+      </Form>
     </ScrollView>
   );
 }
