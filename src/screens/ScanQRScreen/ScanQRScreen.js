@@ -25,10 +25,8 @@ const DataFormat = async (
       "Code",
       "Manufacturer",
       "Last Changed on",
-      "Edit",
-      "Delete",
     ],
-    widthArr: [160, 160, 160, 160, 160, 160, 160, 160],
+    widthArr: [160, 160, 160, 160, 160, 160],
     tableData: [],
   };
   let data_need = [];
@@ -40,8 +38,6 @@ const DataFormat = async (
       (obj) => obj.id === items[index]["item_type"]
     );
     if (items[index]["code"] === scannedData) {
-      // if (items[index]["code"] === "EXC0100001ACCWCR002") {
-      console.log("items[index]", items[index]);
       let facility = await facilities.find(
         (obj) => obj.id === items[index]["facility"]
       );
@@ -54,8 +50,6 @@ const DataFormat = async (
         items[index]["updated_at"]
           ? items[index]["updated_at"].slice(0, 10)
           : "--",
-        "True",
-        "True",
       ]);
     }
   }
@@ -125,7 +119,7 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
     console.log("data", data);
     setScannedData(data);
     setScanned(true);
-    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
   useEffect(() => {
     DataFormat(item, setData, itemClass, facilities, scannedData);
@@ -202,40 +196,7 @@ export default function ScanQRScreen({ setCurrentTab, setDefaultValueItem }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: "#ecf0f1",
-    padding: 100,
-    marginBottom: 25,
-  },
-  qr: {
-    marginTop: "20%",
-    marginBottom: "20%",
-    width: qrSize,
-    height: qrSize,
-  },
-  description: {
-    fontSize: width * 0.09,
-    marginTop: "10%",
-    textAlign: "center",
-    width: "70%",
-    color: "white",
-  },
-  cancel: {
-    fontSize: width * 0.05,
-    textAlign: "center",
-    width: "70%",
-    color: "white",
-  },
-  containerTable: {
-    // flex: 4,
-    // padding: 16,
-    // paddingTop: 30,
-    // backgroundColor: "#fff",
-  },
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
   rowSection: { height: 60, backgroundColor: "#f1f8ff" },
   head: { height: 50, backgroundColor: "#2888fe" },
   headText: {
@@ -244,22 +205,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   text: { margin: 6, fontSize: 16, textAlign: "center" },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "black",
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "white",
-  },
   buttonContainer: {
     backgroundColor: "#2888fe",
     width: "100%",
@@ -267,9 +212,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     marginVertical: 5,
-  },
-  buttonText: {
-    fontWeight: "bold",
-    color: "white",
   },
 });
