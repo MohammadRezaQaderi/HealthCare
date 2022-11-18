@@ -488,7 +488,7 @@ function AddFacilityScreen({ defaultValueFacility }) {
                           {Current !== null && x1 && x2 ? (
                             <View>
                               <View style={styles.container}>
-                                {/* <MapView
+                                <MapView
                                   style={styles.map}
                                   onPress={handleMapClick}
                                 >
@@ -505,7 +505,7 @@ function AddFacilityScreen({ defaultValueFacility }) {
                                       }
                                     />
                                   )}
-                                </MapView> */}
+                                </MapView>
                               </View>
                             </View>
                           ) : null}
