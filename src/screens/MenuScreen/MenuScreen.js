@@ -332,15 +332,30 @@ const MenuScreen = ({
                   <ListFacilityScreen
                     setCurrentTab={setCurrentTab}
                     setDefaultValueFacility={setDefaultValueFacility}
+                    facilityParent={facilityParent}
+                    setFacilityParent={setFacilityParent}
+                    itemParent={itemParent}
                   />
                 ) : currentTab == "New Facility" ? (
                   <AddFacilityScreen
                     defaultValueFacility={defaultValueFacility}
+                    setDefaultValueFacility={setDefaultValueFacility}
+                    facilityParent={facilityParent}
+                    setFacilityParent={setFacilityParent}
                   />
                 ) : currentTab == "Item List" ? (
                   <ListItemScreen
                     setCurrentTab={setCurrentTab}
                     setDefaultValueItem={setDefaultValueItem}
+                    itemParent={itemParent}
+                  />
+                ) : currentTab == "Add Item" ? (
+                  <AddItemScreen
+                    setCurrentTab={setCurrentTab}
+                    setDefaultValueItem={setDefaultValueItem}
+                    defaultValueItem={defaultValueItem}
+                    itemParent={itemParent}
+
                   />
                 ) : (
                   <></>

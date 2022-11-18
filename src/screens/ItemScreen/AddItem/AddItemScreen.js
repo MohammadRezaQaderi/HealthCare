@@ -495,9 +495,9 @@ function Item({ defaultValueItem }) {
 
   return (
     <ScrollView onSubmit={onSaveHandler}>
-      <h3 className="page-title mb-3">
+      <View className="page-title mb-3">
         <Text>Item information</Text>
-      </h3>
+      </View>
 
       <div className="mt-3">
         <div className="card">
