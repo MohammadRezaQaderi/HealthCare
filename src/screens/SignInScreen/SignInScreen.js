@@ -40,7 +40,7 @@ const getContent = () => {
  * This function get the Data from server
  * For use in the offline mode :)
  */
-function getInfoFromServer(setCurrentTab) {
+const getInfoFromServer = async (setCurrentTab) => {
   readData("token").then((token) => {
     token = JSON.parse(token);
     token = "Bearer".concat(" ", token);
@@ -168,91 +168,74 @@ function getInfoFromServer(setCurrentTab) {
           .catch((error) => {
             console.log("errors for get messages reciever: ", error);
           });
-        const fields = [];
-
-        axios
-          .get("http://" + url + "/item/item-field", {
-            headers: { Authorization: token },
-          })
-          .then((response) => {
-            removeItemValue("parent").then(() => "");
-            saveData("parent", response?.data.facility).then(() => "");
-            const item_classes = response.data.data;
-            removeItemValue("itemClass").then(() => "");
-            saveData("itemClass", response?.data.data).then(() => {
-              item_classes.map((item_class) => {
-                let item_classx = item_class?.item_class;
-                const temp_obj = {
-                  item_class: item_classx,
-                  item_type: [],
-                };
-                item_class?.item_type.map((item_type) => {
-                  const temp_type = {
-                    id: item_type.id,
-                    title: item_type.title,
-                    havepqs: item_type.havepqs,
-                  };
-                  axios
-                    .get(
-                      "http://" +
-                        url +
-                        "/item/item-field?class_id=" +
-                        item_classx.id +
-                        "&type_id=" +
-                        item_type.id,
-                      { headers: { Authorization: token } }
-                    )
-                    .then((response) => {
-                      // console.log("response.data.data", response.data.fields);
-                      temp_type["fields"] = response.data?.fields;
-                      console.log("temp_type");
-
-                      if (temp_type.havepqs) {
-                        axios
-                          .get("http://" + url + "/item/itempqs?id=" + item_type.id, {
-                            headers: { Authorization: token },
-                          })
-                          .then((response) => {
-                            // console.log(
-                            //   "response.data.data",
-                            //   response.data
-                            // );
-                            temp_type["pqs"] = response.data;
-                          })
-                          .catch((error) => {
-                            console.log("errors for get item-fielpqsssd: ", error);
-                          });
-                      }
-                      temp_obj.item_type.push(temp_type);
-
-                       
-                    })
-                    .catch((error) => {
-                      console.log("errors for get item-dsdsd: ", error);
-                    });
-                   
-
-              
-                });
-                fields.push(temp_obj);
-              });
-              // console.log(fields[0].item_type)
-              saveData("itemFields", fields).then(() => "");
-              saveData("Addfacility",[]).then(() => "");
-              saveData("Additem",[]).then(() => "");
-              // edit facility
-              saveData("editfacility",[]).then(() => "");
-              saveData("edititem",[]).then(() => "");
-              setCurrentTab("Logout");
-            });
-          })
-          .catch((error) => {
-            console.log("errors for get item-field: ", error);
-          });
+        
       });
     }
   });
 }
+const getAsyncInfo = async (setCurrentTab) => {
+  const t =await readData("token")
+  let tx = JSON.parse(t);
+  const token = "Bearer".concat(" ", tx);
+  const urlx = await readData("url");
+  const url = JSON.parse(urlx);
+  const fields = [];
+
+  const { response } = await axios
+    .get("http://" + url + "/item/item-field", {headers: { Authorization: token }})
+      removeItemValue("parent").then(() => "");
+      saveData("parent", response?.data.facility).then(() => "");
+      const item_classes = response.data.data;
+      removeItemValue("itemClass").then(() => "");
+      saveData("itemClass", response?.data.data).then(() => "");
+        item_classes.map((item_class) => {
+          let item_classx = item_class?.item_class;
+          const temp_obj = {
+            item_class: item_classx,
+            item_type: [],
+          };
+          item_class?.item_type.map(async (item_type) => {
+            const temp_type = {
+              id: item_type.id,
+              title: item_type.title,
+              havepqs: item_type.havepqs,
+            };
+            const resx= await axios
+              .get(
+                "http://" +
+                  url +
+                  "/item/item-field?class_id=" +
+                  item_classx.id +
+                  "&type_id=" +
+                  item_type.id,
+                { headers: { Authorization: token } }
+              )
+              
+                // console.log("response.data.data", response.data.fields);
+                temp_type["fields"] = resx.data?.fields;
+                console.log("temp_type");
+                if (temp_type.havepqs) {
+                  const respqs= await axios
+                    .get("http://" + url + "/item/itempqs?id=" + item_type.id, {
+                      headers: { Authorization: token },
+                    })
+                   
+                      temp_type["pqs"] = respqs.data;
+                  
+                }
+                temp_obj.item_type.push(temp_type);
+             
+              
+          });
+          fields.push(temp_obj);
+          saveData("itemFields", fields).then(() => "");
+        });
+        // console.log(fields[0].item_type)
+       
+  
+
+
+};
 
 const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
   const [loading, setLoading] = useState(false);
@@ -269,6 +252,7 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
         .then((response) => {
           setLoggedIn(true);
           saveData("token", response?.data?.access).then(() => "");
+          getAsyncInfo();
           getInfoFromServer(setCurrentTab);
           setLoading(false);
           
