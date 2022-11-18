@@ -67,7 +67,12 @@ const parentFacilityField = {
  *
  * @returns {JSX} return facility component
  */
-function AddFacilityScreen({ defaultValueFacility }) {
+function AddFacilityScreen({
+  defaultValueFacility,
+  setCurrentTab,
+  setDefaultValueFacility,
+  facilityParent,
+}) {
   const [fieldsValue, setFieldValue] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
   const [levels, setLevels] = useState([]);
@@ -315,16 +320,14 @@ function AddFacilityScreen({ defaultValueFacility }) {
   const onChangeHandler = (value, field) => {
     const validation = field.validation?.[0];
     if (
-      JSON.parse(country)["poptarget"] ===
-        "General population" &&
+      JSON.parse(country)["poptarget"] === "General population" &&
       field.stateName === "populationnumber"
     ) {
       validation.min = +selectedLevel?.minpop;
       validation.max = +selectedLevel?.maxpop;
     }
     if (
-      JSON.parse(country)["poptarget"] ===
-        "Under-1 Population" &&
+      JSON.parse(country)["poptarget"] === "Under-1 Population" &&
       field.stateName === "childrennumber"
     ) {
       validation.min = +selectedLevel?.minpop;
@@ -417,14 +420,33 @@ function AddFacilityScreen({ defaultValueFacility }) {
     }
     const page = window.event.submitter.name === "saveNew" ? "new" : "edit";
 
-    const res = await (id === "new"
-      ? FacilitiesService.postFacility(_fieldsValue)
-      : FacilitiesService.putFacility(_fieldsValue));
-    if (page === "new") {
-      window.location.reload();
-    } else {
-      history.push(`/facilities/list`);
+    if(Object.keys(defaultValueFacility).length > 0){
+      readData("Addfacility").then((data) => {
+          const temp =JSON.parse(data);
+          temp.push(_fieldsValue);
+          removeItemValue("Addfacility");
+          saveData("Addfacility", JSON.stringify(temp));
+      });
+
     }
+    else{
+      readData("editfacility").then((data) => {
+        const temp = JSON.parse(data);
+        temp.push(_fieldsValue);
+        removeItemValue("editfacility");
+        saveData("editfacility", JSON.stringify(temp));
+      });
+    }
+    // const res = await (id === "new"
+    //   ? FacilitiesService.postFacility(_fieldsValue)
+    //   : FacilitiesService.putFacility(_fieldsValue));
+   
+      setCurrentTab("Facility List");
+      // if (page === "new") {
+    //   window.location.reload();
+    // } else {
+    //   history.push(`/facilities/list`);
+    // }
   };
 
   const handleMapClick = async (e) => {

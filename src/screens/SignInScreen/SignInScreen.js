@@ -206,32 +206,43 @@ function getInfoFromServer() {
                       // console.log("response.data.data", response.data.fields);
                       temp_type["fields"] = response.data?.fields;
                       console.log("temp_type");
+
+                      if (temp_type.havepqs) {
+                        axios
+                          .get("http://" + url + "/item/itempqs?id=" + item_type.id, {
+                            headers: { Authorization: token },
+                          })
+                          .then((response) => {
+                            // console.log(
+                            //   "response.data.data",
+                            //   response.data
+                            // );
+                            temp_type["pqs"] = response.data;
+                          })
+                          .catch((error) => {
+                            console.log("errors for get item-fielpqsssd: ", error);
+                          });
+                      }
+                      temp_obj.item_type.push(temp_type);
+
+                       
                     })
                     .catch((error) => {
                       console.log("errors for get item-dsdsd: ", error);
                     });
-                  if (temp_type.havepqs) {
-                    axios
-                      .get(
-                        "http://" + url + "/item/itempqs?id=" + item_type.id,
-                        {
-                          headers: { Authorization: token },
-                        }
-                      )
-                      .then((response) => {
-                        temp_type["pqs"] = response.data;
-                      })
-                      .catch((error) => {
-                        console.log("errors for get item-fielpqsssd: ", error);
-                      });
-                  }
-                  console.log("temp type");
-                  temp_obj.item_type.push(temp_type);
+                   
+
+              
                 });
                 fields.push(temp_obj);
               });
               // console.log(fields[0].item_type)
               saveData("itemFields", fields).then(() => "");
+              saveData("Addfacility",[]).then(() => "");
+              saveData("Additem",[]).then(() => "");
+              // edit facility
+              saveData("editfacility",[]).then(() => "");
+              saveData("edititem",[]).then(() => "");
             });
           })
           .catch((error) => {
