@@ -101,7 +101,7 @@ function getInfoFromServer() {
             console.log("errors for get facilities: ", error);
           });
         axios
-          .get("http://" + url + "/item/", {
+          .get("http://" + url + "/item/itemallFac", {
             headers: { Authorization: token },
           })
           .then((response) => {
