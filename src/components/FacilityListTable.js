@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { Table, TableWrapper, Row, Cell } from "react-native-table-component";
 import { readData } from "./DataStorage";
 import InternetConnection from "./InternetConnection";
-import SelectInput from "./SelectInput/SelectInput";
+import addFacility from "../../assets/add-facility.png";
+import addItem from "../../assets/add-list.png";
+import listItem from "../../assets/list-item.png";
+import editIcon from "../../assets/edit.png";
+import deleteIcon from "../../assets/delete.png";
 export default class FacilityListTable extends Component {
   constructor(props) {
     super(props);
@@ -80,24 +84,97 @@ export default class FacilityListTable extends Component {
       }
     });
   }
-
+  addFacilityIndex(index) {
+    this.props.setFacilityParent({
+      id: this.props.facility[index]["id"],
+      name: this.props.facility[index]["name"],
+    });
+    this.props.setCurrentTab("New Facility");
+  }
+  addItemIndex(index) {
+    this.props.setItemParent({
+      id: this.props.facility[index]["id"],
+      name: this.props.facility[index]["name"],
+    });
+    this.props.setCurrentTab("Add Item");
+  }
+  listItemIndex(index) {
+    let config = {
+      id: this.props.facility[index]["id"],
+      name: this.props.facility[index]["name"],
+    };
+    this.props.setItemParent(config);
+    this.props.setCurrentTab("Item List");
+  }
   render() {
     const state = this.state;
-    const editToolBox = (data, index) => (
-      <View style={{ flex: 1, flexDirection: "column" }}>
+    const editToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.editIndex(index)}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Edit</Text>
-          </View>
+          <Image
+            source={editIcon}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
-    const deleteToolBox = (data, index) => (
-      <View style={{ flex: 1, flexDirection: "column" }}>
+    const deleteToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
         <TouchableOpacity onPress={() => this.deleteIndex(index)}>
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Delete</Text>
-          </View>
+          <Image
+            source={deleteIcon}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
+        </TouchableOpacity>
+      </View>
+    );
+    const addFacilityToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
+        <TouchableOpacity onPress={() => this.addFacilityIndex(index)}>
+          <Image
+            source={addFacility}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
+        </TouchableOpacity>
+      </View>
+    );
+    const addItemToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
+        <TouchableOpacity onPress={() => this.addItemIndex(index)}>
+          <Image
+            source={addItem}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
+        </TouchableOpacity>
+      </View>
+    );
+    const listItemToolBox = (data, index, width) => (
+      <View style={{ marginHorizontal: 30 }}>
+        <TouchableOpacity onPress={() => this.listItemIndex(index)}>
+          <Image
+            source={listItem}
+            style={{
+              width: 20,
+              height: 20,
+              tintColor: "black",
+            }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
@@ -115,17 +192,37 @@ export default class FacilityListTable extends Component {
               {rowData.map((cellData, cellIndex) => (
                 <Cell
                   key={cellIndex}
+                  style={{ width: state.widthArr[cellIndex] }}
                   data={
                     cellIndex === 6
-                      ? editToolBox(cellData, index)
+                      ? editToolBox(cellData, index, state.widthArr[cellIndex])
                       : cellIndex === 7
-                      ? deleteToolBox(cellData, index)
+                      ? deleteToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
+                      : cellIndex === 8
+                      ? addFacilityToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
+                      : cellIndex === 9
+                      ? addItemToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
+                      : cellIndex === 10
+                      ? listItemToolBox(
+                          cellData,
+                          index,
+                          state.widthArr[cellIndex]
+                        )
                       : cellData
                   }
-                  widthArr={state.widthArr}
-                  textStyle={
-                    (styles.text, { minWidth: state?.widthArr[index] })
-                  }
+                  textStyle={[styles.text]}
                 />
               ))}
             </TableWrapper>
@@ -137,15 +234,19 @@ export default class FacilityListTable extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  container: {},
   head: { height: 50, backgroundColor: "#2888fe" },
-  text: { margin: 6, fontSize: 16, textAlign: "center", alignItems: "center" },
+  text: {
+    marginHorizontal: 6,
+    fontSize: 16,
+    textAlign: "center",
+    alignItems: "center",
+  },
   rowSection: {
-    flex: 2,
     flexDirection: "row",
     height: 60,
     backgroundColor: "#f1f8ff",
   },
   btn: { width: 58, height: 18, backgroundColor: "#78B7BB", borderRadius: 2 },
-  btnText: { textAlign: "center", color: "black" },
+  btnText: { textAlign: "center", color: "white" },
 });
