@@ -103,7 +103,7 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
       if (connectionState) {
         axios
           .post(
-            "http://" + url + "/message/read-message",
+            "https://" + url + "/message/read-message",
             {
               checked,
             },

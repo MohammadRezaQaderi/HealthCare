@@ -11,7 +11,7 @@ import { saveData } from "../../components/DataStorage";
 
 const URLScreen = ({ setUrlState }) => {
   const onPassPressed = (values) => {
-    let url = "http://" + values.url + "/auth/urlCheck/";
+    let url = "https://" + values.url + "/auth/urlCheck/";
     axios
       .get(url)
       .then((response) => {

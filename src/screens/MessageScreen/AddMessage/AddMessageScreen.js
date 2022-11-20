@@ -65,7 +65,7 @@ const AddMessageScreen = ({ defaultValueMessage }) => {
         if (!defaultValueMessage) {
           axios
             .post(
-              "http://" + url + "/message/",
+              "https://" + url + "/message/",
               {
                 values,
               },
@@ -109,7 +109,7 @@ const AddMessageScreen = ({ defaultValueMessage }) => {
           defaultValueMessage.body = values.body;
           axios
             .put(
-              "http://" + url + "/message/",
+              "https://" + url + "/message/",
               {
                 defaultValueMessage,
               },

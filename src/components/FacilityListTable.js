@@ -42,7 +42,7 @@ export default class FacilityListTable extends Component {
         if (this.connectionState) {
           axios
             .post(
-              "http://" + url + "/facilities/delete",
+              "https://" + url + "/facilities/delete",
               {
                 id: this.props.facility[index]["id"],
                 delete_reason: this.props.selected[0],

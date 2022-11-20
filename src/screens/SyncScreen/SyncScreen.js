@@ -21,7 +21,7 @@ function getInfoFromServer() {
       readData("URL").then((url) => {
         url = JSON.parse(url);
         axios
-          .get("http://" + url + "/facilities/facility-field", {
+          .get("https://" + url + "/facilities/facility-field", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -32,7 +32,7 @@ function getInfoFromServer() {
             console.log("errors for get facility-field: ", error);
           });
         axios
-          .get("http://" + url + "/user-data/", {
+          .get("https://" + url + "/user-data/", {
             headers: { Authorization: token },
           })
           .then((res) => {
@@ -63,7 +63,7 @@ function getInfoFromServer() {
           });
 
         axios
-          .get("http://" + url + "/facilities/", {
+          .get("https://" + url + "/facilities/", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -74,7 +74,7 @@ function getInfoFromServer() {
             console.log("errors for get facilities: ", error);
           });
         axios
-          .get("http://" + url + "/item/itemallFac", {
+          .get("https://" + url + "/item/itemallFac", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -85,7 +85,7 @@ function getInfoFromServer() {
             console.log("errors for get item: ", error);
           });
         axios
-          .get("http://" + url + "/message/helper", {
+          .get("https://" + url + "/message/helper", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -96,7 +96,7 @@ function getInfoFromServer() {
             console.log("errors for get message-facility-list: ", error);
           });
         axios
-          .get("http://" + url + "/message/", {
+          .get("https://" + url + "/message/", {
             headers: { Authorization: token },
             params: { type: "sender" },
           })
@@ -108,7 +108,7 @@ function getInfoFromServer() {
             console.log("errors for get messages sender: ", error);
           });
         axios
-          .get("http://" + url + "/message/", {
+          .get("https://" + url + "/message/", {
             headers: { Authorization: token },
             params: { type: "reciever" },
           })
@@ -120,7 +120,7 @@ function getInfoFromServer() {
             console.log("errors for get messages reciever: ", error);
           });
         axios
-          .get("http://" + url + "/facilities/delete", {
+          .get("https://" + url + "/facilities/delete", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -131,7 +131,7 @@ function getInfoFromServer() {
             console.log("errors for get messages reciever: ", error);
           });
         axios
-          .get("http://" + url + "/item/delete", {
+          .get("https://" + url + "/item/delete", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -144,7 +144,7 @@ function getInfoFromServer() {
         const fields = [];
 
         axios
-          .get("http://" + url + "/item/item-field", {
+          .get("https://" + url + "/item/item-field", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -167,7 +167,7 @@ function getInfoFromServer() {
                   };
                   axios
                     .get(
-                      "http://" +
+                      "https://" +
                         url +
                         "/item/item-field?class_id=" +
                         item_classx.id +
@@ -186,7 +186,7 @@ function getInfoFromServer() {
                   if (temp_type.havepqs) {
                     axios
                       .get(
-                        "http://" + url + "/item/itempqs?id=" + item_type.id,
+                        "https://" + url + "/item/itempqs?id=" + item_type.id,
                         {
                           headers: { Authorization: token },
                         }
@@ -233,7 +233,7 @@ const SyncScreen = ({}) => {
         if (connectionState) {
           axios
             .post(
-              "http://" + url + "/message/read-message",
+              "https://" + url + "/message/read-message",
               {
                 value,
               },
@@ -260,7 +260,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .post(
-                "http://" + url + "/message/",
+                "https://" + url + "/message/",
                 {
                   param,
                 },
@@ -288,7 +288,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .post(
-                "http://" + url + "/facilities/",
+                "https://" + url + "/facilities/",
                 {
                   param,
                 },
@@ -317,7 +317,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .put(
-                "http://" + url + "/facilities/",
+                "https://" + url + "/facilities/",
                 {
                   param,
                 },
@@ -346,7 +346,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .post(
-                "http://" + url + "/facilities/delete",
+                "https://" + url + "/facilities/delete",
                 {
                   param,
                 },
@@ -374,7 +374,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .post(
-                "http://" + url + "/item/",
+                "https://" + url + "/item/",
                 {
                   param,
                 },
@@ -403,7 +403,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .put(
-                "http://" + url + "/item/",
+                "https://" + url + "/item/",
                 {
                   param,
                 },
@@ -431,7 +431,7 @@ const SyncScreen = ({}) => {
           if (connectionState) {
             axios
               .post(
-                "http://" + url + "/item/delete",
+                "https://" + url + "/item/delete",
                 {
                   param,
                 },

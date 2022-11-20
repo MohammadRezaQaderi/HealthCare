@@ -1,7 +1,7 @@
 import ApiManager from "./axios-config";
 import authHeader from "./auth-header";
 
-const API_URL = "http://46.105.58.235:8007/facilities/";
+const API_URL = "https://46.105.58.235:8007/facilities/";
 
 class FacilitiesService {
   getFacilities(params) {

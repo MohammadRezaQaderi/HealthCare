@@ -50,7 +50,7 @@ const getInfoFromServer = async (setCurrentTab) => {
       readData("URL").then((url) => {
         url = JSON.parse(url);
         axios
-          .get("http://" + url + "/facilities/facility-field", {
+          .get("https://" + url + "/facilities/facility-field", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -61,7 +61,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get facility-field: ", error);
           });
         axios
-          .get("http://" + url + "/user-data/", {
+          .get("https://" + url + "/user-data/", {
             headers: { Authorization: token },
           })
           .then((res) => {
@@ -92,7 +92,7 @@ const getInfoFromServer = async (setCurrentTab) => {
           });
 
         axios
-          .get("http://" + url + "/facilities/", {
+          .get("https://" + url + "/facilities/", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -103,7 +103,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get facilities: ", error);
           });
         axios
-          .get("http://" + url + "/item/itemallFac", {
+          .get("https://" + url + "/item/itemallFac", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -114,7 +114,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get item: ", error);
           });
         axios
-          .get("http://" + url + "/message/helper", {
+          .get("https://" + url + "/message/helper", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -125,7 +125,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get message-facility-list: ", error);
           });
         axios
-          .get("http://" + url + "/message/", {
+          .get("https://" + url + "/message/", {
             headers: { Authorization: token },
             params: { type: "sender" },
           })
@@ -137,7 +137,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get messages sender: ", error);
           });
         axios
-          .get("http://" + url + "/message/", {
+          .get("https://" + url + "/message/", {
             headers: { Authorization: token },
             params: { type: "reciever" },
           })
@@ -149,7 +149,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get messages reciever: ", error);
           });
         axios
-          .get("http://" + url + "/facilities/delete", {
+          .get("https://" + url + "/facilities/delete", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -160,7 +160,7 @@ const getInfoFromServer = async (setCurrentTab) => {
             console.log("errors for get messages reciever: ", error);
           });
         axios
-          .get("http://" + url + "/item/delete", {
+          .get("https://" + url + "/item/delete", {
             headers: { Authorization: token },
           })
           .then((response) => {
@@ -188,7 +188,7 @@ const getAsyncInfo = async (setLoading,setCurrentTab) => {
   const fields = [];
 
   const  response  = await axios
-    .get("http://" + url + "/item/item-field", {headers: { Authorization: token }})
+    .get("https://" + url + "/item/item-field", {headers: { Authorization: token }})
     // console.log("first res",response)
       removeItemValue("parent").then(() => "");
       saveData("parent", response?.data.facility).then(() => "");
@@ -209,7 +209,7 @@ const getAsyncInfo = async (setLoading,setCurrentTab) => {
             };
             const resx= await axios
               .get(
-                "http://" +
+                "https://" +
                   url +
                   "/item/item-field?class_id=" +
                   item_classx.id +
@@ -223,7 +223,7 @@ const getAsyncInfo = async (setLoading,setCurrentTab) => {
                 console.log("temp_type", temp_type);
                 if (temp_type.havepqs) {
                   const respqs= await axios
-                    .get("http://" + url + "/item/itempqs?id=" + item_type.id, {
+                    .get("https://" + url + "/item/itempqs?id=" + item_type.id, {
                       headers: { Authorization: token },
                     })
                    
@@ -259,7 +259,7 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
     readData("URL").then((url) => {
       url = JSON.parse(url);
       axios
-        .post("http://" + url + "/auth/login/", { username, password })
+        .post("https://" + url + "/auth/login/", { username, password })
         .then((response) => {
           setLoggedIn(true);
           saveData("token", response?.data?.access).then(() => "");
