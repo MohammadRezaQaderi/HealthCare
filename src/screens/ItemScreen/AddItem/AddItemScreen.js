@@ -12,6 +12,7 @@ import {
   saveData,
 } from "../../../components/DataStorage";
 import DynamicInput from "../../../components/DynamicInput/DynamicInput";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   View,
@@ -207,7 +208,7 @@ function Item({
       //   selectedItemType.id,
       //   parent
       // );
-      readData("itemFields").then((x) => {
+      const x =await AsyncStorage.getItem("itemFields");
         const z = JSON.parse(x);
         const temp= z.filter((item) => item.item_type.length > 0);
         // find the item class
@@ -282,7 +283,7 @@ function Item({
         }
         //
         return result;
-      });
+     
     },
     {
       enabled: !!selectedItemType,

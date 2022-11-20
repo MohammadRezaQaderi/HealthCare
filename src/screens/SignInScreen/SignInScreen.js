@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import * as yup from "yup";
 import axios from "axios";
 // Component Import
@@ -173,22 +175,27 @@ const getInfoFromServer = async (setCurrentTab) => {
     }
   });
 }
-const getAsyncInfo = async (setCurrentTab) => {
-  const t =await readData("token")
+const getAsyncInfo = async (setLoading,setCurrentTab) => {
+
+  const t = await AsyncStorage.getItem("token");
+  console.log("token: ", t);
   let tx = JSON.parse(t);
   const token = "Bearer".concat(" ", tx);
-  const urlx = await readData("url");
+  const urlx = await AsyncStorage.getItem("URL");
+  console.log("urlx",urlx)
   const url = JSON.parse(urlx);
+  console.log(url)
   const fields = [];
 
-  const { response } = await axios
+  const  response  = await axios
     .get("http://" + url + "/item/item-field", {headers: { Authorization: token }})
+    // console.log("first res",response)
       removeItemValue("parent").then(() => "");
       saveData("parent", response?.data.facility).then(() => "");
       const item_classes = response.data.data;
       removeItemValue("itemClass").then(() => "");
       saveData("itemClass", response?.data.data).then(() => "");
-        item_classes.map((item_class) => {
+        item_classes.map(async (item_class) => {
           let item_classx = item_class?.item_class;
           const temp_obj = {
             item_class: item_classx,
@@ -213,7 +220,7 @@ const getAsyncInfo = async (setCurrentTab) => {
               
                 // console.log("response.data.data", response.data.fields);
                 temp_type["fields"] = resx.data?.fields;
-                console.log("temp_type");
+                console.log("temp_type", temp_type);
                 if (temp_type.havepqs) {
                   const respqs= await axios
                     .get("http://" + url + "/item/itempqs?id=" + item_type.id, {
@@ -227,8 +234,12 @@ const getAsyncInfo = async (setCurrentTab) => {
              
               
           });
+          console.log("temp_obj",temp_obj)
           fields.push(temp_obj);
           saveData("itemFields", fields).then(() => "");
+          setLoading(false);
+          setCurrentTab("Logout");
+
         });
         // console.log(fields[0].item_type)
        
@@ -252,9 +263,8 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
         .then((response) => {
           setLoggedIn(true);
           saveData("token", response?.data?.access).then(() => "");
-          getAsyncInfo();
+          getAsyncInfo(setLoading, setCurrentTab);
           getInfoFromServer(setCurrentTab);
-          setLoading(false);
           
         })
         .catch((error) => {
