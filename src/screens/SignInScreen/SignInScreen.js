@@ -188,59 +188,37 @@ const getAsyncInfo = async (setLoading,setCurrentTab) => {
   const fields = [];
 
   const  response  = await axios
-    .get("https://" + url + "/item/item-field", {headers: { Authorization: token }})
+    .get("https://" + url + "/item/item-field-mobile", {headers: { Authorization: token }})
     // console.log("first res",response)
       removeItemValue("parent").then(() => "");
       saveData("parent", response?.data.facility).then(() => "");
       const item_classes = response.data.data;
       removeItemValue("itemClass").then(() => "");
-      saveData("itemClass", response?.data.data).then(() => "");
-        item_classes.map(async (item_class) => {
+      saveData("itemClass", response?.data.data).then(() => {
+        item_classes.map((item_class) => {
           let item_classx = item_class?.item_class;
           const temp_obj = {
             item_class: item_classx,
             item_type: [],
           };
-          item_class?.item_type.map(async (item_type) => {
+          item_class?.item_type.map((item_type) => {
             const temp_type = {
               id: item_type.id,
               title: item_type.title,
               havepqs: item_type.havepqs,
+              fields: item_type.fields,
+              pqs: item_type.pqs,
             };
-            const resx= await axios
-              .get(
-                "https://" +
-                  url +
-                  "/item/item-field?class_id=" +
-                  item_classx.id +
-                  "&type_id=" +
-                  item_type.id,
-                { headers: { Authorization: token } }
-              )
-              
-                // console.log("response.data.data", response.data.fields);
-                temp_type["fields"] = resx.data?.fields;
-                console.log("temp_type", temp_type);
-                if (temp_type.havepqs) {
-                  const respqs= await axios
-                    .get("https://" + url + "/item/itempqs?id=" + item_type.id, {
-                      headers: { Authorization: token },
-                    })
-                   
-                      temp_type["pqs"] = respqs.data;
-                  
-                }
-                temp_obj.item_type.push(temp_type);
-             
-              
+
+            temp_obj.item_type.push(temp_type);
           });
-          console.log("temp_obj",temp_obj)
+          console.log("temp_obj", temp_obj);
           fields.push(temp_obj);
           saveData("itemFields", fields).then(() => "");
           setLoading(false);
           setCurrentTab("Logout");
-
         });
+      });
         // console.log(fields[0].item_type)
        
   
