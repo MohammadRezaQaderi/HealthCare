@@ -8,6 +8,7 @@ import {
   saveData,
 } from "../../components/DataStorage";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * This function get the Data from server
@@ -431,7 +432,7 @@ const SyncScreen = ({}) => {
     });
     // get new data
     getInfoFromServer();
-    getAsyncInfo;
+    getAsyncInfo();
     console.warn("Info Synced :)");
 
   };
