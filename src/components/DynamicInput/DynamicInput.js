@@ -88,7 +88,7 @@ const DynamicInput = (props) => {
                   ? !param.active
                   : !param.enable
                 if(!disabled){
-                  data.push({ value: param.name, key: param.id });
+                  data.push({ value: param.name || param.describe, key: param.id });
                 }
       });
 
