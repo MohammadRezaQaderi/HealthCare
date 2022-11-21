@@ -34,7 +34,7 @@ export default function App() {
     readData("token").then((token) => {
       if (token != null) {
         setLoggedIn(true);
-        setCurrentTab("Scan QR");
+        setCurrentTab("Add Item");
       }
     });
     setCheckState(true);

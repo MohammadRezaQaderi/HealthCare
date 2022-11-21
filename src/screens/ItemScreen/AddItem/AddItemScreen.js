@@ -272,7 +272,6 @@ function Item({
           result.unshift({
             id: "code",
             name: "Item code",
-            topic: firstTopic,
             type: "text",
             active: false,
             disabled: true,
