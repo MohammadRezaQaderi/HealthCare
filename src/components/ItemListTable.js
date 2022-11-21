@@ -39,7 +39,7 @@ export default class ItemListTable extends Component {
         if (this.connectionState) {
           axios
             .post(
-              "https://" + url + "/item/delete",
+              "http://" + url + "/item/delete",
               {
                 id: this.props.items[index]["id"],
                 delete_reason: this.props.selected[0],

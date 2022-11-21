@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { readData } from "../../../components/DataStorage";
 import SelectInput from "../../../components/SelectInput/SelectInput";
@@ -16,11 +16,7 @@ const itemHandleData = {
   ],
   widthArr: [160, 180, 120, 120, 120, 80, 80],
   tableData: [
-    ["EXP0100001", "DC PEV", 1, "PR", 0.1, "2022/10/20", "True"],
-    ["EXP0100003", "DS KOUMASSI", 2, "LD", 0.1, "2022/10/19", "True"],
-    ["EXP0200007", "DS Port Bouet", 2, "LD", 0.4, "2022/10/19", "True"],
-    ["EXP0200001", "DS MARCORY", 2, "LD", 0.2, "2022/10/19", "True"],
-    ["EXP0200002", "DS Grd BASSAME", 2, "LD", 0.7, "2022/10/20", "True"],
+   
   ],
 };
 
@@ -68,6 +64,7 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
   const [itemClass, setItemClass] = useState([]);
   const [deleteItem, setDeleteItem] = useState([]);
   const [selected, setSelected] = useState([]);
+  const didMount = useRef(false);
   useEffect(() => {
     readData("item").then((value) => {
       if (value != null) {
@@ -83,6 +80,13 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
               parent = JSON.parse(parent);
               let temp = data.filter((obj) => obj.facility === parent.id);
               setItem(temp);
+               readData("itemClass").then((x) => {
+                 let data = JSON.parse(x);
+                 try {
+                   setItemClass(data);
+                   // DataFormat(item, setData, itemClass);
+                 } catch (e) {}
+               });
             } catch (e) {}
           });
         }
@@ -105,15 +109,16 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
         setDeleteItem([]);
       }
     });
-    readData("itemClass").then((x) => {
-      let data = JSON.parse(x);
-      try {
-        setItemClass(data);
-      } catch (e) {}
-    });
+   
   }, []);
   useEffect(() => {
+    if (!didMount.current) {
+      return ()=> didMount.current = true;
+    }
+    console.log("item", item);
+    console.log("itemClass", itemClass);
     DataFormat(item, setData, itemClass);
+  
   }, [itemClass]);
   return (
     <ScrollView>
@@ -130,16 +135,7 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
             Items
           </Text>
 
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "black",
-              paddingBottom: 10,
-            }}
-          >
-            Items owned separated by levels
-          </Text>
+        
           <Text
             style={{
               fontSize: 12,
