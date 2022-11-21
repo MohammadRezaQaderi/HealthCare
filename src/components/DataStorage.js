@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 
 const readData = async (key) => {
   try {
@@ -40,4 +41,15 @@ const clearAll = async () => {
   }
 };
 
-export { readData, saveData, clearAll, removeItemValue };
+const checkConnected = async () => {
+  return NetInfo.fetch().then((state) => {
+    if (state.isConnected) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+};
+
+
+export { readData, saveData, clearAll, removeItemValue, checkConnected };

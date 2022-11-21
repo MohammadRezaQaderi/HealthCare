@@ -299,7 +299,7 @@ const DynamicInput = (props) => {
       <InputText
         name={field.name}
         label={field.name}
-        key={field.id}
+        key={field.name}
         onKeyPress={(e) => {
           e.persist();
           if (field.type === "number") {

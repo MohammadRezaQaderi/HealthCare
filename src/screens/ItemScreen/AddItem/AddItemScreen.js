@@ -118,44 +118,43 @@ function Item({
         //   ...preValues,
         //   facility: res.data.facility,
         // }));
-        readData("itemClass").then((res) => {
+        const res=await AsyncStorage.getItem("itemClass");
           const itemClass = JSON.parse(res);
-          setSelectedItemClass(itemClass);
+          console.log("itemClass",itemClass)
+          setItemClassesAndTypes(itemClass);
           const data = itemClass.filter((item) => item.item_type.length > 0);
-           if (Object.keys(defaultValueItem).length === 0) {
-            console.log("datassssssssss",data)
-             setSelectedItemClass(data[0]);
-             setSelectedItemType(data[0]?.item_type?.[0]);
-           } else {
-             console.log(fieldsValue);
-             if (Object.keys(fieldsValue).length === 0) {
-               window.location.reload();
-               setSelectedItemClass(data[0]);
-               setSelectedItemType(data[0]?.item_type?.[0]);
-             } else {
-               const item_class = data.find(
-                 (item) => item?.item_class?.id === fieldsValue.item_class
-               );
-               const item_type = item_class?.item_type?.find(
-                 (item) => item.id === fieldsValue.item_type
-               );
-               console.log(fieldsValue);
-               console.log(item_class);
-               console.log(item_type);
-               setSelectedItemClass(item_class);
+          console.log("data",data)
+          if (Object.keys(defaultValueItem).length === 0) {
+            setSelectedItemClass(data[0]);
+            setSelectedItemType(data[0]?.item_type?.[0]);
+          } else {
+            console.log(fieldsValue);
+            if (Object.keys(fieldsValue).length === 0) {
+              window.location.reload();
+              setSelectedItemClass(data[0]);
+              setSelectedItemType(data[0]?.item_type?.[0]);
+            } else {
+              const item_class = data.find(
+                (item) => item?.item_class?.id === fieldsValue.item_class
+              );
+              const item_type = item_class?.item_type?.find(
+                (item) => item.id === fieldsValue.item_type
+              );
+              console.log(fieldsValue);
+              console.log(item_class);
+              console.log(item_type);
+              setSelectedItemClass(item_class);
 
-               setSelectedItemType(item_type);
-             }
-           }
+              setSelectedItemType(item_type);
+            }
+          }
           return data;
 
-          
           // if (datas.length === 0) {
           //   toast.error(<Text>No available item found</Text>);
           //   history.push("/settings/item-t-level");
           // }
-
-        });
+        
       },
       {
         refetchOnMount: true,
@@ -212,7 +211,6 @@ function Item({
         const z = JSON.parse(x);
         const temp= z.filter((item) => item.item_type.length > 0);
         // find the item class
-        console.log("temp",z);
         const itemClass = temp.find(
           (item) => item.item_class.id === selectedItemClass?.item_class.id
         );
@@ -224,7 +222,6 @@ function Item({
         console.log("itemType");
         if(itemType.havepqs){
         const pqs = itemType?.pqs;
-        console.log(pqs)
         setPQSData(
           pqs.map((item) => ({
             label: item.pqsnumber
@@ -252,7 +249,6 @@ function Item({
           },
         };
 
-        console.log(res);
         const result = [];
         if (res.data.fields) {
           for (const field of res.data.fields) {
@@ -544,7 +540,7 @@ function Item({
         </View>
         <View>
           <Text>Item class</Text>
-
+          {console.log("class", itemClassesAndTypes)}
           <SelectDropdown
             data={itemClassesAndTypes?.map((zz, index) => {
               return { value: index, label: zz.item_class.title };
@@ -624,6 +620,7 @@ function Item({
                     <>
                       <Select
                         options={pqsData}
+                        key={pqsField.state}
                         onChange={(e) => {
                           console.log("on change ");
                           onChangeHandler(e.label.split(" , ")[0], pqsField);
@@ -677,14 +674,14 @@ function Item({
             }
             const hasRequiredError = !!fieldErrors[field.state];
             return (
-              <View>
+              <View key={field.state}>
                 <DynamicInput
                   field={field}
                   onChangeHandler={onChangeHandler}
                   defaultValue={fieldsValue[field.state]}
                 />
                 {hasRequiredError && (
-                  <View>
+                  <View key={field.state}>
                     <Text>{fieldErrors[field.state]}</Text>
                   </View>
                 )}
