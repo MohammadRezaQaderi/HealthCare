@@ -120,10 +120,10 @@ function Item({
         // }));
         const res=await AsyncStorage.getItem("itemClass");
           const itemClass = JSON.parse(res);
-          console.log("itemClass",itemClass)
+          // console.log("itemClass",itemClass)
           setItemClassesAndTypes(itemClass);
           const data = itemClass.filter((item) => item.item_type.length > 0);
-          console.log("data",data)
+          // console.log("data",data)
           if (Object.keys(defaultValueItem).length === 0) {
             setSelectedItemClass(data[0]);
             setSelectedItemType(data[0]?.item_type?.[0]);
@@ -218,8 +218,8 @@ function Item({
         const itemType = itemClass?.item_type?.find(
           (item) => item.id === selectedItemType?.id
         );
-        console.log(itemType);
-        console.log("itemType");
+        // console.log(itemType);
+        // console.log("itemType");
         if(itemType.havepqs){
         const pqs = itemType?.pqs;
         setPQSData(
@@ -258,7 +258,7 @@ function Item({
             // const fieldTopicInResult = result[field.field.topic] ?? [];
 
             // fieldTopicInResult.push(field.field);
-            result.push(field);
+            result.push(field.field);
           }
           // const firstTopic = Object.keys(result)[0] ?? "Type";
           // if (result[firstTopic] === undefined) {
@@ -540,10 +540,10 @@ function Item({
         </View>
         <View>
           <Text>Item class</Text>
-          {console.log("class", itemClassesAndTypes)}
+          {/* {console.log("class", itemClassesAndTypes)} */}
           <SelectDropdown
             data={itemClassesAndTypes?.map((zz, index) => {
-              return { value: index, label: zz.item_class.title };
+              return { value: index, label: zz.item_class.title, key: index };
             })}
             defaultButtonText={"Item class"}
             onSelect={(selectedItem, index) => {
@@ -566,7 +566,7 @@ function Item({
 
           <SelectDropdown
             data={selectedItemClass?.item_type?.map((itemType, index) => {
-              return { value: index, label: itemType.title };
+              return { value: index, label: itemType.title, key: index };
             })}
             defaultButtonText={"Items category"}
             onSelect={(selectedItem, index) => {
@@ -612,13 +612,34 @@ function Item({
             {isFromPQS &&
               fromPQSFields.map((pqsField) => (
                 <View key={pqsField.state}>
-                  <View>
+                  <View key={pqsField.state + "field"}>
                     <Text>{pqsField.name}</Text>
                   </View>
 
                   {pqsData && pqsField.state === "PQSPISCode" ? (
                     <>
-                      <Select
+                      <SelectDropdown
+                        data={pqsData}
+                        defaultButtonText={"PQSPIS Field"}
+                        onSelect={(selectedItem, index) => {
+                            onChangeHandler(
+                              selectedItem.label.split(" , ")[0],
+                              pqsField
+                            );
+                        }}
+                        search={true}
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                          // text represented after item is selected
+                          // if data array is an array of objects then return selectedItem.property to render after item is selected
+                          return selectedItem.label;
+                        }}
+                        rowTextForSelection={(item, index) => {
+                          // text represented for each item in dropdown
+                          // if data array is an array of objects then return item.property to represent item in dropdown
+                          return item.label;
+                        }}
+                      />
+                      {/* <Select
                         options={pqsData}
                         key={pqsField.state}
                         onChange={(e) => {
@@ -633,15 +654,8 @@ function Item({
                               fieldsValue["PQSPISCode"]
                           )?.value,
                         }}
-                        // onBlur={(e) => {
-                        //   const value = e.target.value;
-                        //   console.log(e.target.value)
-                        //   if (value.length > 0) {
-                        //     console.log("onBlur");
-                        //     onChangeHandler(value, pqsField);
-                        //   }
-                        // }}
-                      />
+                    
+                      /> */}
                     </>
                   ) : (
                     <DynamicInput
@@ -656,9 +670,9 @@ function Item({
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={selectPQSHandler}
-                        // style={styles.appButtonContainer}
+                        style={styles.appButtonContainer}
                       >
-                        <Text>Load</Text>
+                        <Text style={styles.appButtonText}>Load</Text>
                       </TouchableOpacity>
                     </View>
                   )}
@@ -674,23 +688,56 @@ function Item({
             }
             const hasRequiredError = !!fieldErrors[field.state];
             return (
-              <View key={field.state}>
+              <View key={field.name}>
                 <DynamicInput
                   field={field}
                   onChangeHandler={onChangeHandler}
                   defaultValue={fieldsValue[field.state]}
                 />
                 {hasRequiredError && (
-                  <View key={field.state}>
+                  <View key={field.id + "error"}>
                     <Text>{fieldErrors[field.state]}</Text>
                   </View>
                 )}
               </View>
             );
           })}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={onSaveHandler}
+          style={styles.appButtonContainer}
+        >
+          <Text style={styles.appButtonText}>Save all</Text>
+        </TouchableOpacity>
       </Form>
     </ScrollView>
   );
 }
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+  },
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "#009688",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 10,
+  },
+  appButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+});
 export default Item;
