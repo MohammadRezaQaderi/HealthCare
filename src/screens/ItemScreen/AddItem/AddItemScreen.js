@@ -11,6 +11,8 @@ import {
   removeItemValue,
   saveData,
 } from "../../../components/DataStorage";
+import { FontAwesome, Feather } from "@expo/vector-icons";
+
 import DynamicInput from "../../../components/DynamicInput/DynamicInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -539,13 +541,28 @@ function Item({
           />
         </View>
         <View>
-          <Text>Item class</Text>
+          <Text style={styles.label}>Item class</Text>
           {/* {console.log("class", itemClassesAndTypes)} */}
           <SelectDropdown
             data={itemClassesAndTypes?.map((zz, index) => {
               return { value: index, label: zz.item_class.title, key: index };
             })}
             defaultButtonText={"Item class"}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={(isOpened) => {
+              return (
+                <FontAwesome
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={"#444"}
+                  size={18}
+                />
+              );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
             onSelect={(selectedItem, index) => {
               selectItemClassHandler(index);
             }}
@@ -562,13 +579,28 @@ function Item({
           />
         </View>
         <View>
-          <Text>Items category</Text>
+          <Text style={styles.label}>Items category</Text>
 
           <SelectDropdown
             data={selectedItemClass?.item_type?.map((itemType, index) => {
               return { value: index, label: itemType.title, key: index };
             })}
             defaultButtonText={"Items category"}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={(isOpened) => {
+              return (
+                <FontAwesome
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={"#444"}
+                  size={18}
+                />
+              );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
             onSelect={(selectedItem, index) => {
               selectItemTypeHandler(index);
             }}
@@ -622,10 +654,10 @@ function Item({
                         data={pqsData}
                         defaultButtonText={"PQSPIS Field"}
                         onSelect={(selectedItem, index) => {
-                            onChangeHandler(
-                              selectedItem.label.split(" , ")[0],
-                              pqsField
-                            );
+                          onChangeHandler(
+                            selectedItem.label.split(" , ")[0],
+                            pqsField
+                          );
                         }}
                         search={true}
                         buttonTextAfterSelection={(selectedItem, index) => {
@@ -738,6 +770,27 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
+  },
+  dropdown1BtnStyle: {
+    width: "100%",
+    height: 60,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#444",
+  },
+  dropdown1BtnTxtStyle: { color: "#444", textAlign: "left" },
+  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF" },
+  dropdown1RowStyle: {
+    backgroundColor: "#EFEFEF",
+    borderBottomColor: "#C5C5C5",
+  },
+  dropdown1RowTxtStyle: { color: "#444", textAlign: "left" },
+  label: {
+    color: "#444",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
 });
 export default Item;
