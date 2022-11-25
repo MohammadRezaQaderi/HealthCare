@@ -506,9 +506,18 @@ function AddFacilityScreen({
                     <View key={field.stateName}>
                       {field.stateName === "gpsCordinate" ? (
                         <View>
-                          <Text> {fieldsValue[field.stateName]}</Text>
                           {Current !== null && x1 && x2 ? (
                             <View>
+                              <DynamicInput
+                                field={field}
+                                onChangeHandler={onChangeHandler}
+                                defaultValue={fieldsValue[field.stateName]}
+                                separator={
+                                  field.stateName === "childrennumber" ||
+                                  field.stateName === "loverlevelfac" ||
+                                  field.stateName === "populationnumber"
+                                }
+                              />
                               <View style={styles.container}>
                                 <MapView
                                   style={styles.map}
@@ -619,8 +628,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   map: {
-    width: (Dimensions.get("window").width)/100*70,
+    width: (Dimensions.get("window").width)/100*85,
     height: (Dimensions.get("window").height)/100*40,
+    marginBottom: 20,
   },
   appButtonContainer: {
     elevation: 8,
