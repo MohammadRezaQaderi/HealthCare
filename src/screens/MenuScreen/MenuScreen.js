@@ -182,6 +182,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Message List",
