@@ -11,6 +11,7 @@ import {
   PixelRatio
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
+import MultiSelect from "react-native-multiple-select";
 import constants from "expo-constants";
 
 // import { components } from "react-select";
@@ -95,26 +96,46 @@ const DynamicInput = (props) => {
 
     
       return (
-        <SelectDropdown
-          data={data}
-          defaultButtonText={field.name}
-          onSelect={(selectedItem, index) => {
-            onChangeHandler(selectedItem.key.toString(), field);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            // text represented after item is selected
-            // if data array is an array of objects then return selectedItem.property to render after item is selected
-            return selectedItem.value;
-          }}
-          rowTextForSelection={(item, index) => {
-            // text represented for each item in dropdown
-            // if data array is an array of objects then return item.property to represent item in dropdown
-            return item.value;
-          }}
-        />
+        <>
+          <Text style={styles.label}>{field.name}</Text>
+
+          <SelectDropdown
+            data={data}
+            defaultButtonText={field.name}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={(isOpened) => {
+              return (
+                <FontAwesome
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={"#444"}
+                  size={18}
+                />
+              );
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
+            onSelect={(selectedItem, index) => {
+              onChangeHandler(selectedItem.key.toString(), field);
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem.value;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item.value;
+            }}
+          />
+        </>
       );
 //         
     } else {
+      console.log(field);
       const options = [];
       let selecteda = [];
       // console.log(selecteda);
@@ -227,12 +248,28 @@ const DynamicInput = (props) => {
 
     return (
       <>
+        <Text style={styles.label}>{field.name}</Text>
         <SelectDropdown
           data={data}
           defaultButtonText={field.name}
           onSelect={(selectedItem, index) => {
             onChangeHandler(selectedItem.key.toString(), field);
           }}
+          buttonStyle={styles.dropdown1BtnStyle}
+          buttonTextStyle={styles.dropdown1BtnTxtStyle}
+          renderDropdownIcon={(isOpened) => {
+            return (
+              <FontAwesome
+                name={isOpened ? "chevron-up" : "chevron-down"}
+                color={"#444"}
+                size={18}
+              />
+            );
+          }}
+          dropdownIconPosition={"right"}
+          dropdownStyle={styles.dropdown1DropdownStyle}
+          rowStyle={styles.dropdown1RowStyle}
+          rowTextStyle={styles.dropdown1RowTxtStyle}
           buttonTextAfterSelection={(selectedItem, index) => {
             // text represented after item is selected
             // if data array is an array of objects then return selectedItem.property to render after item is selected
@@ -244,18 +281,6 @@ const DynamicInput = (props) => {
             return item.value;
           }}
         />
-        {/* <Picker
-          selectedValue={defaultValue}
-          enabled={field.active ? field.active : !field.disabled}
-          id={`field-${field.id}`}
-          onValueChange={(itemValue, itemIndex) => {
-            onChangeHandler(itemValue === "true", field);
-          }}
-        >
-          <Picker.Item label="Please select" value="" />
-          <Picker.Item label="Yes" value={true} key="xx" />
-          <Picker.Item label="No" value={false} key="xy" />
-        </Picker> */}
       </>
     );
   }
@@ -322,14 +347,12 @@ const DynamicInput = (props) => {
           onChangeHandler(e.target.value, field);
         }}
         keyboardType="numeric"
-        placeholder={field.name}
         validateNames={validateNames}
         errorMessages={texts}
         value={defaultValue}
         type="text"
         editable={field.active ? field.active : !field.disabled}
         id={`field-${field.id}`}
-        leftIcon={<FontAwesome name="user-o" color="#0A3055" size={20} />}
         invalidIcon={<Feather name="alert-circle" color="red" size={20} />}
         validIcon={<Feather name="check-circle" color="green" size={20} />}
         labelStyle={styles.labelStyle}
@@ -375,7 +398,6 @@ const DynamicInput = (props) => {
         // change the decimal pointing to selected language
         onChangeHandler(e.target.value, field);
       }}
-      placeholder={field.name}
       validateNames={field.required ? ["required"] : []}
       errorMessages={
         field.required ? ["required"] : []      }
@@ -383,13 +405,12 @@ const DynamicInput = (props) => {
       type="text"
       editable={field.active ? field.active : !field.disabled}
       id={`field-${field.id}`}
-      leftIcon={<FontAwesome name="user-o" color="#0A3055" size={20} />}
       invalidIcon={<Feather name="alert-circle" color="red" size={20} />}
       validIcon={<Feather name="check-circle" color="green" size={20} />}
       labelStyle={styles.labelStyle}
       style={[styles.inputStyle]}
       containerStyle={styles.inputContainerStyle}
-      floatingTopValue={hp("1%")}
+      floatingTopValue={hp("10%")}
       floatingFontSize={hp("0.5%")}
       onChange={(e, target, text) => onChangeHandler(text, field)}
       onBlur={(e) => {
@@ -469,21 +490,26 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     color: constants.white,
-    paddingTop: 5,
+    paddingTop: 10,
+    width: "80%",
   },
   inputContainerStyle: {
-    paddingBottom: 5,
-    paddingTop: 5,
+    marginBottom: 20,
+    paddingBottom: 15,
+    paddingTop: 18,
+    width: "100%",
+    height: 60,
     borderWidth: 2,
     borderBottomWidth: 2,
     // borderColor: "#333333",
     // borderBottomColor: "#333333",
     borderColor: constants.primaryColor,
     borderBottomColor: constants.primaryColor,
-    borderRadius: 15,
+    borderRadius: 10,
   },
   inputIconStyle: {
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
+    // marginTop: 5,
     fontSize: hp("2.3%"),
     backgroundColor: "#333333",
     borderRadius: 5,
@@ -491,6 +517,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: hp("0.2%"),
     paddingVertical: hp("0.1%"),
   },
+  labelStyle: {
+    fontSize: 10,
+    color: constants.white,
+    paddingTop: 10,
+    opacity: 0.9,
+    // top: 20
+  },
+  dropdown1BtnStyle: {
+    width: "100%",
+    height: 60,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#444",
+  },
+  dropdown1BtnTxtStyle: { color: "#444", textAlign: "left" },
+  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF" },
+  dropdown1RowStyle: {
+    backgroundColor: "#EFEFEF",
+    borderBottomColor: "#C5C5C5",
+  },
+  dropdown1RowTxtStyle: { color: "#444", textAlign: "left" },
+  label: {
+    color: "#444",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+
+ 
 });
 
 export default DynamicInput;
