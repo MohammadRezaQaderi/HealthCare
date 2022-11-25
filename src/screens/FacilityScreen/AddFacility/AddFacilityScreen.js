@@ -470,7 +470,7 @@ function AddFacilityScreen({
     );
   } else {
     return (
-      <ScrollView>
+      <ScrollView style={styles.newfac}>
         <View>
           <Form onSubmit={onSaveHandler}>
             <View>
@@ -619,8 +619,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: (Dimensions.get("window").width)/100*70,
+    height: (Dimensions.get("window").height)/100*40,
   },
   appButtonContainer: {
     elevation: 8,
@@ -629,6 +629,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     marginTop: 10,
+    marginBottom: 10,
   },
   appButtonText: {
     fontSize: 18,
@@ -636,6 +637,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
+  },
+  newfac: {
+    padding: 2,
+    height: "85%",
   },
 });
 export default AddFacilityScreen;
