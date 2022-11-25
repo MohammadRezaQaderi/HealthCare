@@ -132,7 +132,7 @@ function Item({
           } else {
             console.log(fieldsValue);
             if (Object.keys(fieldsValue).length === 0) {
-              window.location.reload();
+              // window.location.reload();
               setSelectedItemClass(data[0]);
               setSelectedItemType(data[0]?.item_type?.[0]);
             } else {
@@ -529,10 +529,8 @@ function Item({
   }
 
   return (
-    <ScrollView>
-      <View className="page-title mb-3">
-        <Text>Add new item</Text>
-      </View>
+    <ScrollView style={styles.newfac}>
+     
       <Form onSubmit={onSaveHandler}>
         <View>
           <DynamicInput
@@ -763,6 +761,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     marginTop: 10,
+    marginBottom: 10,
+    paddingBottom: 10,
   },
   appButtonText: {
     fontSize: 18,
@@ -791,6 +791,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     marginBottom: 5,
+  },
+  newfac: {
+    padding: 2,
+    height: "82%",
   },
 });
 export default Item;
