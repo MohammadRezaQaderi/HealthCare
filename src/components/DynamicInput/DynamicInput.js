@@ -4,6 +4,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
   Image,
   Text,
   TouchableOpacity,
@@ -101,7 +102,7 @@ const DynamicInput = (props) => {
 
           <SelectDropdown
             data={data}
-            defaultButtonText={field.name}
+            defaultButtonText={"Please select"}
             buttonStyle={styles.dropdown1BtnStyle}
             buttonTextStyle={styles.dropdown1BtnTxtStyle}
             renderDropdownIcon={(isOpened) => {
@@ -167,45 +168,46 @@ const DynamicInput = (props) => {
       }
 
       return (
-        <MultiSelect
-          hideTags
-          items={options}
-          uniqueKey="id"
-          onSelectedItemsChange={(e) => {
-            // console.log(e);
-            let x = [];
-            let y = "";
-            if (e !== null) {
-              for (let i = 0; i < e.length; i++) {
-                x.push(e[i].id);
-                y += e[i].id;
+        <SafeAreaView style={{ flex: 1 }}>
+          <Text style={styles.label}>{field.name}</Text>
+
+          <MultiSelect
+            hideTags
+            items={options}
+            uniqueKey="id"
+            onSelectedItemsChange={(e) => {
+              
+              let y = "";
+              if (e !== null) {
+                for (let i = 0; i < e.length; i++) {
+                  y += e[i].id;
+                }
+                setSelected(e);
+                selecteda = e;
+                onChangeHandler(y, field);
+              } else {
+                onChangeHandler("", field);
+                setSelected([]);
+                selecteda = [];
               }
-              setSelected(e);
-              selecteda = e;
-              onChangeHandler(y, field);
-            } else {
-              onChangeHandler("", field);
-              setSelected([]);
-              selecteda = [];
-            }
-          }}
-          selectedItems={selecteda}
-          selectText="Pick Items"
-          searchInputPlaceholderText="Search Items..."
-          // onChangeInput={(text) => console.log(text)}
-          altFontFamily="ProximaNova-Light"
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          key={field.id}
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
-          itemTextColor="#000"
-          displayKey="name"
-          searchInputStyle={{ color: "#CCC" }}
-          submitButtonColor="#CCC"
-          submitButtonText="Submit"
-        />
+            }}
+            selectedItems={selected.length > 0 ? selected : selecteda}
+            selectText="Select Services"
+            searchInputPlaceholderText="Search Items..."
+            // onChangeInput={(text) => console.log(text)}
+            tagRemoveIconColor="#000"
+            tagBorderColor="#000"
+            tagTextColor="#000"
+            key={field.id}
+            selectedItemTextColor="#000"
+            selectedItemIconColor="#000"
+            itemTextColor="#000"
+            displayKey="name"
+            searchInputStyle={{ color: "#000", borderColor: "#000", border: 2 }}
+            submitButtonColor="#000"
+            submitButtonText="Close"
+          />
+        </SafeAreaView>
         // <ReactSelect
         //   options={options}
         //   isMulti
@@ -251,7 +253,7 @@ const DynamicInput = (props) => {
         <Text style={styles.label}>{field.name}</Text>
         <SelectDropdown
           data={data}
-          defaultButtonText={field.name}
+          defaultButtonText={"Please select"}
           onSelect={(selectedItem, index) => {
             onChangeHandler(selectedItem.key.toString(), field);
           }}
@@ -518,7 +520,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp("0.1%"),
   },
   labelStyle: {
-    fontSize: 10,
+    fontSize: 12,
     color: constants.white,
     paddingTop: 10,
     opacity: 0.9,
