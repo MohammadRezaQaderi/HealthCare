@@ -15,8 +15,8 @@ export default class ItemListTable extends Component {
   }
 
   editIndex(index) {
-    this.props.setDefaultValueFacility(this.props.items[index]);
-    this.props.setCurrentTab("New List");
+    this.props.setDefaultValueItem(this.props.items[index]);
+    this.props.setCurrentTab("Add Item");
   }
   deleteIndex(index) {
     InternetConnection().then((res) => {
