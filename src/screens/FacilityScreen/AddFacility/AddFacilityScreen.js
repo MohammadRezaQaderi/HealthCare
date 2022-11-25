@@ -474,9 +474,7 @@ function AddFacilityScreen({
       <ScrollView style={styles.newfac}>
         <View>
           <Form onSubmit={onSaveHandler}>
-            <View>
-              <Text>Facility information</Text>
-            </View>
+            
             <View>
               <DynamicInput
                 field={parentFacilityField}
