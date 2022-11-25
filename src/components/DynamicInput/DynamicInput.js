@@ -98,7 +98,11 @@ const DynamicInput = (props) => {
     
       return (
         <>
-          <Text style={styles.label}>{field.name}</Text>
+          <Text style={styles.label}>
+            {field.name}
+
+            {field.required && <Text style={styles.required}>*</Text>}
+          </Text>
 
           <SelectDropdown
             data={data}
@@ -169,14 +173,16 @@ const DynamicInput = (props) => {
 
       return (
         <SafeAreaView style={{ flex: 1 }}>
-          <Text style={styles.label}>{field.name}</Text>
+          <Text style={styles.label}>
+            {field.name}
 
+            {field.required && <Text style={styles.required}>*</Text>}
+          </Text>
           <MultiSelect
             hideTags
             items={options}
             uniqueKey="id"
             onSelectedItemsChange={(e) => {
-              
               let y = "";
               if (e !== null) {
                 for (let i = 0; i < e.length; i++) {
@@ -250,7 +256,10 @@ const DynamicInput = (props) => {
 
     return (
       <>
-        <Text style={styles.label}>{field.name}</Text>
+        <Text style={styles.label}>
+          {field.name}
+          {field.required && <Text style={styles.required}>*</Text>}
+        </Text>
         <SelectDropdown
           data={data}
           defaultButtonText={"Please select"}
@@ -323,10 +332,72 @@ const DynamicInput = (props) => {
 
 
     return (
+      <>
+        <Text style={styles.label}>
+          {field.name}
+          {field.required && <Text style={styles.required}>*</Text>}
+        </Text>
+        <InputText
+          name={field.name}
+          // label={field.name}
+          key={field.name}
+          onKeyPress={(e) => {
+            e.persist();
+            if (field.type === "number") {
+              if (validation && validation?.float) {
+                // if field is number and have float validation
+                // just allow numbers and decimal point come from language
+                if (numericKeys.indexOf(e.key) === -1) {
+                  e.preventDefault();
+                  return;
+                }
+              } else if (validation && validation?.float === false) {
+                // if field is number and have not float validation
+                if (num1.indexOf(e.key) === -1) {
+                  e.preventDefault();
+                  return;
+                }
+              }
+            }
+            // change the decimal pointing to selected language
+            onChangeHandler(e.target.value, field);
+          }}
+          keyboardType="numeric"
+          validateNames={validateNames}
+          errorMessages={texts}
+          value={defaultValue}
+          type="text"
+          editable={field.active ? field.active : !field.disabled}
+          id={`field-${field.id}`}
+          invalidIcon={<Feather name="alert-circle" color="red" size={20} />}
+          validIcon={<Feather name="check-circle" color="green" size={20} />}
+          labelStyle={styles.labelStyle}
+          style={[styles.inputStyle]}
+          containerStyle={styles.inputContainerStyle}
+          floatingTopValue={hp("1%")}
+          floatingFontSize={hp("0.5%")}
+          onChange={(e, target, text) => onChangeHandler(text, field)}
+          onBlur={(e) => {
+            e.persist();
+            // check for seperator
+            if (separator) {
+              const formatted = thousandSeparator(e.target.value);
+              onChangeHandler(formatted, field);
+            }
+          }}
+        />
+      </>
+    );
+  }
+  return (
+    <>
+      <Text style={styles.label}>
+        {field.name} {field.required && <Text style={styles.required}>*</Text>}
+      </Text>
+
       <InputText
         name={field.name}
-        label={field.name}
-        key={field.name}
+        // label={field.name}
         onKeyPress={(e) => {
           e.persist();
           if (field.type === "number") {
@@ -348,9 +419,8 @@ const DynamicInput = (props) => {
           // change the decimal pointing to selected language
           onChangeHandler(e.target.value, field);
         }}
-        keyboardType="numeric"
-        validateNames={validateNames}
-        errorMessages={texts}
+        validateNames={field.required ? ["required"] : []}
+        errorMessages={field.required ? ["required"] : []}
         value={defaultValue}
         type="text"
         editable={field.active ? field.active : !field.disabled}
@@ -360,7 +430,7 @@ const DynamicInput = (props) => {
         labelStyle={styles.labelStyle}
         style={[styles.inputStyle]}
         containerStyle={styles.inputContainerStyle}
-        floatingTopValue={hp("1%")}
+        floatingTopValue={hp("10%")}
         floatingFontSize={hp("0.5%")}
         onChange={(e, target, text) => onChangeHandler(text, field)}
         onBlur={(e) => {
@@ -372,58 +442,7 @@ const DynamicInput = (props) => {
           }
         }}
       />
-    );
-  }
-  return (
-    <InputText
-      name={field.name}
-      label={field.name}
-
-      onKeyPress={(e) => {
-        e.persist();
-        if (field.type === "number") {
-          if (validation && validation?.float) {
-            // if field is number and have float validation
-            // just allow numbers and decimal point come from language
-            if (numericKeys.indexOf(e.key) === -1) {
-              e.preventDefault();
-              return;
-            }
-          } else if (validation && validation?.float === false) {
-            // if field is number and have not float validation
-            if (num1.indexOf(e.key) === -1) {
-              e.preventDefault();
-              return;
-            }
-          }
-        }
-        // change the decimal pointing to selected language
-        onChangeHandler(e.target.value, field);
-      }}
-      validateNames={field.required ? ["required"] : []}
-      errorMessages={
-        field.required ? ["required"] : []      }
-      value={defaultValue}
-      type="text"
-      editable={field.active ? field.active : !field.disabled}
-      id={`field-${field.id}`}
-      invalidIcon={<Feather name="alert-circle" color="red" size={20} />}
-      validIcon={<Feather name="check-circle" color="green" size={20} />}
-      labelStyle={styles.labelStyle}
-      style={[styles.inputStyle]}
-      containerStyle={styles.inputContainerStyle}
-      floatingTopValue={hp("10%")}
-      floatingFontSize={hp("0.5%")}
-      onChange={(e, target, text) => onChangeHandler(text, field)}
-      onBlur={(e) => {
-        e.persist();
-        // check for seperator
-        if (separator) {
-          const formatted = thousandSeparator(e.target.value);
-          onChangeHandler(formatted, field);
-        }
-      }}
-    />
+    </>
     // <Form.Control
     //   onKeyPress={(e) => {
     //     e.persist();
@@ -547,8 +566,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-
- 
+  required: {
+    color: "red",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
 });
 
 export default DynamicInput;

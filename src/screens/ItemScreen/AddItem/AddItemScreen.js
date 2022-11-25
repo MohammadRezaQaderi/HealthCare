@@ -35,6 +35,7 @@ const facilityField = {
   type: "text",
   active: false,
   disabled: true,
+  required: true,
   state: "facility",
   name: "Facility Name",
 };
@@ -530,7 +531,6 @@ function Item({
 
   return (
     <ScrollView style={styles.newfac}>
-     
       <Form onSubmit={onSaveHandler}>
         <View>
           <DynamicInput
@@ -539,7 +539,10 @@ function Item({
           />
         </View>
         <View>
-          <Text style={styles.label}>Item class</Text>
+          <Text style={styles.label}>
+            Item class
+            <Text style={styles.required}>*</Text>
+          </Text>
           {/* {console.log("class", itemClassesAndTypes)} */}
           <SelectDropdown
             data={itemClassesAndTypes?.map((zz, index) => {
@@ -577,7 +580,9 @@ function Item({
           />
         </View>
         <View>
-          <Text style={styles.label}>Items category</Text>
+          <Text style={styles.label}>
+            Items category <Text style={styles.required}>*</Text>
+          </Text>
 
           <SelectDropdown
             data={selectedItemClass?.item_type?.map((itemType, index) => {
@@ -795,6 +800,12 @@ const styles = StyleSheet.create({
   newfac: {
     padding: 2,
     height: "82%",
+  },
+  required: {
+    color: "red",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
 });
 export default Item;
