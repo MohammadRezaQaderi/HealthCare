@@ -13,6 +13,8 @@ const Show = (items) => {
 
 // For multiple Buttons...
 const TabButton = (
+  setDefaultValueFacility,
+  setDefaultValueItem,
   currentTab,
   setCurrentTab,
   title,
@@ -26,6 +28,8 @@ const TabButton = (
     return (
       <TouchableOpacity
         onPress={() => {
+          setDefaultValueFacility({})
+          setDefaultValueItem({})
           setCurrentTab(title);
           if (setShowed != "no") {
             Show(setShowed);
@@ -86,6 +90,8 @@ const TabButton = (
         <TouchableOpacity
           onPress={() => {
             setCurrentTab(title);
+            setDefaultValueFacility({});
+            setDefaultValueItem({});
           }}
         >
           <View

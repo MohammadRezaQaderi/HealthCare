@@ -86,6 +86,8 @@ const MenuScreen = ({
                   // Tab Bar Buttons....
                 }
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Facility",
@@ -96,6 +98,8 @@ const MenuScreen = ({
                   true
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "New Facility",
@@ -106,6 +110,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Facility List",
@@ -116,6 +122,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Items",
@@ -126,6 +134,8 @@ const MenuScreen = ({
                   true
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Add Item",
@@ -136,6 +146,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Item List",
@@ -146,6 +158,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Message",
@@ -156,6 +170,8 @@ const MenuScreen = ({
                   true
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Send Message",
@@ -176,6 +192,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Scan QR",
@@ -186,6 +204,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Sync",
@@ -196,6 +216,8 @@ const MenuScreen = ({
                   false
                 )}
                 {TabButton(
+                  setDefaultValueFacility,
+                  setDefaultValueItem,
                   currentTab,
                   setCurrentTab,
                   "Settings",

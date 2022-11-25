@@ -60,6 +60,7 @@ const parentFacilityField = {
   type: "text",
   active: false,
   disabled: true,
+  name: "Parent facility",
   stateName: "parentName",
 };
 
@@ -486,7 +487,6 @@ function AddFacilityScreen({
                 defaultValue={fieldsValue["name"]}
                 onChangeHandler={onChangeHandler}
               />
-              <Text>Please select level: </Text>
               <DynamicInput
                 field={levelField}
                 defaultValue={fieldsValue["level"]}
@@ -541,30 +541,7 @@ function AddFacilityScreen({
                             </View>
                           ) : null}
 
-                          {/* <Button
-                            // className="btn btn-primary mt-2 w-50"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              navigator.geolocation.getCurrentPosition(
-                                (pos) => {
-                                  const { latitude, longitude } = pos.coords;
-                                  console.log(pos);
-                                  const data = {
-                                    latlng: {
-                                      lat: latitude,
-                                      lng: longitude,
-                                    },
-                                  };
-                                  setMap(data.latlng);
-                                  handleMapClick(data);
-                                },
-                                () => {},
-                                { enableHighAccuracy: true }
-                              );
-                            }}
-                          >
-                            <Text>Get current location</Text>
-                          </Button> */}
+                        
                         </View>
                       ) : (
                         <View>
