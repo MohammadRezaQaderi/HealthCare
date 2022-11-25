@@ -21,6 +21,7 @@ import AddFacilityScreen from "../FacilityScreen/AddFacility/AddFacilityScreen";
 import ListFacilityScreen from "../FacilityScreen/ListFacility/ListFacilityScreen";
 import AddItemScreen from "../ItemScreen/AddItem/AddItemScreen";
 import ListItemScreen from "../ItemScreen/ListItem/ListItemScreen";
+import SettingScreen from "../SettingScreen";
 
 // Icon and Image Import
 import home from "../../../assets/home.png";
@@ -383,6 +384,12 @@ const MenuScreen = ({
                     setDefaultValueItem={setDefaultValueItem}
                     defaultValueItem={defaultValueItem}
                     itemParent={itemParent}
+                  />
+                ) : currentTab == "Settings" ? (
+                  <SettingScreen
+                    setUrlState={setUrlState}
+                    setLoggedIn={setLoggedIn}
+                    setCurrentTab={setCurrentTab}
                   />
                 ) : (
                   <></>
