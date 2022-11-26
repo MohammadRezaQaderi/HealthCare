@@ -428,7 +428,7 @@ function AddFacilityScreen({
           const temp =JSON.parse(data);
           temp.push(_fieldsValue);
           removeItemValue("send-facility");
-          saveData("send-facility", JSON.stringify(temp));
+          saveData("send-facility", temp);
       setCurrentTab("Facility List");
 
       });
@@ -439,7 +439,7 @@ function AddFacilityScreen({
         const temp = JSON.parse(data);
         temp.push(_fieldsValue);
         removeItemValue("edited-facility");
-        saveData("edited-facility", JSON.stringify(temp));
+        saveData("edited-facility", temp);
       setCurrentTab("Facility List");
 
       });
