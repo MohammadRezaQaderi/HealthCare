@@ -420,7 +420,7 @@ function Item({
       }
     }
     // const page = window.event.submitter.name === "saveNew" ? "new" : "edit";
-    if(Object.keys(defaultValueItem).length !== 0){
+    if(Object.keys(defaultValueItem).length === 0){
       readData("send-item").then((data) => {
           const temp =JSON.parse(data);
           temp.push(_fieldsValue);
