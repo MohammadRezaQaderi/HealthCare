@@ -235,6 +235,8 @@ const MenuScreen = ({
               <View>
                 {loggedIn
                   ? TabButton(
+                      setDefaultValueFacility,
+                      setDefaultValueItem,
                       currentTab,
                       setCurrentTab,
                       "Logout",
@@ -245,6 +247,8 @@ const MenuScreen = ({
                       false
                     )
                   : TabButton(
+                      setDefaultValueFacility,
+                      setDefaultValueItem,
                       currentTab,
                       setCurrentTab,
                       "Login",
