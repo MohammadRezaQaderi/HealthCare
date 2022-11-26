@@ -419,23 +419,23 @@ function AddFacilityScreen({
         }
       }
     }
-    const page = window.event.submitter.name === "saveNew" ? "new" : "edit";
+    // const page = window.event.submitter.name === "saveNew" ? "new" : "edit";
 
     if(Object.keys(defaultValueFacility).length > 0){
-      readData("Addfacility").then((data) => {
+      readData("send-facility").then((data) => {
           const temp =JSON.parse(data);
           temp.push(_fieldsValue);
-          removeItemValue("Addfacility");
-          saveData("Addfacility", JSON.stringify(temp));
+          removeItemValue("send-facility");
+          saveData("send-facility", JSON.stringify(temp));
       });
 
     }
     else{
-      readData("editfacility").then((data) => {
+      readData("edited-facility").then((data) => {
         const temp = JSON.parse(data);
         temp.push(_fieldsValue);
-        removeItemValue("editfacility");
-        saveData("editfacility", JSON.stringify(temp));
+        removeItemValue("edited-facility");
+        saveData("edited-facility", JSON.stringify(temp));
       });
     }
     // const res = await (id === "new"

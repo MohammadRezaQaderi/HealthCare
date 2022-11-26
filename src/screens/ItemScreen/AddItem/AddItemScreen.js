@@ -30,6 +30,7 @@ import {
 import SelectDropdown from "react-native-select-dropdown";
 import { Form } from "validate-form-in-expo-style";
 
+
 const facilityField = {
   id: "facility",
   type: "text",
@@ -418,17 +419,25 @@ function Item({
         }
       }
     }
-    const page = window.event.submitter.name === "saveNew" ? "new" : "edit";
-
-    const res = await (id === "new"
-      ? ItemService.postItem(_fieldsValue)
-      : ItemService.putItem(_fieldsValue));
-    if (page === "new") {
-      window.location.reload();
-    } else {
-      history.push(`/items/list`);
-      setFieldValue(_fieldsValue);
+    // const page = window.event.submitter.name === "saveNew" ? "new" : "edit";
+    if(Object.keys(defaultValueItem).length !== 0){
+      readData("send-item").then((data) => {
+          const temp =JSON.parse(data);
+          temp.push(_fieldsValue);
+          removeItemValue("send-item");
+          saveData("send-item", JSON.stringify(temp));
+      });
+    }else{
+      readData("edited-item").then((data) => {
+        const temp =JSON.parse(data);
+        temp.push(_fieldsValue);
+        removeItemValue("edited-item");
+        saveData("edited-item", JSON.stringify(temp));
+      });
     }
+    setCurrentTab("Item List");
+
+    
   };
 
   const selectItemClassHandler = async (e) => {
