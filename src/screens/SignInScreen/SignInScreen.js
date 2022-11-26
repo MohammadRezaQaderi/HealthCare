@@ -215,6 +215,10 @@ const getAsyncInfo = async (setLoading,setCurrentTab) => {
           console.log("temp_obj", temp_obj);
           fields.push(temp_obj);
           saveData("itemFields", fields).then(() => "");
+          saveData("send-facility",JSON.stringify([])).then(() => "");
+          saveData("send-item", JSON.stringify([])).then(() => "");
+          saveData("edited-item", JSON.stringify([])).then(() => "");
+          saveData("edited-facility", JSON.stringify([])).then(() => "");
           setLoading(false);
           setCurrentTab("Logout");
         });

@@ -346,6 +346,7 @@ function AddFacilityScreen({
     if (field.stateName === "level") {
       cloneFieldsValue[field.stateName] = parseInt(value);
     }
+    // console.log("cloneFieldsValue", cloneFieldsValue);
     setFieldValue(cloneFieldsValue);
     //check validation and required
     const _fieldErrors = { ...fieldErrors };
@@ -366,7 +367,7 @@ function AddFacilityScreen({
   };
 
   const onSaveHandler = async (e) => {
-    e.preventDefault();
+    console.log(fieldsValue);
 
     if (hasRequiredErrors()) {
       return;
@@ -575,7 +576,7 @@ function AddFacilityScreen({
                       ) : null}
                       {hasRequiredError ? (
                         <View>
-                          <Text> {fieldErrors[field.stateName]}</Text>r
+                          <Text> {fieldErrors[field.stateName]}</Text>
                         </View>
                       ) : null}
                     </View>

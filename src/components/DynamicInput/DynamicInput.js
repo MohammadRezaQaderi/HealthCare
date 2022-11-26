@@ -341,28 +341,10 @@ const DynamicInput = (props) => {
           name={field.name}
           // label={field.name}
           key={field.name}
-          onKeyPress={(e) => {
-            e.persist();
-            if (field.type === "number") {
-              if (validation && validation?.float) {
-                // if field is number and have float validation
-                // just allow numbers and decimal point come from language
-                if (numericKeys.indexOf(e.key) === -1) {
-                  e.preventDefault();
-                  return;
-                }
-              } else if (validation && validation?.float === false) {
-                // if field is number and have not float validation
-                if (num1.indexOf(e.key) === -1) {
-                  e.preventDefault();
-                  return;
-                }
-              }
-            }
-            // change the decimal pointing to selected language
-            onChangeHandler(e.target.value, field);
+          onChangeText={(text) => {
+            onChangeHandler(text, field);
           }}
-          keyboardType="numeric"
+          keyboardType={keyboardType}
           validateNames={validateNames}
           errorMessages={texts}
           value={defaultValue}
@@ -398,27 +380,8 @@ const DynamicInput = (props) => {
       <InputText
         name={field.name}
         // label={field.name}
-        onKeyPress={(e) => {
-          e.persist();
-          if (field.type === "number") {
-            if (validation && validation?.float) {
-              // if field is number and have float validation
-              // just allow numbers and decimal point come from language
-              if (numericKeys.indexOf(e.key) === -1) {
-                e.preventDefault();
-                return;
-              }
-            } else if (validation && validation?.float === false) {
-              // if field is number and have not float validation
-              if (num1.indexOf(e.key) === -1) {
-                e.preventDefault();
-                return;
-              }
-            }
-          }
-          // change the decimal pointing to selected language
-          onChangeHandler(e.target.value, field);
-        }}
+        onChangeText={(text) => {
+          onChangeHandler(text, field)}}
         validateNames={field.required ? ["required"] : []}
         errorMessages={field.required ? ["required"] : []}
         value={defaultValue}
