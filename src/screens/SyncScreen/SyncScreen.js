@@ -194,8 +194,10 @@ const getAsyncInfo = async ( ) => {
 };
 
 const SyncScreen = ({}) => {
-  const [connectionState, setConnectionState] = useState(false);
+  const [connectionState, setConnectionState] = useState(true);
   const onPassPressed = () => {
+    checkConnected().then((res) => setConnectionState(res));
+
     let token = "";
     let url = "";
     readData("token").then((token) => {
@@ -205,7 +207,7 @@ const SyncScreen = ({}) => {
     readData("URL").then((url) => {
       url = JSON.parse(url);
     });
-    checkConnected().then((res) => setConnectionState(res));
+    console.log("connectionState", connectionState);
     readData("read-message").then((value) => {
       if (value != null) {
         if (connectionState) {
@@ -260,6 +262,7 @@ const SyncScreen = ({}) => {
       }
     });
     readData("send-facility").then((value) => {
+      console.log("value", value);
       if (value != null) {
         for (let index = 0; index < value.length; index++) {
           let param = value[index];
@@ -280,6 +283,10 @@ const SyncScreen = ({}) => {
               .catch((error) => {
                 console.log("errors send-facility: ", error);
               });
+          } else {
+            console.log(
+              "we did not have the facility to send to server  neeeeeeeeet"
+            );
           }
         }
         removeItemValue("send-facility").then(() => "");
@@ -309,6 +316,9 @@ const SyncScreen = ({}) => {
               .catch((error) => {
                 console.log("errors edited-facility: ", error);
               });
+          }
+          else{
+            console.log("we did not have the facility to send to server  neeeeeeeeet");
           }
         }
         removeItemValue("edited-facility").then(() => "");

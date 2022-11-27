@@ -425,22 +425,43 @@ function AddFacilityScreen({
     if(Object.keys(defaultValueFacility).length === 0){
       readData("send-facility").then((data) => {
         console.log("data",data);
+        if(data === null){
+          const temp = []
+          temp.push(_fieldsValue);
+          console.log("temp", temp);
+          removeItemValue("send-facility");
+          saveData("send-facility", temp);
+          setCurrentTab("Facility List");
+        }
+        else{
           const temp =JSON.parse(data);
           temp.push(_fieldsValue);
+          console.log("temp",temp);
           removeItemValue("send-facility");
           saveData("send-facility", temp);
       setCurrentTab("Facility List");
+        }
 
       });
 
     }
     else{
       readData("edited-facility").then((data) => {
-        const temp = JSON.parse(data);
-        temp.push(_fieldsValue);
-        removeItemValue("edited-facility");
-        saveData("edited-facility", temp);
-      setCurrentTab("Facility List");
+        if (data === null) {
+          const temp = []
+          temp.push(_fieldsValue);
+          removeItemValue("edited-facility");
+          saveData("edited-facility", temp);
+          setCurrentTab("Facility List");
+        
+        }
+        else{
+          const temp = JSON.parse(data);
+          temp.push(_fieldsValue);
+          removeItemValue("edited-facility");
+          saveData("edited-facility", temp);
+          setCurrentTab("Facility List");
+        }
 
       });
     }
@@ -543,8 +564,6 @@ function AddFacilityScreen({
                               </View>
                             </View>
                           ) : null}
-
-                        
                         </View>
                       ) : (
                         <View>
@@ -564,7 +583,7 @@ function AddFacilityScreen({
                         "General population" &&
                       field.stateName === "populationnumber" &&
                       selectedLevel ? (
-                        <Text>
+                        <Text style={styles.rangeStyle}>
                           range: {separator(selectedLevel?.minpop)} -{" "}
                           {separator(selectedLevel?.maxpop)}
                         </Text>
@@ -573,14 +592,17 @@ function AddFacilityScreen({
                         "Under-1 Population" &&
                       field.stateName === "childrennumber" &&
                       selectedLevel ? (
-                        <Text>
+                        <Text style={styles.rangeStyle}>
                           range: {separator(selectedLevel?.minpop)} -{" "}
                           {separator(selectedLevel?.maxpop)}
                         </Text>
                       ) : null}
                       {hasRequiredError ? (
                         <View>
-                          <Text> {fieldErrors[field.stateName]}</Text>
+                          <Text style={styles.error}>
+                            {" "}
+                            {fieldErrors[field.stateName]}
+                          </Text>
                         </View>
                       ) : null}
                     </View>
@@ -631,6 +653,16 @@ const styles = StyleSheet.create({
   newfac: {
     padding: 2,
     height: "85%",
+  },
+  error: {
+    color: "red",
+    fontSize: 12,
+  },
+  rangeStyle: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 export default AddFacilityScreen;
