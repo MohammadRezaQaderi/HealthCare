@@ -505,6 +505,7 @@ function AddFacilityScreen({
     );
   } else {
     return (
+      <>
       <ScrollView style={styles.newfac}>
         <View>
           <Form onSubmit={onSaveHandler}>
@@ -617,16 +618,19 @@ function AddFacilityScreen({
                   );
                 })}
             </View>
-            <TouchableOpacity
+            
+          </Form>
+        </View>
+      </ScrollView>
+      
+      <TouchableOpacity
               activeOpacity={0.8}
               onPress={onSaveHandler}
               style={styles.appButtonContainer}
             >
               <Text style={styles.appButtonText}>Save all</Text>
             </TouchableOpacity>
-          </Form>
-        </View>
-      </ScrollView>
+      </>
     );
   }
 }
@@ -648,6 +652,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
+    position: "absolute",
+    bottom: 0,
+    left: "34%",
     marginTop: 10,
     marginBottom: 10,
   },
