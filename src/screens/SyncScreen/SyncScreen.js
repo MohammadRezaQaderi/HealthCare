@@ -1,6 +1,8 @@
 import { View, StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "../../components/CustomButton";
+import { ActivityIndicator } from "react-native-paper";
+
 import {
   checkConnected,
   readData,
@@ -187,6 +189,10 @@ const getAsyncInfo = async ( ) => {
       console.log("temp_obj", temp_obj);
       fields.push(temp_obj);
       saveData("itemFields", fields).then(() => "");
+      saveData("send-facility", []).then(() => "");
+      saveData("send-item", []).then(() => "");
+      saveData("edited-item", []).then(() => "");
+      saveData("edited-facility", []).then(() => "");
      
     });
   });
@@ -195,7 +201,9 @@ const getAsyncInfo = async ( ) => {
 
 const SyncScreen = ({}) => {
   const [connectionState, setConnectionState] = useState(true);
+  const [loading, setLoading] = useState(false);
   const onPassPressed = () => {
+    setLoading(true);
     checkConnected().then((res) => setConnectionState(res));
 
     let token = "";
@@ -295,7 +303,7 @@ const SyncScreen = ({}) => {
                 );
               }
             }
-            // removeItemValue("send-facility").then(() => "");
+            removeItemValue("send-facility").then(() => "");
           } else {
             console.log("we did not have the facility to send to server ");
           }
@@ -459,7 +467,9 @@ const SyncScreen = ({}) => {
         });
         // get new data
         getInfoFromServer();
-        getAsyncInfo();
+        getAsyncInfo().then(() => {
+          setLoading(false);
+        });
         console.warn("Info Synced :)");
       });
 
@@ -469,6 +479,13 @@ const SyncScreen = ({}) => {
     
 
   };
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.root}>
       <Text style={styles.secondaryText}>
@@ -490,6 +507,11 @@ const styles = StyleSheet.create({
     color: "gray",
     paddingTop: 20,
     textAlign: "center",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 export default SyncScreen;

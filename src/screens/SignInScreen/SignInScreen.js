@@ -247,12 +247,13 @@ const SignInScreen = ({ setLoggedIn, setCurrentTab }) => {
           saveData("token", response?.data?.access).then(() => "");
           getAsyncInfo(setLoading, setCurrentTab);
           getInfoFromServer(setCurrentTab);
+          setLoading(false);
           
         })
         .catch((error) => {
           console.log("errors to login: ", error);
         });
-      setLoading(false);
+      
     });
   };
   const signUpValidationSchema = yup.object().shape({
