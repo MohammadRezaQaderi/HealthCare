@@ -236,13 +236,23 @@ function AddFacilityScreen({
             }
             result.push(field);
           }
+          if (Object.keys(facilityParent).length === 0) {
 
+            setFieldValue((perFieldsValue) => ({
+              ...perFieldsValue,
+              completerstaffname:
+                perFieldsValue?.completerstaffname ?? res.user.username,
+              parentName: facilityParent.name,
+            }));
+          }
+          else{
           setFieldValue((perFieldsValue) => ({
             ...perFieldsValue,
             completerstaffname:
               perFieldsValue?.completerstaffname ?? res.user.username,
             parentName: res.facility.name,
           }));
+        }
           setFacilityFields(result);
         } else {
           console.log("error");
