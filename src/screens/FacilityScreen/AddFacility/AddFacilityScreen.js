@@ -136,7 +136,10 @@ function AddFacilityScreen({
         let x22 = gps.split(",")[1]?.split(")")[0];
         setx1(x11);
         setx2(x22);
-        setMap([x11, x22]);
+        setMap({
+          latitude: x11,
+          longitude: x22,
+        });
       } else {
         console.log("mire injar");
         readData("country").then((country) => {

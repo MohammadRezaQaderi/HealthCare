@@ -188,11 +188,11 @@ const getAsyncInfo = async ( ) => {
       });
       console.log("temp_obj", temp_obj);
       fields.push(temp_obj);
-      saveData("itemFields", fields).then(() => "");
-      saveData("send-facility", []).then(() => "");
-      saveData("send-item", []).then(() => "");
-      saveData("edited-item", []).then(() => "");
-      saveData("edited-facility", []).then(() => "");
+      // saveData("itemFields", fields).then(() => "");
+      // saveData("send-facility", []).then(() => "");
+      // saveData("send-item", []).then(() => "");
+      // saveData("edited-item", []).then(() => "");
+      // saveData("edited-facility", []).then(() => "");
      
     });
   });
@@ -253,9 +253,7 @@ const SyncScreen = ({}) => {
                 axios
                   .post(
                     "https://" + url + "/message/",
-                    {
-                      param,
-                    },
+                   param,
                     {
                       headers: { Authorization: token },
                     }
@@ -315,13 +313,14 @@ const SyncScreen = ({}) => {
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
+              console.log("param", param);
               if (connectionState) {
                 axios
                   .put(
                     "https://" + url + "/facilities/",
-                    {
+                    
                       param,
-                    },
+                   
                     {
                       headers: { Authorization: token },
                     }
@@ -338,7 +337,7 @@ const SyncScreen = ({}) => {
                 );
               }
             }
-            removeItemValue("edited-facility").then(() => "");
+            // removeItemValue("edited-facility").then(() => "");
           } else {
             console.log("we did not have the facility to send to server ");
           }
@@ -354,9 +353,7 @@ const SyncScreen = ({}) => {
                 axios
                   .post(
                     "https://" + url + "/facilities/delete",
-                    {
-                      param,
-                    },
+                   param,
                     {
                       headers: { Authorization: token },
                     }
@@ -384,9 +381,7 @@ const SyncScreen = ({}) => {
                 axios
                   .post(
                     "https://" + url + "/item/",
-                    {
-                      param,
-                    },
+                   param,
                     {
                       headers: { Authorization: token },
                     }
@@ -415,9 +410,7 @@ const SyncScreen = ({}) => {
                 axios
                   .put(
                     "https://" + url + "/item/",
-                    {
-                      param,
-                    },
+                   param,
                     {
                       headers: { Authorization: token },
                     }
@@ -445,9 +438,7 @@ const SyncScreen = ({}) => {
                 axios
                   .post(
                     "https://" + url + "/item/delete",
-                    {
-                      param,
-                    },
+                   param,
                     {
                       headers: { Authorization: token },
                     }
