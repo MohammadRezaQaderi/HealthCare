@@ -209,6 +209,8 @@ const SyncScreen = ({}) => {
         console.log("url: ", url);
         console.log("connectionState", connectionState);
         readData("read-message").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             if (connectionState) {
               axios
@@ -234,6 +236,8 @@ const SyncScreen = ({}) => {
           }
         });
         readData("send-message").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
@@ -298,6 +302,8 @@ const SyncScreen = ({}) => {
         });
 
         readData("edited-facility").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
@@ -331,6 +337,8 @@ const SyncScreen = ({}) => {
         });
 
         readData("deleted-facility").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
@@ -359,6 +367,8 @@ const SyncScreen = ({}) => {
           }
         });
         readData("send-item").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
@@ -388,6 +398,8 @@ const SyncScreen = ({}) => {
         });
 
         readData("edited-item").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
@@ -416,6 +428,8 @@ const SyncScreen = ({}) => {
           }
         });
         readData("deleted-item").then((value) => {
+          value = JSON.parse(value);
+
           if (value != null) {
             for (let index = 0; index < value.length; index++) {
               let param = value[index];
