@@ -83,6 +83,13 @@ const DynamicInput = (props) => {
     // we need to hard code the other_service becouse just this select is multiple choice
     if (field.stateName !== "other_services") {
       const data=[];
+      let temp_Def =field.params.find((item) => ((item.id) === defaultValue) || ((item.id).toString() === defaultValue || ((item.name) === defaultValue))) ;
+      
+      const defaultValues={
+        value:temp_Def?.name|| temp_Def?.describe,
+        key:temp_Def?.id
+      }
+
       field.params.map((param) => {
             const disabled=param.enabled
                   ? !param.enabled
@@ -107,6 +114,7 @@ const DynamicInput = (props) => {
           <SelectDropdown
             data={data}
             defaultButtonText={"Please select"}
+            defaultValue={defaultValues}
             buttonStyle={styles.dropdown1BtnStyle}
             buttonTextStyle={styles.dropdown1BtnTxtStyle}
             renderDropdownIcon={(isOpened) => {
@@ -249,6 +257,11 @@ const DynamicInput = (props) => {
   }
 // check for boolean type
   if (field.type === "bool") {
+     
+     const defaultValues = {
+       value: defaultValue ? "YES" : "NO",
+       key: defaultValue  ? true : false,
+     };
     const data =[]
     data.push({ value: "Please select", key: "" });
     data.push({ value: "Yes", key: true });
@@ -263,6 +276,7 @@ const DynamicInput = (props) => {
         <SelectDropdown
           data={data}
           defaultButtonText={"Please select"}
+          defaultValue={defaultValues}
           onSelect={(selectedItem, index) => {
             onChangeHandler(selectedItem.key.toString(), field);
           }}
@@ -328,7 +342,6 @@ const DynamicInput = (props) => {
       validateNames.push("required");
       texts.push("This field is required");
     }
-   
 
 
     return (
@@ -347,7 +360,7 @@ const DynamicInput = (props) => {
           keyboardType={keyboardType}
           validateNames={validateNames}
           errorMessages={texts}
-          value={defaultValue}
+          value={defaultValue?.toString()}
           type="text"
           editable={field.active ? field.active : !field.disabled}
           id={`field-${field.id}`}

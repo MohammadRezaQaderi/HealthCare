@@ -60,6 +60,7 @@ const parentFacilityField = {
   type: "text",
   active: false,
   disabled: true,
+  required: true,
   name: "Parent facility",
   stateName: "parentName",
 };
