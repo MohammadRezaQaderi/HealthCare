@@ -412,6 +412,11 @@ function AddFacilityScreen({
       if (field === undefined) {
         continue;
       }
+      // check for statName type
+      if (field.stateName === "type") {
+        const type_id =field.params.find((type) => (_fieldsValue[key] === (type.id).toString() || _fieldsValue[key] === type.name )).id;
+        _fieldsValue[key] = type_id;
+      }
       if (_fieldsValue[key] === "") {
         delete _fieldsValue[key];
       }
