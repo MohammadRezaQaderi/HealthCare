@@ -179,7 +179,7 @@ const ListMessageScreen = ({ setCurrentTab, setDefaultValueMessage }) => {
     DataFormat(messages, setData, type, setLoading);
   }, [messages]);
   return (
-    <ScrollView>
+    <ScrollView style={styles.newfac}>
       <SelectInput
         data={typeData}
         setSelected={setType}
@@ -260,5 +260,9 @@ const styles = StyleSheet.create({
   text: { margin: 6, fontSize: 16, textAlign: "center" },
   btn: { width: 58, height: 18, backgroundColor: "#78B7BB", borderRadius: 2 },
   btnText: { textAlign: "center", color: "#fff" },
+  newfac: {
+    padding: 2,
+    height: "85%",
+  },
 });
 export default ListMessageScreen;

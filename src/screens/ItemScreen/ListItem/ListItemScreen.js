@@ -121,7 +121,7 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
   
   }, [itemClass]);
   return (
-    <ScrollView>
+    <ScrollView style={styles.newfac}>
       {data?.tableData?.length > 0 && deleteItem.length > 0 ? (
         <View style={styles.container}>
           <Text
@@ -135,7 +135,6 @@ const ListItemScreen = ({ setCurrentTab, setDefaultValueItem, itemParent }) => {
             Items
           </Text>
 
-        
           <Text
             style={{
               fontSize: 12,
@@ -186,5 +185,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   text: { margin: 6, fontSize: 16, textAlign: "center" },
+  newfac: {
+    padding: 2,
+    height: "85%",
+  },
 });
 export default ListItemScreen;
