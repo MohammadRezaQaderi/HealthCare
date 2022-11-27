@@ -203,247 +203,256 @@ const SyncScreen = ({}) => {
     readData("token").then((token) => {
       token = JSON.parse(token);
       token = "Bearer".concat(" ", token);
-    });
-    readData("URL").then((url) => {
-      url = JSON.parse(url);
-    });
-    console.log("connectionState", connectionState);
-    readData("read-message").then((value) => {
-      if (value != null) {
-        if (connectionState) {
-          axios
-            .post(
-              "https://" + url + "/message/read-message",
-              {
-                value,
-              },
-              {
-                headers: { Authorization: token },
-              }
-            )
-            .then((response) => {
-              removeItemValue("read-message").then(() => "");
-              console.log("response read-message: ", response);
-            })
-            .catch((error) => {
-              console.log("errors read-message: ", error);
-            });
-        }
-      } else {
-        console.log("we did not have the message to send to server ");
-      }
-    });
-    readData("send-message").then((value) => {
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .post(
-                "https://" + url + "/message/",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response send-message: ", response);
-              })
-              .catch((error) => {
-                console.log("errors send-message: ", error);
-              });
-          }
-        }
-        removeItemValue("send-message").then(() => "");
-      } else {
-        console.log("we did not have the message to send to server ");
-      }
-    });
-    readData("send-facility").then((value) => {
-      console.log("value", value);
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .post(
-                "https://" + url + "/facilities/",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response send-facility: ", response);
-              })
-              .catch((error) => {
-                console.log("errors send-facility: ", error);
-              });
+      readData("URL").then((url) => {
+        url = JSON.parse(url);
+        console.log("token: ", token);
+        console.log("url: ", url);
+        console.log("connectionState", connectionState);
+        readData("read-message").then((value) => {
+          if (value != null) {
+            if (connectionState) {
+              axios
+                .post(
+                  "https://" + url + "/message/read-message",
+                  {
+                    value,
+                  },
+                  {
+                    headers: { Authorization: token },
+                  }
+                )
+                .then((response) => {
+                  removeItemValue("read-message").then(() => "");
+                  console.log("response read-message: ", response);
+                })
+                .catch((error) => {
+                  console.log("errors read-message: ", error);
+                });
+            }
           } else {
-            console.log(
-              "we did not have the facility to send to server  neeeeeeeeet"
-            );
+            console.log("we did not have the message to send to server ");
           }
-        }
-        removeItemValue("send-facility").then(() => "");
-      } else {
-        console.log("we did not have the facility to send to server ");
-      }
-    });
+        });
+        readData("send-message").then((value) => {
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              if (connectionState) {
+                axios
+                  .post(
+                    "https://" + url + "/message/",
+                    {
+                      param,
+                    },
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response send-message: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors send-message: ", error);
+                  });
+              }
+            }
+            removeItemValue("send-message").then(() => "");
+          } else {
+            console.log("we did not have the message to send to server ");
+          }
+        });
+        readData("send-facility").then((value) => {
+          console.log("value", value);
+          value=JSON.parse(value)
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              console.log("param", param);
+              if (connectionState) {
+                axios
+                  .post(
+                    "https://" + url + "/facilities/",
+                    
+                      param,
+                    
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response send-facility: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors send-facility: ", error);
+                  });
+              } else {
+                console.log(
+                  "we did not have the facility to send to server  neeeeeeeeet"
+                );
+              }
+            }
+            // removeItemValue("send-facility").then(() => "");
+          } else {
+            console.log("we did not have the facility to send to server ");
+          }
+        });
 
-    readData("edited-facility").then((value) => {
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .put(
-                "https://" + url + "/facilities/",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response edited-facility: ", response);
-              })
-              .catch((error) => {
-                console.log("errors edited-facility: ", error);
-              });
+        readData("edited-facility").then((value) => {
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              if (connectionState) {
+                axios
+                  .put(
+                    "https://" + url + "/facilities/",
+                    {
+                      param,
+                    },
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response edited-facility: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors edited-facility: ", error);
+                  });
+              } else {
+                console.log(
+                  "we did not have the facility to send to server  neeeeeeeeet"
+                );
+              }
+            }
+            removeItemValue("edited-facility").then(() => "");
+          } else {
+            console.log("we did not have the facility to send to server ");
           }
-          else{
-            console.log("we did not have the facility to send to server  neeeeeeeeet");
-          }
-        }
-        removeItemValue("edited-facility").then(() => "");
-      } else {
-        console.log("we did not have the facility to send to server ");
-      }
-    });
+        });
 
-    readData("deleted-facility").then((value) => {
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .post(
-                "https://" + url + "/facilities/delete",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response delete facility: ", response);
-              })
-              .catch((error) => {
-                console.log("errors delete facility: ", error);
-              });
+        readData("deleted-facility").then((value) => {
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              if (connectionState) {
+                axios
+                  .post(
+                    "https://" + url + "/facilities/delete",
+                    {
+                      param,
+                    },
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response delete facility: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors delete facility: ", error);
+                  });
+              }
+            }
+            removeItemValue("deleted-facility").then(() => "");
+          } else {
+            console.log("we did not have the facility to send to server ");
           }
-        }
-        removeItemValue("deleted-facility").then(() => "");
-      } else {
-        console.log("we did not have the facility to send to server ");
-      }
-    });
-    readData("send-item").then((value) => {
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .post(
-                "https://" + url + "/item/",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response send-item: ", response);
-              })
-              .catch((error) => {
-                console.log("errors send-item: ", error);
-              });
+        });
+        readData("send-item").then((value) => {
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              if (connectionState) {
+                axios
+                  .post(
+                    "https://" + url + "/item/",
+                    {
+                      param,
+                    },
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response send-item: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors send-item: ", error);
+                  });
+              }
+            }
+            removeItemValue("send-item").then(() => "");
+          } else {
+            console.log("we did not have the item to send to server ");
           }
-        }
-        removeItemValue("send-item").then(() => "");
-      } else {
-        console.log("we did not have the item to send to server ");
-      }
-    });
+        });
 
-    readData("edited-item").then((value) => {
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .put(
-                "https://" + url + "/item/",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response edited-item: ", response);
-              })
-              .catch((error) => {
-                console.log("errors edited-item: ", error);
-              });
+        readData("edited-item").then((value) => {
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              if (connectionState) {
+                axios
+                  .put(
+                    "https://" + url + "/item/",
+                    {
+                      param,
+                    },
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response edited-item: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors edited-item: ", error);
+                  });
+              }
+            }
+            removeItemValue("edited-item").then(() => "");
+          } else {
+            console.log("we did not have the item to send to server ");
           }
-        }
-        removeItemValue("edited-item").then(() => "");
-      } else {
-        console.log("we did not have the item to send to server ");
-      }
-    });
-    readData("deleted-item").then((value) => {
-      if (value != null) {
-        for (let index = 0; index < value.length; index++) {
-          let param = value[index];
-          if (connectionState) {
-            axios
-              .post(
-                "https://" + url + "/item/delete",
-                {
-                  param,
-                },
-                {
-                  headers: { Authorization: token },
-                }
-              )
-              .then((response) => {
-                console.log("response delete item: ", response);
-              })
-              .catch((error) => {
-                console.log("errors delete item: ", error);
-              });
+        });
+        readData("deleted-item").then((value) => {
+          if (value != null) {
+            for (let index = 0; index < value.length; index++) {
+              let param = value[index];
+              if (connectionState) {
+                axios
+                  .post(
+                    "https://" + url + "/item/delete",
+                    {
+                      param,
+                    },
+                    {
+                      headers: { Authorization: token },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("response delete item: ", response);
+                  })
+                  .catch((error) => {
+                    console.log("errors delete item: ", error);
+                  });
+              }
+            }
+            removeItemValue("deleted-item").then(() => "");
+          } else {
+            console.log("we did not have the facility to send to server ");
           }
-        }
-        removeItemValue("deleted-item").then(() => "");
-      } else {
-        console.log("we did not have the facility to send to server ");
-      }
+        });
+        // get new data
+        getInfoFromServer();
+        getAsyncInfo();
+        console.warn("Info Synced :)");
+      });
+
+
     });
-    // get new data
-    getInfoFromServer();
-    getAsyncInfo();
-    console.warn("Info Synced :)");
+    
+    
 
   };
   return (
